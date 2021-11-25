@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="io.choerodon.iam.infra.mapper.ProjectRelationshipProMapper">
+
+    <resultMap id="ProjectRelationshipUser" type="io.choerodon.iam.infra.dto.ProjectRelationshipDTO">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId" />
+        <result column="parent_id" property="parentId" />
+        <result column="projCode" property="projCode"/>
+        <result column="projName" property="projName"/>
+        <result column="iamgeUrl" property="iamgeUrl"/>
+        <result column="start_date" property="startDate" />
+        <result column="end_date" property="endDate" />
+        <result column="enabled" property="enabled" />
+        <result column="program_id" property="programId" />
+        <result column="object_version_number" property="objectVersionNumber"/>
+        <result column="creation_date" property="creationDate" />
+        <result column="responsibility_user_id" property="responsibilityUserId"/>
+        <association property="responsibilityUser" javaType="io.choerodon.iam.api.vo.UserVO">
+            <result column="user_id" property="id"/>
+            <result column="is_ldap" property="ldap"/>
+            <result column="login_name" property="loginName"/>
+            <result column="email" property="email"/>
+            <result column="real_name" property="realName"/>
+            <result column="image_url" property="imageUrl"/>
+            <result column="profile_photo" property="profilePhoto"/>
+        </association>
+    </resultMap>
+    <select id="selectProjectsByParentId" resultMap="ProjectRelationshipUser">
+        SELECT
+        fpr.*,
+        fpr.IS_ENABLED AS enabled,
+        fp.CODE AS projCode,
+        fp.NAME AS projName,
+        fp.id as project_id,
+        fp.IMAGE_URL as iamgeUrl,
+        iu.id as user_id,
+        iu.login_name,
+        iu.real_name,
+        iu.email,
+        iu.is_ldap,
+        iu.image_url,
+        iu.profile_photo
+        FROM
+        fd_project_relationship fpr
+        LEFT JOIN fd_project fp ON fpr.PROJECT_ID = fp.ID
+        LEFT JOIN iam_user iu on  iu.id=fpr.RESPONSIBILITY_USER_ID
+        WHERE
+        fpr.PARENT_ID = #{parentId}
+        <if test="onlySelectEnable">
+            and fpr.is_enabled = 1
+        </if>
+        <if test="params != null">
+            AND (
+            fp.NAME LIKE concat(concat('%', #{params}), '%') OR
+            fp.CODE LIKE concat(concat('%',#{params}),'%')
+            )
+        </if>
+
+    </select>
+
+    <select id="selectProgramsByProjectId" resultType="io.choerodon.iam.infra.dto.ProjectDTO">
+        SELECT FP.CODE,FP.NAME
+        FROM FD_PROJECT_RELATIONSHIP FPR
+        LEFT JOIN FD_PROJECT FP ON FPR.PROGRAM_ID = FP.ID
+        WHERE FPR.PROJECT_ID = #{projectId} AND FPR.PROGRAM_ID IS NOT NULL
+        <if test="onlySelectEnable">
+            and FPR.IS_ENABLED = 1
+        </if>
+    </select>
+
+    <select id="selectAllPrograms" resultType="io.choerodon.iam.infra.dto.ProjectRelationshipDTO">
+        SELECT
+            fpr.*
+        FROM
+            fd_project_relationship fpr
+        WHERE
+            fpr.PARENT_ID IS NOT NULL
+    </select>
+
+    <select id="selectSequenceNull" resultType="io.choerodon.iam.infra.dto.ProjectRelationshipDTO">
+        SELECT fpr.* FROM fd_project_relationship fpr
+        WHERE fpr.parent_id = #{projectId}
+        AND fpr.sequence IS NULL
+    </select>
+
+    <select id="selectMaxSequence" resultType="java.lang.Integer">
+        SELECT MAX(fpr.sequence) FROM fd_project_relationship fpr
+        WHERE fpr.parent_id = #{projectId}
+    </select>
+
+    <select id="selectBeforeProject" resultType="io.choerodon.iam.infra.dto.ProjectRelationshipDTO">
+         SELECT fpr.* FROM fd_project_relationship fpr
+         WHERE fpr.parent_id = #{parentId}
+         AND fpr.sequence > #{sequence}
+         order by fpr.sequence,fpr.id
+    </select>
+
+    <select id="queryByParentAndProjectId" resultType="io.choerodon.iam.infra.dto.ProjectRelationshipDTO">
+        SELECT fpr.* FROM fd_project_relationship fpr
+        where
+          fpr.parent_id = #{parentId}
+          AND fpr.project_id = #{projectId}
+    </select>
+
+    <select id="queryAfterByParentAndProjectId" resultType="io.choerodon.iam.infra.dto.ProjectRelationshipDTO">
+        SELECT fpr.* FROM fd_project_relationship fpr
+        where
+          fpr.parent_id = #{parentId}
+          AND fpr.sequence &lt; (
+              SELECT fpr.sequence FROM fd_project_relationship fpr
+                where
+                  fpr.parent_id = #{parentId}
+                  AND fpr.project_id = #{projectId}
+          )
+       order by fpr.sequence desc, fpr.id desc limit 1
+    </select>
+
+    <select id="selectProjectsByParentIdAndOrder" resultMap="ProjectRelationshipUser">
+        SELECT
+        fpr.*,
+        fpr.IS_ENABLED AS enabled,
+        fp.CODE AS projCode,
+        fp.NAME AS projName,
+        fp.id as project_id,
+        fp.IMAGE_URL as iamgeUrl,
+        iu.id as user_id,
+        iu.login_name,
+        iu.real_name,
+        iu.email,
+        iu.is_ldap,
+        iu.image_url,
+        iu.profile_photo
+        FROM
+        fd_project_relationship fpr
+        LEFT JOIN fd_project fp ON fpr.PROJECT_ID = fp.ID
+        LEFT JOIN iam_user iu on  iu.id=fpr.RESPONSIBILITY_USER_ID
+        WHERE
+        fpr.PARENT_ID = #{parentId}
+        <if test="onlySelectEnable">
+            and fpr.is_enabled = 1
+        </if>
+        <if test="params != null">
+            AND (
+            fp.NAME LIKE concat(concat('%', #{params}), '%') OR
+            fp.CODE LIKE concat(concat('%',#{params}),'%')
+            )
+        </if>
+        <if test="!sort">
+            order by fpr.sequence desc,fpr.id desc
+        </if>
+    </select>
+
+</mapper>
