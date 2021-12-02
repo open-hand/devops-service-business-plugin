@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.choerodon.iam.DevopsServiceBusinessAutoConfiguration
+io.choerodon.devops.DevopsServiceBusinessAutoConfiguration
