@@ -10,9 +10,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.devops.api.vo.template.CiTemplateLanguageVO;
-import io.choerodon.devops.app.service.CiTemplateLanguageBusService;
-import io.choerodon.devops.app.service.CiTemplateLanguageService;
-import io.choerodon.devops.infra.dto.CiTemplateLanguageDTO;
+import io.choerodon.devops.app.service.CiTemplateCategoryBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
 
@@ -24,21 +22,21 @@ import io.choerodon.swagger.annotation.CustomPageRequest;
  */
 
 @RestController("ciSiteTemplateLanguageController.v1")
-@RequestMapping("/v1/site/{source_id}/ci_template_language")
-public class CiSiteTemplateLanguageController extends BaseController {
+@RequestMapping("/v1/site/{source_id}/ci_template_category")
+public class CiSiteTemplateCategoryController extends BaseController {
 
     @Autowired
-    private CiTemplateLanguageBusService ciTemplateLanguageBusService;
+    private CiTemplateCategoryBusService ciTemplateCategoryBusService;
 
-    @ApiOperation(value = "平台层查询流水线使用语言列表")
+    @ApiOperation(value = "平台层查询流水线分类")
     @GetMapping
     @CustomPageRequest
-    public ResponseEntity<Page<CiTemplateLanguageVO>> pageTemplateLanguage(
+    public ResponseEntity<Page<CiTemplateLanguageVO>> pageTemplateCategory(
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
             @RequestParam(value = "searchParam", required = false) String searchParam) {
-        return ResponseEntity.ok(ciTemplateLanguageBusService.pageTemplateLanguages(sourceId, pageRequest, searchParam));
+        return ResponseEntity.ok(ciTemplateCategoryBusService.pageTemplateCategory(sourceId, pageRequest, searchParam));
     }
 
 }

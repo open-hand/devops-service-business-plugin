@@ -9,6 +9,6 @@ import io.choerodon.mybatis.common.BaseMapper;
 /**
  * Created by wangxiang on 2021/12/2
  */
-public interface CiTemplateLanguageBusMapper extends BaseMapper<CiTemplateLanguageDTO> {
-    List<CiTemplateLanguageDTO> queryTemplateLanguagesByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
+public interface CiTemplateCategoryBusMapper extends BaseMapper<CiTemplateLanguageDTO> {
+    List<CiTemplateLanguageDTO> pageTemplateCategory(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
 }

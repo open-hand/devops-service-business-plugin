@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.choerodon.devops.infra.mapper.DevopsPipelineTemplateBusMapper">
+
+
+    <resultMap id="DevopsPipelineTemplateMap" type="io.choerodon.devops.api.vo.template.DevopsPipelineTemplateVO">
+        <id property="id" column="id"/>
+        <result column="name" property="name"/>
+        <result column="creation_date" property="creationDate"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="built_in" property="builtIn"/>
+        <result column="built_in" property="builtIn"/>
+        <result column="enable" property="enable"/>
+
+        <association property="ciTemplateLanguageVO" javaType="io.choerodon.devops.api.vo.template.CiTemplateLanguageVO">
+            <id column="user_id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="sex" property="sex"/>
+            <result column="address" property="address"/>
+        </association>
+
+
+
+
+    </resultMap>
+
+    <select id="queryDevopsPipelineTemplateByParams" resultMap="DevopsPipelineTemplateMap">
+        SELECT
+        *
+        FROM
+        devops_pipeline_template dpt
+        WHERE
+        dpt.source.id = #{sourceId,jdbcType=BIGINT}
+        <if test="searchParam != null and searchParam != ''">
+
+        </if>
+    </select>
+</mapper>

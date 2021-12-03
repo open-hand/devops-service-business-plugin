@@ -7,7 +7,7 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 /**
  * Created by wangxiang on 2021/12/2
  */
-public interface CiTemplateLanguageBusService {
+public interface CiTemplateCategoryBusService {
 
-    Page<CiTemplateLanguageVO> pageTemplateLanguages(Long sourceId, PageRequest pageRequest, String searchParam);
+    Page<CiTemplateLanguageVO> pageTemplateCategory(Long sourceId, PageRequest pageRequest, String searchParam);
 }
