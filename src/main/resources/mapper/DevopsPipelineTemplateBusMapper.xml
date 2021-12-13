@@ -8,7 +8,8 @@
         <result column="name" property="name"/>
         <result column="creation_date" property="creationDate"/>
         <result column="created_by" property="createdBy"/>
-        <result column="built_in" property="builtIn"/>
+        <result column="source_type" property="sourceType"/>
+        <result column="source_id" property="sourceId"/>
         <result column="built_in" property="builtIn"/>
         <result column="enable" property="enable"/>
 

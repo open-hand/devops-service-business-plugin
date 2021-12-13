@@ -29,7 +29,7 @@ public class CiSitePipelineTemplateController extends BaseController {
     private CiPipelineTemplateBusService ciPipelineTemplateBusService;
 
 
-    @ApiOperation(value = "平台层查询流水线任务分组列表")
+    @ApiOperation(value = "平台层查询流水线模板")
     @GetMapping
     @CustomPageRequest
     public ResponseEntity<Page<DevopsPipelineTemplateVO>> pagePipelineTemplate(
