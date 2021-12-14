@@ -3,6 +3,7 @@ package io.choerodon.devops.api.controller.v1;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
+import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,27 @@ public class CiSitePipelineTemplateController extends BaseController {
             @RequestParam(value = "searchParam", required = false) String searchParam) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.pagePipelineTemplate(sourceId, pageRequest, searchParam));
     }
+
+
+    @ApiOperation(value = "平台层停用流水线模板")
+    @PutMapping("/invalid")
+    public ResponseEntity<Void> invalidPipelineTemplate(
+            @PathVariable(value = "source_id") Long sourceId,
+            @Encrypt @RequestParam(value = "ci_pipeline_template_id") Long ciPipelineTemplateId) {
+        ciPipelineTemplateBusService.invalidPipelineTemplate(sourceId, ciPipelineTemplateId);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @ApiOperation(value = "平台层启用流水线模板")
+    @PutMapping("/enable")
+    public ResponseEntity<Void> enablePipelineTemplate(
+            @PathVariable(value = "source_id") Long sourceId,
+            @Encrypt @RequestParam(value = "ci_pipeline_template_id") Long ciPipelineTemplateId) {
+        ciPipelineTemplateBusService.enablePipelineTemplate(sourceId, ciPipelineTemplateId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 }

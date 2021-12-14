@@ -9,9 +9,7 @@
         FROM
           devops_ci_template_category dctc
         <where>
-            <if test="searchParam != null and searchParam != ''">
 
-            </if>
         </where>
 
 

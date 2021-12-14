@@ -11,5 +11,5 @@ import io.choerodon.mybatis.common.BaseMapper;
  * Created by wangxiang on 2021/12/2
  */
 public interface CiTemplateCategoryBusMapper extends BaseMapper<CiTemplateCategoryDTO> {
-    List<CiTemplateCategoryDTO> pageTemplateCategory(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
+    List<CiTemplateCategoryDTO> pageTemplateCategory(@Param("searchParam") String searchParam);
 }

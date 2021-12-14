@@ -28,11 +28,18 @@
 
     <select id="queryDevopsPipelineTemplateByParams" resultMap="DevopsPipelineTemplateMap">
         SELECT
-        *
+           dpt.id AS template_id,
+           dpt.name AS template_name,
+           dpt.source_type AS tempate_source_type,
+           dpt.built_in AS template_built_in,
+           dpt.enable AS template_enable,
+           dpt.creation_date AS template_create_date,
+           dpt.created_by AS template_create_by,
+           dctc.id AS category_id,
+           dctc.category AS category_name
         FROM
-        devops_pipeline_template dpt
-        WHERE
-        dpt.source.id = #{sourceId,jdbcType=BIGINT}
+           devops_pipeline_template dpt
+        JOIN devops_ci_template_category dctc ON dpt.ci_template_category_id=dctc.id
         <if test="searchParam != null and searchParam != ''">
 
         </if>
