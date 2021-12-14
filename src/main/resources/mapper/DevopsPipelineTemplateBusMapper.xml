@@ -13,11 +13,12 @@
         <result column="built_in" property="builtIn"/>
         <result column="enable" property="enable"/>
 
-        <association property="ciTemplateLanguageVO" javaType="io.choerodon.devops.api.vo.template.CiTemplateLanguageVO">
+        <association property="ciTemplateCategoryVO" javaType="io.choerodon.devops.api.vo.template.CiTemplateCategoryVO">
             <id column="user_id" property="id"/>
-            <result column="username" property="username"/>
-            <result column="sex" property="sex"/>
-            <result column="address" property="address"/>
+            <result column="language" property="language"/>
+            <result column="source_type" property="sourceType"/>
+            <result column="creation_date" property="creationDate"/>
+            <result column="created_by" property="createdBy"/>
         </association>
 
 

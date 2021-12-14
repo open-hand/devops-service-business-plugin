@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
-import io.choerodon.devops.api.vo.template.CiTemplateLanguageVO;
+import io.choerodon.devops.api.vo.template.CiTemplateCategoryVO;
 import io.choerodon.devops.app.service.CiTemplateCategoryBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
@@ -31,7 +31,7 @@ public class CiSiteTemplateCategoryController extends BaseController {
     @ApiOperation(value = "平台层查询流水线分类")
     @GetMapping
     @CustomPageRequest
-    public ResponseEntity<Page<CiTemplateLanguageVO>> pageTemplateCategory(
+    public ResponseEntity<Page<CiTemplateCategoryVO>> pageTemplateCategory(
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,

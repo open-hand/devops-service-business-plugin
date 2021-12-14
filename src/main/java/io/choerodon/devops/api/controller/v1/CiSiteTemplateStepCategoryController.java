@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
-import io.choerodon.devops.api.vo.template.CiTemplateLanguageVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
 import io.choerodon.devops.app.service.CiTemplateStepCategoryBusService;
-import io.choerodon.devops.app.service.CiTemplateStepCategoryService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
 

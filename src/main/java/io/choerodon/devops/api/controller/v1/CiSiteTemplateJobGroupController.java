@@ -10,10 +10,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.devops.api.vo.template.CiTemplateJobGroupVO;
-import io.choerodon.devops.api.vo.template.CiTemplateLanguageVO;
 import io.choerodon.devops.app.service.CiTemplateJobGroupBusService;
-import io.choerodon.devops.app.service.CiTemplateJobGroupService;
-import io.choerodon.devops.infra.dto.CiTemplateJobGroupDTO;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
 
