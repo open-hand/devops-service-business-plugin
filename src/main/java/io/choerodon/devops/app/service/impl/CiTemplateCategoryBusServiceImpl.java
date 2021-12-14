@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.utils.ConvertUtils;
-import io.choerodon.devops.api.vo.template.CiTemplateLanguageVO;
+import io.choerodon.devops.api.vo.template.CiTemplateCategoryVO;
 import io.choerodon.devops.app.service.CiTemplateCategoryBusService;
-import io.choerodon.devops.infra.dto.CiTemplateLanguageDTO;
+import io.choerodon.devops.infra.dto.CiTemplateCategoryDTO;
 import io.choerodon.devops.infra.mapper.CiTemplateCategoryBusMapper;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -22,9 +22,9 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
     private CiTemplateCategoryBusMapper ciTemplateCategoryBusMapper;
 
     @Override
-    public Page<CiTemplateLanguageVO> pageTemplateCategory(Long sourceId, PageRequest pageRequest, String searchParam) {
-        Page<CiTemplateLanguageDTO> ciTemplateLanguageDTOS = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateCategoryBusMapper.pageTemplateCategory(sourceId, searchParam));
-        Page<CiTemplateLanguageVO> ciTemplateLanguageVOS = ConvertUtils.convertPage(ciTemplateLanguageDTOS, CiTemplateLanguageVO.class);
-        return ciTemplateLanguageVOS;
+    public Page<CiTemplateCategoryVO> pageTemplateCategory(Long sourceId, PageRequest pageRequest, String searchParam) {
+        Page<CiTemplateCategoryDTO> ciTemplateCategoryDTOS = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateCategoryBusMapper.pageTemplateCategory(sourceId, searchParam));
+        Page<CiTemplateCategoryVO> ciTemplateCategoryVOS = ConvertUtils.convertPage(ciTemplateCategoryDTOS, CiTemplateCategoryVO.class);
+        return ciTemplateCategoryVOS;
     }
 }

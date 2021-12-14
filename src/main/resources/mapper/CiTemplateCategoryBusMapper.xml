@@ -3,15 +3,17 @@
 <mapper namespace="io.choerodon.devops.infra.mapper.CiTemplateCategoryBusMapper">
 
 
-    <select id="queryTemplateLanguagesByParams" resultType="io.choerodon.devops.infra.dto.CiTemplateLanguageDTO">
+    <select id="pageTemplateCategory" resultType="io.choerodon.devops.infra.dto.CiTemplateCategoryDTO">
         SELECT
           *
         FROM
-          devops_ci_template_language dctl
-        WHERE
-          dctl.source.id = #{sourceId,jdbcType=BIGINT}
-        <if test="searchParam != null and searchParam != ''">
+          devops_ci_template_category dctc
+        <where>
+            <if test="searchParam != null and searchParam != ''">
 
-        </if>
+            </if>
+        </where>
+
+
     </select>
 </mapper>
