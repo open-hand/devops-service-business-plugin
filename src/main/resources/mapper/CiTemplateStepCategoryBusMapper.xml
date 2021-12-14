@@ -9,7 +9,7 @@
         FROM
          devops_ci_template_step_category dctsc
         WHERE
-         dctsc.source.id = #{sourceId,jdbcType=BIGINT}
+         dctsc.source_id = #{sourceId,jdbcType=BIGINT}
         <if test="searchParam != null and searchParam != ''">
 
         </if>

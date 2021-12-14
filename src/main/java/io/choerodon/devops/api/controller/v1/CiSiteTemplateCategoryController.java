@@ -3,6 +3,7 @@ package io.choerodon.devops.api.controller.v1;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
+import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +37,27 @@ public class CiSiteTemplateCategoryController extends BaseController {
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
             @RequestParam(value = "searchParam", required = false) String searchParam) {
-        return ResponseEntity.ok(ciTemplateCategoryBusService.pageTemplateCategory(sourceId, pageRequest, searchParam));
+        return ResponseEntity.ok(ciTemplateCategoryBusService.pageTemplateCategory(pageRequest, searchParam));
     }
+
+    @ApiOperation(value = "平台层修改流水线分类")
+    @PutMapping
+    public ResponseEntity<CiTemplateCategoryVO> updateTemplateCategory(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestBody CiTemplateCategoryVO ciTemplateCategoryVO) {
+        return ResponseEntity.ok(ciTemplateCategoryBusService.updateTemplateCategory(ciTemplateCategoryVO));
+    }
+
+
+    @ApiOperation(value = "平台层删除流水线分类")
+    @DeleteMapping
+    public ResponseEntity<CiTemplateCategoryVO> deleteTemplateCategory(
+            @PathVariable(value = "source_id") Long sourceId,
+            @Encrypt @RequestParam("ci_template_category_id") Long ciTemplateCategoryId) {
+        ciTemplateCategoryBusService.deleteTemplateCategory(ciTemplateCategoryId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
 

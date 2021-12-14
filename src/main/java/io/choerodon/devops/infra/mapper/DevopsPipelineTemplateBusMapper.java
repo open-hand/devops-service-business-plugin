@@ -3,7 +3,7 @@ package io.choerodon.devops.infra.mapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-import io.choerodon.devops.infra.dto.CiTemplateJobGroupDTO;
+import io.choerodon.devops.api.vo.template.DevopsPipelineTemplateVO;
 import io.choerodon.devops.infra.dto.DevopsPipelineTemplateDTO;
 import io.choerodon.mybatis.common.BaseMapper;
 
@@ -15,6 +15,6 @@ import io.choerodon.mybatis.common.BaseMapper;
  */
 public interface DevopsPipelineTemplateBusMapper extends BaseMapper<DevopsPipelineTemplateDTO> {
 
-    List<DevopsPipelineTemplateDTO> queryDevopsPipelineTemplateByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
+    List<DevopsPipelineTemplateVO> queryDevopsPipelineTemplateByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
 }
 
