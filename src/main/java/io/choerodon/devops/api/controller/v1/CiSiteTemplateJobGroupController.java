@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.devops.api.vo.template.CiTemplateJobGroupVO;
 import io.choerodon.devops.app.service.CiTemplateJobGroupBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
+import io.choerodon.swagger.annotation.Permission;
 
 /**
  * 流水线任务模板分组(CiTemplateJobGroup)表控制层
@@ -30,6 +32,7 @@ public class CiSiteTemplateJobGroupController extends BaseController {
 
 
     @ApiOperation(value = "平台层查询流水线任务分组列表")
+    @Permission(level = ResourceLevel.SITE)
     @GetMapping
     @CustomPageRequest
     public ResponseEntity<Page<CiTemplateJobGroupVO>> pageTemplateJobGroup(

@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
 import io.choerodon.devops.app.service.CiTemplateStepCategoryBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
+import io.choerodon.swagger.annotation.Permission;
 
 /**
  * 流水线步骤模板分类(CiTemplateStepCategory)表控制层
@@ -29,6 +31,7 @@ public class CiSiteTemplateStepCategoryController extends BaseController {
     private CiTemplateStepCategoryBusService ciTemplateStepCategoryBusService;
 
     @ApiOperation(value = "平台层查询流水线使用语言列表")
+    @Permission(level = ResourceLevel.SITE)
     @GetMapping
     @CustomPageRequest
     public ResponseEntity<Page<CiTemplateStepCategoryVO>> pageTemplateStepCategory(

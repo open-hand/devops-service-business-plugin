@@ -13,4 +13,7 @@ public interface CiTemplateStepBusService {
     CiTemplateStepVO updateTemplateStep(Long sourceId, CiTemplateStepVO ciTemplateStepVO);
 
     void deleteTemplateStep(Long sourceId, Long ciStepTemplateId);
+
+    CiTemplateStepVO createTemplateStep(Long sourceId, CiTemplateStepVO ciTemplateStepVO);
+
 }

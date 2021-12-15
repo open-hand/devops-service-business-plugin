@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.devops.api.vo.template.DevopsPipelineTemplateVO;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
+import io.choerodon.swagger.annotation.Permission;
 
 /**
  * 流水线任务模板分组(CiTemplateJobGroup)表控制层
@@ -33,6 +35,7 @@ public class CiSitePipelineTemplateController extends BaseController {
     @ApiOperation(value = "平台层查询流水线模板")
     @GetMapping
     @CustomPageRequest
+    @Permission(level = ResourceLevel.SITE)
     public ResponseEntity<Page<DevopsPipelineTemplateVO>> pagePipelineTemplate(
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
@@ -44,6 +47,7 @@ public class CiSitePipelineTemplateController extends BaseController {
 
     @ApiOperation(value = "平台层停用流水线模板")
     @PutMapping("/invalid")
+    @Permission(level = ResourceLevel.SITE)
     public ResponseEntity<Void> invalidPipelineTemplate(
             @PathVariable(value = "source_id") Long sourceId,
             @Encrypt @RequestParam(value = "ci_pipeline_template_id") Long ciPipelineTemplateId) {
@@ -54,6 +58,7 @@ public class CiSitePipelineTemplateController extends BaseController {
 
     @ApiOperation(value = "平台层启用流水线模板")
     @PutMapping("/enable")
+    @Permission(level = ResourceLevel.SITE)
     public ResponseEntity<Void> enablePipelineTemplate(
             @PathVariable(value = "source_id") Long sourceId,
             @Encrypt @RequestParam(value = "ci_pipeline_template_id") Long ciPipelineTemplateId) {
