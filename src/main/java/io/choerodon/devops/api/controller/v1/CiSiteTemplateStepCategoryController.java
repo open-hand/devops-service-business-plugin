@@ -2,7 +2,9 @@ package io.choerodon.devops.api.controller.v1;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
 import org.hzero.core.base.BaseController;
+import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +32,7 @@ public class CiSiteTemplateStepCategoryController extends BaseController {
     @Autowired
     private CiTemplateStepCategoryBusService ciTemplateStepCategoryBusService;
 
-    @ApiOperation(value = "平台层查询流水线使用语言列表")
+    @ApiOperation(value = "平台层查询流水线分类列表")
     @Permission(level = ResourceLevel.SITE)
     @GetMapping
     @CustomPageRequest
@@ -41,6 +43,36 @@ public class CiSiteTemplateStepCategoryController extends BaseController {
             @RequestParam(value = "searchParam", required = false) String searchParam) {
         return ResponseEntity.ok(ciTemplateStepCategoryBusService.pageTemplateStepCategory(sourceId, pageRequest, searchParam));
     }
+
+
+    @ApiOperation(value = "平台层创建流水线步骤模板分类")
+    @Permission(level = ResourceLevel.SITE)
+    @PostMapping
+    public ResponseEntity<CiTemplateStepCategoryVO> createTemplateStepCategory(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestBody @Valid CiTemplateStepCategoryVO CiTemplateStepCategoryVO) {
+        return ResponseEntity.ok(ciTemplateStepCategoryBusService.createTemplateStepCategory(sourceId, CiTemplateStepCategoryVO));
+    }
+
+    @ApiOperation(value = "平台层修改流水线步骤分类模板")
+    @Permission(level = ResourceLevel.SITE)
+    @PutMapping
+    public ResponseEntity<CiTemplateStepCategoryVO> updateTemplateStepCategory(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestBody CiTemplateStepCategoryVO ciTemplateStepCategoryVO) {
+        return ResponseEntity.ok(ciTemplateStepCategoryBusService.updateTemplateStepCategory(sourceId, ciTemplateStepCategoryVO));
+    }
+
+    @ApiOperation(value = "平台层删除流水线步骤分类模板")
+    @Permission(level = ResourceLevel.SITE)
+    @DeleteMapping
+    public ResponseEntity<Void> deleteTemplateStepCategory(
+            @PathVariable(value = "source_id") Long sourceId,
+            @Encrypt @RequestParam("ci_template_category_id") Long ciTemplateCategoryId) {
+        ciTemplateStepCategoryBusService.deleteTemplateStepCategory(sourceId, ciTemplateCategoryId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
 

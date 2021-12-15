@@ -3,6 +3,7 @@ package io.choerodon.devops.infra.mapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
+import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
 import io.choerodon.devops.infra.dto.CiTemplateStepCategoryDTO;
 import io.choerodon.mybatis.common.BaseMapper;
 
@@ -14,7 +15,7 @@ import io.choerodon.mybatis.common.BaseMapper;
  */
 public interface CiTemplateStepCategoryBusMapper extends BaseMapper<CiTemplateStepCategoryDTO> {
 
-    List<CiTemplateStepCategoryDTO> queryTemplateStepCategoryByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
+    List<CiTemplateStepCategoryVO> queryTemplateStepCategoryByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
 
 }
 

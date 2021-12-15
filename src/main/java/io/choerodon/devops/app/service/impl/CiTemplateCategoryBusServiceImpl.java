@@ -1,5 +1,6 @@
 package io.choerodon.devops.app.service.impl;
 
+import java.util.List;
 import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import io.choerodon.core.domain.Page;
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.utils.ConvertUtils;
 import io.choerodon.devops.api.vo.template.CiTemplateCategoryVO;
+import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
 import io.choerodon.devops.app.service.CiTemplateCategoryBusService;
 import io.choerodon.devops.infra.constant.Constant;
 import io.choerodon.devops.infra.dto.CiTemplateCategoryDTO;
+import io.choerodon.devops.infra.dto.CiTemplateStepCategoryDTO;
 import io.choerodon.devops.infra.mapper.CiTemplateCategoryBusMapper;
 import io.choerodon.devops.infra.util.UserDTOFillUtil;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -58,5 +62,27 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
         }
         AssertUtils.isTrue(ciTemplateCategoryDTO.getBuiltIn(), "error.delete.builtin.ci.template.category");
         ciTemplateCategoryBusMapper.deleteByPrimaryKey(ciTemplateCategoryDTO.getId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public CiTemplateCategoryVO createTemplateCategory(CiTemplateCategoryVO ciTemplateCategoryVO) {
+        AssertUtils.notNull(ciTemplateCategoryVO, "error.ci.template.category.null");
+        checkCategoryName(ciTemplateCategoryVO);
+        CiTemplateCategoryDTO ciTemplateCategoryDTO = new CiTemplateCategoryDTO();
+        BeanUtils.copyProperties(ciTemplateCategoryVO, ciTemplateCategoryDTO);
+        if (ciTemplateCategoryBusMapper.insertSelective(ciTemplateCategoryDTO) != 1) {
+            throw new CommonException("error.create.template.category");
+        }
+        return ConvertUtils.convertObject(ciTemplateCategoryDTO, CiTemplateCategoryVO.class);
+    }
+
+    private void checkCategoryName(CiTemplateCategoryVO ciTemplateCategoryVO) {
+        CiTemplateCategoryDTO record = new CiTemplateCategoryDTO();
+        record.setCategory(ciTemplateCategoryVO.getCategory());
+        List<CiTemplateCategoryDTO> ciTemplateCategoryDTOS = ciTemplateCategoryBusMapper.select(record);
+        if (!CollectionUtils.isEmpty(ciTemplateCategoryDTOS)) {
+            throw new CommonException("error.pipeline.category.exist");
+        }
     }
 }

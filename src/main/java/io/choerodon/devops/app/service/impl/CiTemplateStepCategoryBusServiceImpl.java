@@ -1,14 +1,27 @@
 package io.choerodon.devops.app.service.impl;
 
+import java.util.List;
+import org.hzero.core.base.BaseConstants;
+import org.hzero.core.util.AssertUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import io.choerodon.core.domain.Page;
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.utils.ConvertUtils;
 import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
+import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.devops.app.service.CiTemplateStepCategoryBusService;
+
+import io.choerodon.devops.infra.constant.Constant;
 import io.choerodon.devops.infra.dto.CiTemplateStepCategoryDTO;
+import io.choerodon.devops.infra.dto.CiTemplateStepDTO;
+import io.choerodon.devops.infra.mapper.CiTemplateStepBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateStepCategoryBusMapper;
+import io.choerodon.devops.infra.util.UserDTOFillUtil;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 
@@ -21,10 +34,79 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
     @Autowired
     private CiTemplateStepCategoryBusMapper ciTemplateStepCategoryBusMapper;
 
+    @Autowired
+    private CiTemplateStepBusMapper ciTemplateStepBusMapper;
+
     @Override
     public Page<CiTemplateStepCategoryVO> pageTemplateStepCategory(Long sourceId, PageRequest pageRequest, String searchParam) {
-        Page<CiTemplateStepCategoryDTO> ciTemplateStepCategoryDTOS = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateStepCategoryBusMapper.queryTemplateStepCategoryByParams(sourceId, searchParam));
-        Page<CiTemplateStepCategoryVO> ciTemplateStepCategoryVOS = ConvertUtils.convertPage(ciTemplateStepCategoryDTOS, CiTemplateStepCategoryVO.class);
-        return ciTemplateStepCategoryVOS;
+        Page<CiTemplateStepCategoryVO> ciTemplateStepCategoryVOPage = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateStepCategoryBusMapper.queryTemplateStepCategoryByParams(sourceId, searchParam));
+        if (CollectionUtils.isEmpty(ciTemplateStepCategoryVOPage.getContent())) {
+            return ciTemplateStepCategoryVOPage;
+        }
+        UserDTOFillUtil.fillUserInfo(ciTemplateStepCategoryVOPage.getContent(), Constant.CREATED_BY, Constant.CREATOR);
+        return ciTemplateStepCategoryVOPage;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public CiTemplateStepCategoryVO updateTemplateStepCategory(Long sourceId, CiTemplateStepCategoryVO ciTemplateStepCategoryVO) {
+        CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = ciTemplateStepCategoryBusMapper.selectByPrimaryKey(ciTemplateStepCategoryVO.getId());
+        AssertUtils.notNull(ciTemplateStepCategoryDTO, "error.ci.step.template.category.not.exist");
+        AssertUtils.isTrue(ciTemplateStepCategoryDTO.getBuiltIn(), "error.update.builtin.step.template.category");
+        checkStepCategoryName(ciTemplateStepCategoryVO);
+        BeanUtils.copyProperties(ciTemplateStepCategoryVO, ciTemplateStepCategoryDTO);
+        ciTemplateStepCategoryBusMapper.updateByPrimaryKeySelective(ciTemplateStepCategoryDTO);
+        return ConvertUtils.convertObject(ciTemplateStepCategoryBusMapper.selectByPrimaryKey(ciTemplateStepCategoryDTO.getId()), CiTemplateStepCategoryVO.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteTemplateStepCategory(Long sourceId, Long ciTemplateCategoryId) {
+
+        CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = ciTemplateStepCategoryBusMapper.selectByPrimaryKey(ciTemplateCategoryId);
+        if (ciTemplateStepCategoryDTO == null) {
+            return;
+        }
+        checkRelated(ciTemplateStepCategoryDTO);
+        AssertUtils.isTrue(ciTemplateStepCategoryDTO.getBuiltIn(), "error.delete.builtin.step.template.category");
+        ciTemplateStepCategoryBusMapper.deleteByPrimaryKey(ciTemplateStepCategoryDTO.getId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public CiTemplateStepCategoryVO createTemplateStepCategory(Long sourceId, CiTemplateStepCategoryVO ciTemplateStepCategoryVO) {
+        AssertUtils.notNull(ciTemplateStepCategoryVO, "error.ci.template.step.category.null");
+        checkStepCategoryName(ciTemplateStepCategoryVO);
+
+        CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = new CiTemplateStepCategoryDTO();
+        BeanUtils.copyProperties(ciTemplateStepCategoryVO, ciTemplateStepCategoryDTO);
+        if (ciTemplateStepCategoryBusMapper.insertSelective(ciTemplateStepCategoryDTO) != 1) {
+            throw new CommonException("error.create.step.template.category");
+        }
+        return ConvertUtils.convertObject(ciTemplateStepCategoryDTO, CiTemplateStepCategoryVO.class);
+
+    }
+
+    /**
+     * 校验组织层或者平台层是否有关联该分类
+     *
+     * @param ciTemplateStepCategoryDTO
+     */
+    private void checkRelated(CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO) {
+        CiTemplateStepDTO ciTemplateStepDTO = new CiTemplateStepDTO();
+        ciTemplateStepDTO.setCategoryId(ciTemplateStepCategoryDTO.getId());
+        List<CiTemplateStepDTO> ciTemplateStepDTOS = ciTemplateStepBusMapper.select(ciTemplateStepDTO);
+        if (!CollectionUtils.isEmpty(ciTemplateStepDTOS)) {
+            throw new CommonException("error.delete.step.category.related");
+        }
+    }
+
+    private void checkStepCategoryName(CiTemplateStepCategoryVO ciTemplateStepCategoryVO) {
+        CiTemplateStepCategoryDTO record = new CiTemplateStepCategoryDTO();
+        record.setName(ciTemplateStepCategoryVO.getName());
+        CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = ciTemplateStepCategoryBusMapper.selectOne(record);
+        if (ciTemplateStepCategoryDTO != null) {
+            throw new CommonException("error.step.category.name.already.exists");
+        }
     }
 }

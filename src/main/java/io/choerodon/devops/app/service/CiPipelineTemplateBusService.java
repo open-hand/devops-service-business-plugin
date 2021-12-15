@@ -13,4 +13,7 @@ public interface CiPipelineTemplateBusService {
     void invalidPipelineTemplate(Long sourceId, Long ciPipelineTemplateId);
 
     void enablePipelineTemplate(Long sourceId, Long ciPipelineTemplateId);
+
+    DevopsPipelineTemplateVO createPipelineTemplate(Long sourceId, DevopsPipelineTemplateVO devopsPipelineTemplateVO);
 }
+

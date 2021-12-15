@@ -9,4 +9,11 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
  */
 public interface CiTemplateStepCategoryBusService {
     Page<CiTemplateStepCategoryVO> pageTemplateStepCategory(Long sourceId, PageRequest pageRequest, String searchParam);
+
+    CiTemplateStepCategoryVO updateTemplateStepCategory(Long sourceId, CiTemplateStepCategoryVO ciTemplateStepCategoryVO);
+
+    void deleteTemplateStepCategory(Long sourceId, Long ciTemplateCategoryId);
+
+    CiTemplateStepCategoryVO createTemplateStepCategory(Long sourceId, CiTemplateStepCategoryVO ciTemplateStepCategoryVO);
 }
+

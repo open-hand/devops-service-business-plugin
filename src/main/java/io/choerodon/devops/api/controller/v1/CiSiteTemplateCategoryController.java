@@ -43,6 +43,16 @@ public class CiSiteTemplateCategoryController extends BaseController {
         return ResponseEntity.ok(ciTemplateCategoryBusService.pageTemplateCategory(pageRequest, searchParam));
     }
 
+    @ApiOperation(value = "平台层创建流水线分类")
+    @Permission(level = ResourceLevel.SITE)
+    @PostMapping
+    public ResponseEntity<CiTemplateCategoryVO> createTemplateCategory(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestBody CiTemplateCategoryVO ciTemplateCategoryVO) {
+        return ResponseEntity.ok(ciTemplateCategoryBusService.createTemplateCategory(ciTemplateCategoryVO));
+    }
+
+
     @ApiOperation(value = "平台层修改流水线分类")
     @Permission(level = ResourceLevel.SITE)
     @PutMapping
