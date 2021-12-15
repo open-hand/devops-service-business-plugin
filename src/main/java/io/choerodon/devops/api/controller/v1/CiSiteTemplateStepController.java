@@ -52,7 +52,7 @@ public class CiSiteTemplateStepController {
     @ApiOperation(value = "平台层删除流水线步骤模板")
     @Permission(level = ResourceLevel.SITE)
     @DeleteMapping
-    public ResponseEntity<Page<CiTemplateStepVO>> deleteTemplateStep(
+    public ResponseEntity<Void> deleteTemplateStep(
             @PathVariable(value = "source_id") Long sourceId,
             @Encrypt @RequestParam("ci_step_template_id") Long ciStepTemplateId) {
         ciTemplateStepBusService.deleteTemplateStep(sourceId, ciStepTemplateId);

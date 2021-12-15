@@ -54,4 +54,9 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         devopsPipelineTemplateDTO.setEnable(Boolean.TRUE);
         devopsPipelineTemplateBusMapper.updateByPrimaryKey(devopsPipelineTemplateDTO);
     }
+
+    @Override
+    public DevopsPipelineTemplateVO createPipelineTemplate(Long sourceId, DevopsPipelineTemplateVO devopsPipelineTemplateVO) {
+        return null;
+    }
 }
