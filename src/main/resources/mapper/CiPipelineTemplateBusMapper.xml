@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="io.choerodon.devops.infra.mapper.DevopsPipelineTemplateBusMapper">
+<mapper namespace="io.choerodon.devops.infra.mapper.CiPipelineTemplateBusMapper">
 
 
-    <resultMap id="DevopsPipelineTemplateMap" type="io.choerodon.devops.api.vo.template.DevopsPipelineTemplateVO">
+    <resultMap id="DevopsPipelineTemplateMap" type="io.choerodon.devops.api.vo.template.CiPipelineTemplateVO">
         <id property="id" column="id"/>
         <result column="name" property="name"/>
         <result column="creation_date" property="creationDate"/>
