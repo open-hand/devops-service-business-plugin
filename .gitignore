@@ -48,3 +48,5 @@ package-lock.json
 **/lib/fonts/
 
 /liquibase
+
+/src/main/java/io/choerodon/devops/DevopsServiceBusinessApplication.java
