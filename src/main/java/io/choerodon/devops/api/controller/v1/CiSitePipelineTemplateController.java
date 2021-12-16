@@ -11,6 +11,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.DevopsPipelineTemplateVO;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -40,8 +41,8 @@ public class CiSitePipelineTemplateController extends BaseController {
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
-            @RequestParam(value = "searchParam", required = false) String searchParam) {
-        return ResponseEntity.ok(ciPipelineTemplateBusService.pagePipelineTemplate(sourceId, pageRequest, searchParam));
+            @RequestBody(required = false) SearchVO searchVO) {
+        return ResponseEntity.ok(ciPipelineTemplateBusService.pagePipelineTemplate(sourceId, pageRequest, searchVO));
     }
 
     @ApiOperation(value = "平台层创建流水线模板")

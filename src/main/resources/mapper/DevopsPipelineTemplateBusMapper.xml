@@ -40,8 +40,21 @@
         FROM
            devops_pipeline_template dpt
         JOIN devops_ci_template_category dctc ON dpt.ci_template_category_id=dctc.id
-        <if test="searchParam != null and searchParam != ''">
-
+        <if test="searchVO != null">
+            <if test="searchVO.searchParam != null">
+                <if test="searchVO.searchParam.templateName != null and searchVO.searchParam.templateName != ''">
+                    AND dpt.name LIKE CONCAT(CONCAT('%',
+                    #{searchVO.searchParam.templateName, jdbcType=VARCHAR}), '%')
+                </if>
+<!--                <if test="searchVO.searchParam.custom != null and searchVO.searchParam.custom != ''">-->
+<!--                    <if test="searchVO.searchParam.custom==true">-->
+<!--                        AND mc.CUSTOM=1-->
+<!--                    </if>-->
+<!--                    <if test="searchVO.searchParam.custom==false">-->
+<!--                        AND mc.CUSTOM=0-->
+<!--                    </if>-->
+<!--                </if>-->
+            </if>
         </if>
     </select>
 </mapper>
