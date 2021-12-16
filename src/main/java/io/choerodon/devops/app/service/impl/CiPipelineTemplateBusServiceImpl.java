@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import io.choerodon.core.domain.Page;
+import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.DevopsPipelineTemplateVO;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.devops.infra.constant.Constant;
@@ -27,8 +28,8 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
 
     @Override
-    public Page<DevopsPipelineTemplateVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, String searchParam) {
-        Page<DevopsPipelineTemplateVO> pipelineTemplateVOS = PageHelper.doPageAndSort(pageRequest, () -> devopsPipelineTemplateBusMapper.queryDevopsPipelineTemplateByParams(sourceId, searchParam));
+    public Page<DevopsPipelineTemplateVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
+        Page<DevopsPipelineTemplateVO> pipelineTemplateVOS = PageHelper.doPageAndSort(pageRequest, () -> devopsPipelineTemplateBusMapper.queryDevopsPipelineTemplateByParams(sourceId, searchVO));
         List<DevopsPipelineTemplateVO> devopsPipelineTemplateVOS = pipelineTemplateVOS.getContent();
         if (CollectionUtils.isEmpty(devopsPipelineTemplateVOS)) {
             return pipelineTemplateVOS;
