@@ -12,7 +12,8 @@ import springfox.documentation.annotations.ApiIgnore;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.devops.api.vo.SearchVO;
-import io.choerodon.devops.api.vo.template.CiPipelineTemplateVO;
+import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
+import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
@@ -37,7 +38,7 @@ public class CiSitePipelineTemplateController extends BaseController {
     @GetMapping
     @CustomPageRequest
     @Permission(level = ResourceLevel.SITE)
-    public ResponseEntity<Page<CiPipelineTemplateVO>> pagePipelineTemplate(
+    public ResponseEntity<Page<CiTemplatePipelineVO>> pagePipelineTemplate(
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
@@ -48,9 +49,9 @@ public class CiSitePipelineTemplateController extends BaseController {
     @ApiOperation(value = "平台层创建流水线模板")
     @PostMapping
     @Permission(level = ResourceLevel.SITE)
-    public ResponseEntity<CiPipelineTemplateVO> createPipelineTemplate(
+    public ResponseEntity<CiTemplatePipelineVO> createPipelineTemplate(
             @PathVariable(value = "source_id") Long sourceId,
-            @RequestBody CiPipelineTemplateVO devopsPipelineTemplateVO) {
+            @RequestBody CiTemplatePipelineVO devopsPipelineTemplateVO) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.createPipelineTemplate(sourceId, devopsPipelineTemplateVO));
     }
 
@@ -79,7 +80,7 @@ public class CiSitePipelineTemplateController extends BaseController {
     @ApiOperation(value = "平台层根据流水线模板id查询模板")
     @GetMapping("/{ci_template_id}")
     @Permission(level = ResourceLevel.SITE)
-    public ResponseEntity<CiPipelineTemplateVO> queryPipelineTemplateById(
+    public ResponseEntity<CiTemplatePipelineVO> queryPipelineTemplateById(
             @PathVariable(value = "source_id") Long sourceId,
             @Encrypt @PathVariable(value = "ci_template_id") Long ciPipelineTemplateId) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.queryPipelineTemplateById(sourceId, ciPipelineTemplateId));

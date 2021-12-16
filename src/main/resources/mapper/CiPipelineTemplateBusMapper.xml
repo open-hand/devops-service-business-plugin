@@ -3,7 +3,7 @@
 <mapper namespace="io.choerodon.devops.infra.mapper.CiPipelineTemplateBusMapper">
 
 
-    <resultMap id="DevopsPipelineTemplateMap" type="io.choerodon.devops.api.vo.template.CiPipelineTemplateVO">
+    <resultMap id="DevopsPipelineTemplateMap" type="io.choerodon.devops.api.vo.template.CiTemplatePipelineVO">
         <id property="id" column="id"/>
         <result column="name" property="name"/>
         <result column="creation_date" property="creationDate"/>
