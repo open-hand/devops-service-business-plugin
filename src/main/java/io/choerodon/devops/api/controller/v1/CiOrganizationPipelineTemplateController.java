@@ -12,7 +12,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.devops.api.vo.SearchVO;
-import io.choerodon.devops.api.vo.template.CiPipelineTemplateVO;
+import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
@@ -37,7 +37,7 @@ public class CiOrganizationPipelineTemplateController extends BaseController {
     @GetMapping
     @CustomPageRequest
     @Permission(level = ResourceLevel.SITE)
-    public ResponseEntity<Page<CiPipelineTemplateVO>> pagePipelineTemplate(
+    public ResponseEntity<Page<CiTemplatePipelineVO>> pagePipelineTemplate(
             @PathVariable(value = "organization_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
@@ -48,10 +48,10 @@ public class CiOrganizationPipelineTemplateController extends BaseController {
     @ApiOperation(value = "组织层创建流水线模板")
     @PostMapping
     @Permission(level = ResourceLevel.SITE)
-    public ResponseEntity<CiPipelineTemplateVO> createPipelineTemplate(
+    public ResponseEntity<CiTemplatePipelineVO> createPipelineTemplate(
             @PathVariable(value = "organization_id") Long sourceId,
-            @RequestBody CiPipelineTemplateVO ciPipelineTemplateVO) {
-        return ResponseEntity.ok(ciPipelineTemplateBusService.createPipelineTemplate(sourceId, ciPipelineTemplateVO));
+            @RequestBody CiTemplatePipelineVO CiTemplatePipelineVO) {
+        return ResponseEntity.ok(ciPipelineTemplateBusService.createPipelineTemplate(sourceId, CiTemplatePipelineVO));
     }
 
     @ApiOperation(value = "组织层停用流水线模板")

@@ -4,8 +4,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import io.choerodon.devops.api.vo.SearchVO;
-import io.choerodon.devops.api.vo.template.CiPipelineTemplateVO;
-import io.choerodon.devops.infra.dto.CiPipelineTemplateDTO;
+import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
+import io.choerodon.devops.infra.dto.CiTemplatePipelineDTO;
 import io.choerodon.mybatis.common.BaseMapper;
 
 /**
@@ -14,8 +14,8 @@ import io.choerodon.mybatis.common.BaseMapper;
  * @author hao.wang08@hand-china.com
  * @since 2021-12-01 15:58:16
  */
-public interface CiPipelineTemplateBusMapper extends BaseMapper<CiPipelineTemplateDTO> {
+public interface CiPipelineTemplateBusMapper extends BaseMapper<CiTemplatePipelineDTO> {
 
-    List<CiPipelineTemplateVO> queryDevopsPipelineTemplateByParams(@Param("sourceId") Long sourceId, @Param("searchVO") SearchVO searchVO);
+    List<CiTemplatePipelineVO> queryDevopsPipelineTemplateByParams(@Param("sourceId") Long sourceId, @Param("searchVO") SearchVO searchVO);
 }
 

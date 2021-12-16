@@ -9,11 +9,12 @@ import org.springframework.util.CollectionUtils;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.devops.api.vo.SearchVO;
-import io.choerodon.devops.api.vo.template.CiPipelineTemplateVO;
+import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStageVO;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.devops.infra.constant.Constant;
-import io.choerodon.devops.infra.dto.CiPipelineTemplateDTO;
+import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
+import io.choerodon.devops.infra.dto.CiTemplatePipelineDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStageDTO;
 import io.choerodon.devops.infra.mapper.CiTemplateStageBusMapper;
 import io.choerodon.devops.infra.mapper.CiPipelineTemplateBusMapper;
@@ -36,9 +37,9 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
 
     @Override
-    public Page<CiPipelineTemplateVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
-        Page<CiPipelineTemplateVO> pipelineTemplateVOS = PageHelper.doPageAndSort(pageRequest, () -> ciPipelineTemplateBusMapper.queryDevopsPipelineTemplateByParams(sourceId, searchVO));
-        List<CiPipelineTemplateVO> devopsPipelineTemplateVOS = pipelineTemplateVOS.getContent();
+    public Page<CiTemplatePipelineVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
+        Page<CiTemplatePipelineVO> pipelineTemplateVOS = PageHelper.doPageAndSort(pageRequest, () -> ciPipelineTemplateBusMapper.queryDevopsPipelineTemplateByParams(sourceId, searchVO));
+        List<CiTemplatePipelineVO> devopsPipelineTemplateVOS = pipelineTemplateVOS.getContent();
         if (CollectionUtils.isEmpty(devopsPipelineTemplateVOS)) {
             return pipelineTemplateVOS;
         }
@@ -51,7 +52,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     public void invalidPipelineTemplate(Long sourceId, Long ciPipelineTemplateId) {
         checkPipelineTemplate(ciPipelineTemplateId);
 
-        CiPipelineTemplateDTO ciPipelineTemplateDTO = new CiPipelineTemplateDTO();
+        CiTemplatePipelineDTO ciPipelineTemplateDTO = new CiTemplatePipelineDTO();
         ciPipelineTemplateDTO.setId(ciPipelineTemplateId);
         ciPipelineTemplateDTO.setEnable(Boolean.FALSE);
         ciPipelineTemplateBusMapper.updateByPrimaryKey(ciPipelineTemplateDTO);
@@ -62,7 +63,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     public void enablePipelineTemplate(Long sourceId, Long ciPipelineTemplateId) {
         checkPipelineTemplate(ciPipelineTemplateId);
 
-        CiPipelineTemplateDTO ciPipelineTemplateDTO = new CiPipelineTemplateDTO();
+        CiTemplatePipelineDTO ciPipelineTemplateDTO = new CiTemplatePipelineDTO();
         ciPipelineTemplateDTO.setId(ciPipelineTemplateId);
         ciPipelineTemplateDTO.setEnable(Boolean.TRUE);
         ciPipelineTemplateBusMapper.updateByPrimaryKey(ciPipelineTemplateDTO);
@@ -71,33 +72,35 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
 
     @Override
-    public CiPipelineTemplateVO createPipelineTemplate(Long sourceId, CiPipelineTemplateVO devopsPipelineTemplateVO) {
+    public CiTemplatePipelineVO createPipelineTemplate(Long sourceId, CiTemplatePipelineVO devopsPipelineTemplateVO) {
         return null;
     }
 
     @Override
-    public CiPipelineTemplateVO queryPipelineTemplateById(Long sourceId, Long ciPipelineTemplateId) {
-        CiPipelineTemplateDTO ciPipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(ciPipelineTemplateId);
+    public CiTemplatePipelineVO queryPipelineTemplateById(Long sourceId, Long ciPipelineTemplateId) {
+        CiTemplatePipelineDTO ciPipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(ciPipelineTemplateId);
         AssertUtils.notNull(ciPipelineTemplateDTO, "error.pipeline.template.is.null");
-        CiPipelineTemplateVO ciPipelineTemplateVO = ConvertUtils.convertObject(ciPipelineTemplateDTO, CiPipelineTemplateVO.class);
+        CiTemplatePipelineVO CiTemplatePipelineVO = ConvertUtils.convertObject(ciPipelineTemplateDTO, CiTemplatePipelineVO.class);
         //查询阶段
         CiTemplateStageDTO record = new CiTemplateStageDTO();
         record.setPipelineTemplateId(ciPipelineTemplateId);
         List<CiTemplateStageDTO> ciTemplateStageDTOS = ciTemplateStageBusMapper.select(record);
         if (CollectionUtils.isEmpty(ciTemplateStageDTOS)) {
-            return ciPipelineTemplateVO;
+            return CiTemplatePipelineVO;
         }
         List<CiTemplateStageVO> ciTemplateStageVOS = ConvertUtils.convertList(ciTemplateStageDTOS, CiTemplateStageVO.class);
         ciTemplateStageVOS.forEach(ciTemplateStageVO -> {
+            //通过阶段id 查找JOB
 
+//            ciTemplateStageVO.setCiTemplateJobVOList();
         });
-        ciPipelineTemplateVO.setTemplateStageVOS(ciTemplateStageVOS);
+        CiTemplatePipelineVO.setTemplateStageVOS(ciTemplateStageVOS);
 
-        return ciPipelineTemplateVO;
+        return CiTemplatePipelineVO;
     }
 
     private void checkPipelineTemplate(Long ciPipelineTemplateId) {
-        CiPipelineTemplateDTO pipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(ciPipelineTemplateId);
+        CiTemplatePipelineDTO pipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(ciPipelineTemplateId);
         AssertUtils.notNull(pipelineTemplateDTO, "error.pipeline.template.is.null");
         AssertUtils.isTrue(pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
     }
