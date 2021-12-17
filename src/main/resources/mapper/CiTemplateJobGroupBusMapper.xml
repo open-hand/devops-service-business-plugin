@@ -8,10 +8,11 @@
           *
         FROM
            devops_ci_template_job_group dctjg
-        WHERE
-        dctjg.source_id = #{sourceId,jdbcType=BIGINT}
-        <if test="searchParam != null and searchParam != ''">
+        <where>
+            <if test="searchParam != null and searchParam != ''">
 
-        </if>
+            </if>
+        </where>
+
     </select>
 </mapper>
