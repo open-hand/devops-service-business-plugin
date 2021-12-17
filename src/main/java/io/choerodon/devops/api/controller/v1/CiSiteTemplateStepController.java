@@ -21,7 +21,7 @@ import io.choerodon.swagger.annotation.Permission;
  * Created by wangxiang on 2021/12/14
  */
 @RestController("ciSiteTemplateStepController.v1")
-@RequestMapping("/v1/{source_id}/ci_template_step")
+@RequestMapping("/v1/site/{source_id}/ci_template_step")
 public class CiSiteTemplateStepController {
 
 
