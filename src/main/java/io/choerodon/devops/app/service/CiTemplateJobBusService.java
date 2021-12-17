@@ -9,4 +9,6 @@ import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
  */
 public interface CiTemplateJobBusService {
     List<CiTemplateJobVO> queryTemplateJobsByGroupId(Long sourceId, Long ciTemplateJobGroupId);
+
+    CiTemplateJobVO createTemplateJob(Long sourceId, CiTemplateJobVO ciTemplateJobVO);
 }

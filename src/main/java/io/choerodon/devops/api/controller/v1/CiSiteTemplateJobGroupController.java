@@ -3,6 +3,8 @@ package io.choerodon.devops.api.controller.v1;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
+import org.hzero.core.util.Results;
+import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +45,32 @@ public class CiSiteTemplateJobGroupController extends BaseController {
         return ResponseEntity.ok(ciTemplateJobGroupBusService.pageTemplateJobGroup(sourceId, pageRequest, searchParam));
     }
 
+    @ApiOperation(value = "平台层创建流水线任务分组")
+    @Permission(level = ResourceLevel.SITE)
+    @PostMapping
+    public ResponseEntity<CiTemplateJobGroupVO> createTemplateJobGroup(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestBody CiTemplateJobGroupVO CiTemplateJobGroupVO) {
+        return ResponseEntity.ok(ciTemplateJobGroupBusService.createTemplateJobGroup(sourceId, CiTemplateJobGroupVO));
+    }
 
+    @ApiOperation(value = "平台层更新流水线任务分组")
+    @Permission(level = ResourceLevel.SITE)
+    @PutMapping
+    public ResponseEntity<CiTemplateJobGroupVO> updateTemplateJobGroup(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestBody CiTemplateJobGroupVO CiTemplateJobGroupVO) {
+        return ResponseEntity.ok(ciTemplateJobGroupBusService.updateTemplateJobGroup(sourceId, CiTemplateJobGroupVO));
+    }
+
+    @ApiOperation(value = "平台层删除流水线任务分组")
+    @Permission(level = ResourceLevel.SITE)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTemplateJobGroup(
+            @PathVariable(value = "source_id") Long sourceId,
+            @Encrypt @PathVariable("id") Long ciTemplateJobGroupId) {
+        ciTemplateJobGroupBusService.deleteTemplateJobGroup(sourceId, ciTemplateJobGroupId);
+        return Results.success();
+    }
 }
 
