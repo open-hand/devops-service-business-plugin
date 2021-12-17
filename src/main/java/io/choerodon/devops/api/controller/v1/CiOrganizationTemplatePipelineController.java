@@ -25,9 +25,9 @@ import io.choerodon.swagger.annotation.Permission;
  * @since 2021-12-01 15:58:16
  */
 
-@RestController("ciOrganizationPipelineTemplateController.v1")
-@RequestMapping("/v1/organization/{organization_id}/ci_pipeline_template")
-public class CiOrganizationPipelineTemplateController extends BaseController {
+@RestController("ciOrganizationTemplatePipelineController.v1")
+@RequestMapping("/v1/organization/{organization_id}/ci_template_pipeline")
+public class CiOrganizationTemplatePipelineController extends BaseController {
 
     @Autowired
     private CiPipelineTemplateBusService ciPipelineTemplateBusService;

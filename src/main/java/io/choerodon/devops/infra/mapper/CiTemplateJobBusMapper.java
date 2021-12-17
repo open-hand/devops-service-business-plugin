@@ -1,7 +1,12 @@
 package io.choerodon.devops.infra.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
+import io.choerodon.devops.api.vo.CiTemplateJobBusVO;
+import io.choerodon.devops.api.vo.SearchVO;
+import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
 import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
 import io.choerodon.mybatis.common.BaseMapper;
 
@@ -13,5 +18,7 @@ import io.choerodon.mybatis.common.BaseMapper;
  */
 public interface CiTemplateJobBusMapper extends BaseMapper<CiTemplateJobDTO> {
     Boolean isNameUnique(@Param("name") String name, @Param("sourceId") Long sourceId, @Param("jobId") Long jobId);
+
+    List<CiTemplateJobBusVO> pageUnderOrgLevel(@Param("sourceId") Long sourceId, @Param("searchVO") SearchVO searchVO);
 }
 

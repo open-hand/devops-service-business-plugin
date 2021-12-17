@@ -10,4 +10,35 @@
             AND dctj.id != #{jobId}
         </if>
     </select>
+
+    <select id="pageUnderOrgLevel" resultType="io.choerodon.devops.api.vo.CiTemplateJobBusVO">
+        SELECT dctj.id,
+               dctj.name,
+               dctj.created_by,
+               dctj.last_updated_by,
+               dctj.last_update_date,
+               dctj.source_type,
+               dctjg.name AS group_name
+        FROM devops_ci_template_job dctj
+                     JOIN devops_ci_template_job_group dctjg ON dctj.group_id = dctjg.id
+                WHERE (dctj.source_id = 0 OR dctj.source_id = #{sourceId})
+        <include refid="sqlparam"/>
+    </select>
+
+    <sql id="sqlparam">
+        <if test="searchVO != null">
+            <if test="searchVO.searchParam != null">
+                <if test="searchVO.searchParam.name != null and searchVO.searchParam.name != ''">
+                    AND dctj.name LIKE CONCAT(CONCAT('%',
+                    #{searchVO.searchParam.name, jdbcType=VARCHAR}),'%')
+                </if>
+                <if test="searchVO.searchParam.groupName != null and searchVO.searchParam.groupName != ''">
+                    AND dctjg.name = #{searchVO.searchParam.groupName, jdbcType=VARCHAR}
+                </if>
+                <if test="searchVO.searchParam.sourceType != null and searchVO.searchParam.sourceType != ''">
+                    AND dctj.source_type = #{searchVO.searchParam.sourceType, jdbcType=VARCHAR}
+                </if>
+            </if>
+        </if>
+    </sql>
 </mapper>
