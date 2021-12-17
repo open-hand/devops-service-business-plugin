@@ -14,5 +14,10 @@ public interface CiTemplateJobGroupBusService {
 
     Page<CiTemplateJobGroupVO> pageTemplateJobGroup(Long sourceId, PageRequest pageRequest, String searchParam);
 
+    CiTemplateJobGroupVO createTemplateJobGroup(Long sourceId, CiTemplateJobGroupVO ciTemplateJobGroupVO);
+
+    CiTemplateJobGroupVO updateTemplateJobGroup(Long sourceId, CiTemplateJobGroupVO ciTemplateJobGroupVO);
+
+    void deleteTemplateJobGroup(Long sourceId, Long ciTemplateJobGroupId);
 }
 

@@ -1,8 +1,9 @@
 package io.choerodon.devops.api.controller.v1;
 
+import javax.validation.Valid;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import javax.validation.Valid;
 import org.hzero.core.base.BaseController;
 import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,10 +66,10 @@ public class CiSiteTemplateStepCategoryController extends BaseController {
 
     @ApiOperation(value = "平台层删除流水线步骤分类模板")
     @Permission(level = ResourceLevel.SITE)
-    @DeleteMapping
+    @DeleteMapping("/{ci_template_category_id}")
     public ResponseEntity<Void> deleteTemplateStepCategory(
             @PathVariable(value = "source_id") Long sourceId,
-            @Encrypt @RequestParam("ci_template_category_id") Long ciTemplateCategoryId) {
+            @Encrypt @PathVariable(value = "ci_template_category_id") Long ciTemplateCategoryId) {
         ciTemplateStepCategoryBusService.deleteTemplateStepCategory(sourceId, ciTemplateCategoryId);
         return ResponseEntity.noContent().build();
     }
