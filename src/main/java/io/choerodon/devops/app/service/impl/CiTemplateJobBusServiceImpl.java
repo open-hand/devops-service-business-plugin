@@ -2,14 +2,19 @@ package io.choerodon.devops.app.service.impl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.core.utils.ConvertUtils;
+import io.choerodon.devops.api.vo.CiTemplateJobBusVO;
+import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
 import io.choerodon.devops.app.service.CiTemplateJobBusService;
 import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
@@ -18,6 +23,9 @@ import io.choerodon.devops.infra.enums.CiJobTypeEnum;
 import io.choerodon.devops.infra.mapper.CiTemplateJobBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateJobGroupBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateJobStepRelBusMapper;
+import io.choerodon.devops.infra.util.UserDTOFillUtil;
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 
 /**
  * Created by wangxiang on 2021/12/16
@@ -102,6 +110,16 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         return ciTemplateJobBusMapper.isNameUnique(name, sourceId, jobId);
     }
 
+    @Override
+    public Page<CiTemplateJobBusVO> pageUnderOrgLevel(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
+        Page<CiTemplateJobBusVO> ciTemplateJobVOPage = PageHelper.doPage(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, searchVO));
+        UserDTOFillUtil.fillUserInfo(ciTemplateJobVOPage
+                .getContent()
+                .stream()
+                .filter(ciTemplateJobVO -> ResourceLevel.ORGANIZATION.value().equals(ciTemplateJobVO.getSourceType()))
+                .collect(Collectors.toList()), "createdBy", "creatorInfo");
+        return ciTemplateJobVOPage;
+    }
 
     private void checkParam(CiTemplateJobVO ciTemplateJobVO) {
         // 检验名称
