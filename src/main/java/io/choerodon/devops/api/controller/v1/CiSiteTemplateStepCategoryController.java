@@ -33,7 +33,7 @@ public class CiSiteTemplateStepCategoryController extends BaseController {
     @Autowired
     private CiTemplateStepCategoryBusService ciTemplateStepCategoryBusService;
 
-    @ApiOperation(value = "平台层查询流水线分类列表")
+    @ApiOperation(value = "平台层查询流水线步骤分类列表")
     @Permission(level = ResourceLevel.SITE)
     @GetMapping
     @CustomPageRequest
