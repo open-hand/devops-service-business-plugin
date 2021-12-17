@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.swagger.annotations.ApiOperation;
 import org.hzero.core.base.BaseController;
+import org.hzero.core.util.Results;
 import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,5 +50,33 @@ public class CiSiteTemplateJobController extends BaseController {
         return ResponseEntity.ok(ciTemplateJobBusService.createTemplateJob(sourceId, ciTemplateJobVO));
     }
 
+    @ApiOperation(value = "平台层更新job模版")
+    @Permission(level = ResourceLevel.SITE)
+    @PutMapping
+    public ResponseEntity<CiTemplateJobVO> updateTemplateJob(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestBody CiTemplateJobVO ciTemplateJobVO) {
+        return ResponseEntity.ok(ciTemplateJobBusService.updateTemplateJob(sourceId, ciTemplateJobVO));
+    }
+
+    @ApiOperation(value = "平台层删除job模版")
+    @Permission(level = ResourceLevel.SITE)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CiTemplateJobVO> deleteTemplateJob(
+            @PathVariable(value = "source_id") Long sourceId,
+            @Encrypt @PathVariable Long jobId) {
+        ciTemplateJobBusService.deleteTemplateJob(sourceId, jobId);
+        return Results.success();
+    }
+
+    @ApiOperation(value = "平台层校验job名称唯一")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping("/check_name")
+    public ResponseEntity<Boolean> isNameUnique(
+            @PathVariable(value = "source_id") Long sourceId,
+            @Encrypt @RequestParam(value = "job_id") Long jobId,
+            @RequestParam(value = "name") String name) {
+        return Results.success(ciTemplateJobBusService.isNameUnique(name, sourceId, jobId));
+    }
 }
 
