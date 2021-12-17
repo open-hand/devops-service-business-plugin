@@ -5,6 +5,7 @@ import java.util.List;
 import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import io.choerodon.core.domain.Page;
@@ -40,6 +41,7 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CiTemplateJobGroupVO createTemplateJobGroup(Long sourceId, CiTemplateJobGroupVO ciTemplateJobGroupVO) {
         ciTemplateJobGroupVO.setBuiltIn(false);
         CiTemplateJobGroupDTO ciTemplateJobGroupDTO = ConvertUtils.convertObject(ciTemplateJobGroupVO, CiTemplateJobGroupDTO.class);
@@ -48,6 +50,7 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CiTemplateJobGroupVO updateTemplateJobGroup(Long sourceId, CiTemplateJobGroupVO ciTemplateJobGroupVO) {
         ciTemplateJobGroupVO.setBuiltIn(false);
         CiTemplateJobGroupDTO ciTemplateJobGroupDTO = ConvertUtils.convertObject(ciTemplateJobGroupVO, CiTemplateJobGroupDTO.class);
@@ -56,6 +59,7 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteTemplateJobGroup(Long sourceId, Long ciTemplateJobGroupId) {
         CiTemplateJobGroupDTO ciTemplateJobGroupDTO = ciTemplateJobGroupBusMapper.selectByPrimaryKey(ciTemplateJobGroupId);
         if (ciTemplateJobGroupDTO == null) {

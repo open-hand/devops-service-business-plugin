@@ -11,4 +11,10 @@ public interface CiTemplateJobBusService {
     List<CiTemplateJobVO> queryTemplateJobsByGroupId(Long sourceId, Long ciTemplateJobGroupId);
 
     CiTemplateJobVO createTemplateJob(Long sourceId, CiTemplateJobVO ciTemplateJobVO);
+
+    CiTemplateJobVO updateTemplateJob(Long sourceId, CiTemplateJobVO ciTemplateJobVO);
+
+    void deleteTemplateJob(Long sourceId, Long jobId);
+
+    Boolean isNameUnique(String name, Long sourceId, Long jobId);
 }
