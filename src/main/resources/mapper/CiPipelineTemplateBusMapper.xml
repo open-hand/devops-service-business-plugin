@@ -28,22 +28,22 @@
 
     <select id="queryDevopsPipelineTemplateByParams" resultMap="DevopsPipelineTemplateMap">
         SELECT
-           dpt.id AS template_id,
-           dpt.name AS template_name,
-           dpt.source_type AS tempate_source_type,
-           dpt.built_in AS template_built_in,
-           dpt.enable AS template_enable,
-           dpt.creation_date AS template_create_date,
-           dpt.created_by AS template_create_by,
+           dctp.id AS template_id,
+           dctp.name AS template_name,
+           dctp.source_type AS tempate_source_type,
+           dctp.built_in AS template_built_in,
+           dctp.enable AS template_enable,
+           dctp.creation_date AS template_create_date,
+           dctp.created_by AS template_create_by,
            dctc.id AS category_id,
            dctc.category AS category_name
         FROM
-           devops_pipeline_template dpt
-        JOIN devops_ci_template_category dctc ON dpt.ci_template_category_id=dctc.id
+           devops_ci_template_pipeline dctp
+        JOIN devops_ci_template_category dctc ON dctp.ci_template_category_id=dctc.id
         <if test="searchVO != null">
             <if test="searchVO.searchParam != null">
                 <if test="searchVO.searchParam.templateName != null and searchVO.searchParam.templateName != ''">
-                    AND dpt.name LIKE CONCAT(CONCAT('%',
+                    AND dctp.name LIKE CONCAT(CONCAT('%',
                     #{searchVO.searchParam.templateName, jdbcType=VARCHAR}), '%')
                 </if>
 <!--                <if test="searchVO.searchParam.custom != null and searchVO.searchParam.custom != ''">-->

@@ -10,11 +10,11 @@
            count( * )
          FROM
            devops_ci_template_job_step_rel dctjsr
-         WHERE dctjsr.ci_template_step_id = dcts.id AND  dctsc.source_id = #{sourceId,jdbcType=BIGINT} ) AS template_number
+         WHERE dctjsr.ci_template_step_id = dcts.id AND  dcts.source_id = #{sourceId,jdbcType=BIGINT} ) AS template_number
         FROM
           devops_ci_template_step dcts
         WHERE
-        dctsc.source_id = #{sourceId,jdbcType=BIGINT}
+        dcts.source_id = #{sourceId,jdbcType=BIGINT}
         <if test="searchParam != null and searchParam != ''">
             AND dctsc.`name` LIKE CONCAT(CONCAT('%', #{searchParam, jdbcType=VARCHAR}),'%')
         </if>
