@@ -47,6 +47,8 @@ public class CiSiteTemplateJobController extends BaseController {
     public ResponseEntity<CiTemplateJobVO> createTemplateJob(
             @PathVariable(value = "source_id") Long sourceId,
             @RequestBody CiTemplateJobVO ciTemplateJobVO) {
+        ciTemplateJobVO.setSourceId(0L);
+        ciTemplateJobVO.setSourceType(ResourceLevel.SITE.value());
         return ResponseEntity.ok(ciTemplateJobBusService.createTemplateJob(sourceId, ciTemplateJobVO));
     }
 
@@ -56,6 +58,8 @@ public class CiSiteTemplateJobController extends BaseController {
     public ResponseEntity<CiTemplateJobVO> updateTemplateJob(
             @PathVariable(value = "source_id") Long sourceId,
             @RequestBody CiTemplateJobVO ciTemplateJobVO) {
+        ciTemplateJobVO.setSourceId(0L);
+        ciTemplateJobVO.setSourceType(ResourceLevel.SITE.value());
         return ResponseEntity.ok(ciTemplateJobBusService.updateTemplateJob(sourceId, ciTemplateJobVO));
     }
 
