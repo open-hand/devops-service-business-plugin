@@ -12,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.core.utils.ConvertUtils;
 import io.choerodon.devops.api.vo.CiTemplateJobBusVO;
 import io.choerodon.devops.api.vo.SearchVO;
@@ -20,6 +21,7 @@ import io.choerodon.devops.app.service.CiTemplateJobBusService;
 import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
 import io.choerodon.devops.infra.dto.CiTemplateJobStepRelDTO;
 import io.choerodon.devops.infra.enums.CiJobTypeEnum;
+import io.choerodon.devops.infra.feign.operator.BaseServiceClientOperator;
 import io.choerodon.devops.infra.mapper.CiTemplateJobBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateJobGroupBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateJobStepRelBusMapper;
@@ -44,6 +46,9 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     @Autowired
     private CiTemplateJobStepRelBusMapper ciTemplateJobStepRelBusMapper;
 
+    @Autowired
+    private BaseServiceClientOperator baseServiceClientOperator;
+
     @Override
     public List<CiTemplateJobVO> queryTemplateJobsByGroupId(Long sourceId, Long ciTemplateJobGroupId) {
         CiTemplateJobDTO record = new CiTemplateJobDTO();
@@ -58,6 +63,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CiTemplateJobVO createTemplateJob(Long sourceId, CiTemplateJobVO ciTemplateJobVO) {
+        checkAccess(sourceId);
         checkParam(ciTemplateJobVO);
         CiTemplateJobDTO ciTemplateJobDTO = ConvertUtils.convertObject(ciTemplateJobVO, CiTemplateJobDTO.class);
         // 插入job记录
@@ -77,6 +83,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CiTemplateJobVO updateTemplateJob(Long sourceId, CiTemplateJobVO ciTemplateJobVO) {
+        checkAccess(sourceId);
         checkParam(ciTemplateJobVO);
         CiTemplateJobDTO ciTemplateJobDTO = ConvertUtils.convertObject(ciTemplateJobVO, CiTemplateJobDTO.class);
         // 更新job记录
@@ -99,6 +106,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteTemplateJob(Long sourceId, Long jobId) {
+        checkAccess(sourceId);
         // 删除与steps的关系
         ciTemplateJobStepRelBusMapper.deleteByJobId(jobId);
         // 删除job
@@ -133,6 +141,20 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         // 绑定的组不能为空或不存在
         if (ciTemplateJobVO.getGroupId() == null || ciTemplateJobGroupBusMapper.selectByPrimaryKey(ciTemplateJobVO.getGroupId()) == null) {
             throw new CommonException("error.ci.template.job.group.exist");
+        }
+    }
+
+    private void checkAccess(Long sourceId) {
+        // 如果sourceId为0，校验用户是有有平台管理员角色
+        if (sourceId == 0) {
+            if (!baseServiceClientOperator.checkSiteAccess(DetailsHelper.getUserDetails().getUserId())) {
+                throw new CommonException("error.no.permission.to.do.operation");
+            }
+        } else {
+            // 如果sourceId不为0，校验用户是否有resourceId对应的组织管理权限
+            if (!baseServiceClientOperator.isOrganzationRoot(DetailsHelper.getUserDetails().getUserId(), sourceId)) {
+                throw new CommonException("error.no.permission.to.do.operation");
+            }
         }
     }
 }
