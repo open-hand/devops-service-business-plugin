@@ -41,4 +41,18 @@
             </if>
         </if>
     </sql>
+
+    <select id="queryJobByStageId" resultType="io.choerodon.devops.infra.dto.CiTemplateJobDTO">
+        SELECT
+	      dctj.*
+        FROM
+	      devops_ci_template_job dctj
+        WHERE
+	      dctj.id IN (
+	          SELECT
+	             dctsjr.ci_template_job_id
+	          FROM devops_ci_template_stage_job_rel dctsjr
+	          WHERE dctsjr.ci_template_stage_id = #{stageId,jdbcType=BIGINT} )
+	     AND dctj.source_id = #{sourceId,jdbcType=BIGINT}
+    </select>
 </mapper>

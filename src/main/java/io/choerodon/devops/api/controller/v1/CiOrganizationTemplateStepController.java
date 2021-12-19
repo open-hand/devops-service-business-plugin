@@ -21,9 +21,9 @@ import io.choerodon.swagger.annotation.Permission;
 /**
  * Created by wangxiang on 2021/12/14
  */
-@RestController("ciSiteTemplateStepController.v1")
-@RequestMapping("/v1/site/{source_id}/ci_template_step")
-public class CiSiteTemplateStepController {
+@RestController("ciOrganizationTemplateStepController.v1")
+@RequestMapping("/v1/organization/{organization_id}/ci_template_step")
+public class CiOrganizationTemplateStepController {
 
 
     @Autowired
@@ -34,7 +34,7 @@ public class CiSiteTemplateStepController {
     @GetMapping
     @CustomPageRequest
     public ResponseEntity<Page<CiTemplateStepVO>> pageTemplateStep(
-            @PathVariable(value = "source_id") Long sourceId,
+            @PathVariable(value = "organization_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
             @RequestParam(value = "searchParam", required = false) String searchParam) {
@@ -45,7 +45,7 @@ public class CiSiteTemplateStepController {
     @Permission(level = ResourceLevel.SITE)
     @PutMapping
     public ResponseEntity<CiTemplateStepVO> updateTemplateStep(
-            @PathVariable(value = "source_id") Long sourceId,
+            @PathVariable(value = "organization_id") Long sourceId,
             @RequestBody CiTemplateStepVO ciTemplateStepVO) {
         return ResponseEntity.ok(ciTemplateStepBusService.updateTemplateStep(sourceId, ciTemplateStepVO));
     }
@@ -54,7 +54,7 @@ public class CiSiteTemplateStepController {
     @Permission(level = ResourceLevel.SITE)
     @DeleteMapping
     public ResponseEntity<Void> deleteTemplateStep(
-            @PathVariable(value = "source_id") Long sourceId,
+            @PathVariable(value = "organization_id") Long sourceId,
             @Encrypt @RequestParam("ci_step_template_id") Long ciStepTemplateId) {
         ciTemplateStepBusService.deleteTemplateStep(sourceId, ciStepTemplateId);
         return ResponseEntity.noContent().build();
@@ -65,7 +65,7 @@ public class CiSiteTemplateStepController {
     @Permission(level = ResourceLevel.SITE)
     @PostMapping
     public ResponseEntity<CiTemplateStepVO> createTemplateStep(
-            @PathVariable(value = "source_id") Long sourceId,
+            @PathVariable(value = "organization_id") Long sourceId,
             @RequestBody @Valid CiTemplateStepVO ciTemplateStepVO) {
         return ResponseEntity.ok(ciTemplateStepBusService.createTemplateStep(sourceId, ciTemplateStepVO));
     }
@@ -74,7 +74,7 @@ public class CiSiteTemplateStepController {
     @Permission(level = ResourceLevel.SITE)
     @GetMapping("/template_job_id/{template_job_id}")
     public ResponseEntity<List<CiTemplateStepVO>> queryStepTemplateByJobId(
-            @PathVariable(value = "source_id") Long sourceId,
+            @PathVariable(value = "organization_id") Long sourceId,
             @Encrypt @PathVariable(value = "template_job_id") Long templateJobId) {
         return ResponseEntity.ok(ciTemplateStepBusService.queryStepTemplateByJobId(sourceId, templateJobId));
     }
@@ -83,7 +83,7 @@ public class CiSiteTemplateStepController {
     @Permission(level = ResourceLevel.SITE)
     @GetMapping("/template_step_id/{template_step_id}")
     public ResponseEntity<CiTemplateStepVO> queryStepTemplateByStepId(
-            @PathVariable(value = "source_id") Long sourceId,
+            @PathVariable(value = "organization_id") Long sourceId,
             @Encrypt @PathVariable(value = "template_step_id") Long templateStepId) {
         return ResponseEntity.ok(ciTemplateStepBusService.queryStepTemplateByStepId(sourceId, templateStepId));
     }
