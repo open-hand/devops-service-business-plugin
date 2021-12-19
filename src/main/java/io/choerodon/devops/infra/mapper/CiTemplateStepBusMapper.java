@@ -16,5 +16,7 @@ public interface CiTemplateStepBusMapper extends BaseMapper<CiTemplateStepDTO> {
 
     List<CiTemplateStepDTO> queryTemplateStepByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
 
+    List<CiTemplateStepDTO> queryStepTemplateByJobId(@Param("sourceId") Long sourceId, @Param("templateJobId") Long templateJobId);
+
 }
 

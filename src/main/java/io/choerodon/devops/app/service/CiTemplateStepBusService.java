@@ -1,5 +1,7 @@
 package io.choerodon.devops.app.service;
 
+import java.util.List;
+
 import io.choerodon.core.domain.Page;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -16,4 +18,7 @@ public interface CiTemplateStepBusService {
 
     CiTemplateStepVO createTemplateStep(Long sourceId, CiTemplateStepVO ciTemplateStepVO);
 
+    List<CiTemplateStepVO> queryStepTemplateByJobId(Long sourceId, Long templateJobId);
+
+    CiTemplateStepVO queryStepTemplateByStepId(Long sourceId, Long templateStepId);
 }

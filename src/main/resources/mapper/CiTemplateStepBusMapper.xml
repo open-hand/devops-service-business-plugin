@@ -13,4 +13,16 @@
         <if test="searchParam != null and searchParam != ''">
         </if>
     </select>
+
+    <select id="queryStepTemplateByJobId" resultType="io.choerodon.devops.infra.dto.CiTemplateStepDTO">
+       SELECT
+	     dctc.*
+       FROM
+	     devops_ci_template_step dctc
+	     JOIN devops_ci_template_job_step_rel dctjsr ON dctc.id = dctjsr.ci_template_step_id
+       WHERE
+	     dctjsr.ci_template_job_id = #{templateJobId,jdbcType=BIGINT}
+	     And dctc.source_id=#{sourceId,jdbcType=BIGINT}
+
+    </select>
 </mapper>

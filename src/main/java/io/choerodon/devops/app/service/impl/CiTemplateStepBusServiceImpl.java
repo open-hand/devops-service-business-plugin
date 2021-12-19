@@ -1,6 +1,7 @@
 package io.choerodon.devops.app.service.impl;
 
 
+import java.util.List;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.BeanUtils;
@@ -80,6 +81,26 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
         BeanUtils.copyProperties(ciTemplateStepVO, ciTemplateStepDTO);
         if (ciTemplateStepBusMapper.insertSelective(ciTemplateStepDTO) != 1) {
             throw new CommonException("error.create.step.template");
+        }
+        return ConvertUtils.convertObject(ciTemplateStepDTO, CiTemplateStepVO.class);
+    }
+
+
+    @Override
+    public List<CiTemplateStepVO> queryStepTemplateByJobId(Long sourceId, Long templateJobId) {
+        List<CiTemplateStepDTO> ciTemplateStepDTOS = ciTemplateStepBusMapper.queryStepTemplateByJobId(sourceId, templateJobId);
+        List<CiTemplateStepVO> ciTemplateStepVOS = ConvertUtils.convertList(ciTemplateStepDTOS, CiTemplateStepVO.class);
+        return ciTemplateStepVOS;
+    }
+
+    @Override
+    public CiTemplateStepVO queryStepTemplateByStepId(Long sourceId, Long templateStepId) {
+        CiTemplateStepDTO record = new CiTemplateStepDTO();
+        record.setSourceId(sourceId);
+        record.setId(templateStepId);
+        CiTemplateStepDTO ciTemplateStepDTO = ciTemplateStepBusMapper.selectOne(record);
+        if (ciTemplateStepDTO == null) {
+            return new CiTemplateStepVO();
         }
         return ConvertUtils.convertObject(ciTemplateStepDTO, CiTemplateStepVO.class);
     }
