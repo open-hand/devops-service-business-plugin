@@ -3,11 +3,14 @@
 <mapper namespace="io.choerodon.devops.infra.mapper.CiTemplateStepBusMapper">
 
 
-    <select id="queryTemplateStepByParams" resultType="io.choerodon.devops.infra.dto.CiTemplateStepDTO">
+    <select id="queryTemplateStepByParams" resultType="io.choerodon.devops.api.vo.template.CiTemplateStepVO">
         SELECT
-          *
+          dcts.*,
+          dctsc.NAME AS category_name
         FROM
-         devops_ci_template_step dcts
+          devops_ci_template_step dcts
+        JOIN devops_ci_template_step_category dctsc ON dcts.category_id = dctsc.id
+
         WHERE
         dcts.source_id = #{sourceId,jdbcType=BIGINT}
         <if test="searchParam != null and searchParam != ''">

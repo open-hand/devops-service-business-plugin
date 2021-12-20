@@ -129,6 +129,17 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         return ciTemplateJobVOPage;
     }
 
+    @Override
+    public Page<CiTemplateJobBusVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
+        Page<CiTemplateJobBusVO> ciTemplateJobVOPage = PageHelper.doPage(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, searchVO));
+        UserDTOFillUtil.fillUserInfo(ciTemplateJobVOPage
+                .getContent()
+                .stream()
+                .filter(ciTemplateJobVO -> ResourceLevel.SITE.value().equals(ciTemplateJobVO.getSourceType()))
+                .collect(Collectors.toList()), "createdBy", "creatorInfo");
+        return ciTemplateJobVOPage;
+    }
+
     private void checkParam(CiTemplateJobVO ciTemplateJobVO) {
         // 检验名称
         if (ciTemplateJobVO.getName().length() > MAX_NAME_LENGTH) {
