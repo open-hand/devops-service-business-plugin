@@ -53,6 +53,24 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
             @RequestBody CiTemplatePipelineVO CiTemplatePipelineVO) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.createPipelineTemplate(sourceId, CiTemplatePipelineVO));
     }
+    @ApiOperation(value = "组织层根据流水线模板id查询模板")
+    @GetMapping("/{ci_template_id}")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    public ResponseEntity<CiTemplatePipelineVO> queryPipelineTemplateById(
+            @PathVariable(value = "organization_id") Long sourceId,
+            @Encrypt @PathVariable(value = "ci_template_id") Long ciPipelineTemplateId) {
+        return ResponseEntity.ok(ciPipelineTemplateBusService.queryPipelineTemplateById(sourceId, ciPipelineTemplateId));
+    }
+
+    @ApiOperation(value = "组织层修改流水线模板")
+    @PutMapping
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    public ResponseEntity<CiTemplatePipelineVO> updatePipelineTemplate(
+            @PathVariable(value = "organization_id") Long sourceId,
+            @RequestBody CiTemplatePipelineVO devopsPipelineTemplateVO) {
+        return ResponseEntity.ok(ciPipelineTemplateBusService.updatePipelineTemplate(sourceId, devopsPipelineTemplateVO));
+    }
+
 
     @ApiOperation(value = "组织层停用流水线模板")
     @PutMapping("/invalid")
