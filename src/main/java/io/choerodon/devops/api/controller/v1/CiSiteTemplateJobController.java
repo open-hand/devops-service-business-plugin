@@ -1,5 +1,6 @@
 package io.choerodon.devops.api.controller.v1;
 
+import io.swagger.annotations.ApiParam;
 import java.util.List;
 
 import io.swagger.annotations.ApiOperation;
@@ -9,10 +10,17 @@ import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.devops.api.vo.CiTemplateJobBusVO;
+import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
 import io.choerodon.devops.app.service.CiTemplateJobBusService;
+import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.CustomPageRequest;
 import io.choerodon.swagger.annotation.Permission;
 
@@ -34,12 +42,24 @@ public class CiSiteTemplateJobController extends BaseController {
     @ApiOperation(value = "平台层根据job分组id查询job列表")
     @Permission(level = ResourceLevel.SITE)
     @GetMapping
-    @CustomPageRequest
     public ResponseEntity<List<CiTemplateJobVO>> queryTemplateJobsByGroupId(
             @PathVariable(value = "source_id") Long sourceId,
             @Encrypt @RequestParam(value = "ci_template_job_group_id") Long ciTemplateJobGroupId) {
         return ResponseEntity.ok(ciTemplateJobBusService.queryTemplateJobsByGroupId(sourceId, ciTemplateJobGroupId));
     }
+
+    @ApiOperation(value = "平台层分页查询job列表")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping("/page")
+    @CustomPageRequest
+    public ResponseEntity<Page<CiTemplateJobBusVO>> pageTemplateJobs(
+            @PathVariable(value = "source_id") Long sourceId,
+            @ApiParam(value = "分页参数")
+            @ApiIgnore @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
+            @RequestBody(required = false) SearchVO searchVO) {
+        return ResponseEntity.ok(ciTemplateJobBusService.pageTemplateJobs(sourceId, pageRequest, searchVO));
+    }
+
 
     @ApiOperation(value = "平台层创建job模版")
     @Permission(level = ResourceLevel.SITE)

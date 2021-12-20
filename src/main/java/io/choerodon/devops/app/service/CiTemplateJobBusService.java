@@ -23,4 +23,6 @@ public interface CiTemplateJobBusService {
     Boolean isNameUnique(String name, Long sourceId, Long jobId);
 
     Page<CiTemplateJobBusVO> pageUnderOrgLevel(Long sourceId, PageRequest pageRequest, SearchVO searchVO);
+
+    Page<CiTemplateJobBusVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, SearchVO searchVO);
 }
