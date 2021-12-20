@@ -26,7 +26,7 @@ import io.choerodon.swagger.annotation.Permission;
  */
 
 @RestController("ciOrganizationTemplateJobGroupController.v1")
-@RequestMapping("/v1/organization/{organization_id}/ci_template_job_group")
+@RequestMapping("/v1/organizations/{organization_id}/ci_template_job_group")
 public class CiOrganizationTemplateJobGroupController extends BaseController {
 
     @Autowired

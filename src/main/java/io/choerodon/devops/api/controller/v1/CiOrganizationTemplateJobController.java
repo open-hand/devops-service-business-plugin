@@ -31,7 +31,7 @@ import io.choerodon.swagger.annotation.Permission;
  */
 
 @RestController("ciOrganizationPipelineTemplateController.v1")
-@RequestMapping("/v1/organization/{organization_id}/ci_template_job")
+@RequestMapping("/v1/organizations/{organization_id}/ci_template_job")
 public class CiOrganizationTemplateJobController {
 
     @Autowired

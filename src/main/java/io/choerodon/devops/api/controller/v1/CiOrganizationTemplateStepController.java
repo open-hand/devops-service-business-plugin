@@ -22,7 +22,7 @@ import io.choerodon.swagger.annotation.Permission;
  * Created by wangxiang on 2021/12/14
  */
 @RestController("ciOrganizationTemplateStepController.v1")
-@RequestMapping("/v1/organization/{organization_id}/ci_template_step")
+@RequestMapping("/v1/organizations/{organization_id}/ci_template_step")
 public class CiOrganizationTemplateStepController {
 
 

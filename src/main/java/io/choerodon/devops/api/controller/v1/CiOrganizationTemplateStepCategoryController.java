@@ -26,7 +26,7 @@ import io.choerodon.swagger.annotation.Permission;
  */
 
 @RestController("ciOrganizationTemplateStepCategoryController.v1")
-@RequestMapping("/v1/organization/{organization_id}/ci_template_step_category")
+@RequestMapping("/v1/organizations/{organization_id}ci_template_step_category")
 public class CiOrganizationTemplateStepCategoryController extends BaseController {
 
     @Autowired
