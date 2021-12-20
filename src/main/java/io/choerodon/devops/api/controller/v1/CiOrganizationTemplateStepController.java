@@ -30,7 +30,7 @@ public class CiOrganizationTemplateStepController {
     private CiTemplateStepBusService ciTemplateStepBusService;
 
     @ApiOperation(value = "平台层查询流水线步骤模板")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
     @CustomPageRequest
     public ResponseEntity<Page<CiTemplateStepVO>> pageTemplateStep(
@@ -42,7 +42,7 @@ public class CiOrganizationTemplateStepController {
     }
 
     @ApiOperation(value = "平台层修改流水线步骤模板")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     public ResponseEntity<CiTemplateStepVO> updateTemplateStep(
             @PathVariable(value = "organization_id") Long sourceId,
@@ -51,7 +51,7 @@ public class CiOrganizationTemplateStepController {
     }
 
     @ApiOperation(value = "平台层删除流水线步骤模板")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<Void> deleteTemplateStep(
             @PathVariable(value = "organization_id") Long sourceId,
@@ -62,7 +62,7 @@ public class CiOrganizationTemplateStepController {
 
 
     @ApiOperation(value = "平台层创建流水线步骤模板")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     public ResponseEntity<CiTemplateStepVO> createTemplateStep(
             @PathVariable(value = "organization_id") Long sourceId,
@@ -71,7 +71,7 @@ public class CiOrganizationTemplateStepController {
     }
 
     @ApiOperation(value = "平台层根据jobId查询步骤模板")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/template_job_id/{template_job_id}")
     public ResponseEntity<List<CiTemplateStepVO>> queryStepTemplateByJobId(
             @PathVariable(value = "organization_id") Long sourceId,
@@ -80,7 +80,7 @@ public class CiOrganizationTemplateStepController {
     }
 
     @ApiOperation(value = "平台层根据stepId查询步骤模板")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/template_step_id/{template_step_id}")
     public ResponseEntity<CiTemplateStepVO> queryStepTemplateByStepId(
             @PathVariable(value = "organization_id") Long sourceId,

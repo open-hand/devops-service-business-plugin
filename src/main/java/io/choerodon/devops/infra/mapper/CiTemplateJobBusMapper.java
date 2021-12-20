@@ -2,6 +2,7 @@ package io.choerodon.devops.infra.mapper;
 
 import java.util.List;
 
+import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 
 import io.choerodon.devops.api.vo.CiTemplateJobBusVO;

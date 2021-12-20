@@ -1,6 +1,7 @@
 package io.choerodon.devops.infra.mapper;
 
 import java.util.List;
+import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 
 import io.choerodon.devops.infra.dto.CiTemplateStepDTO;
@@ -18,5 +19,6 @@ public interface CiTemplateStepBusMapper extends BaseMapper<CiTemplateStepDTO> {
 
     List<CiTemplateStepDTO> queryStepTemplateByJobId(@Param("sourceId") Long sourceId, @Param("templateJobId") Long templateJobId);
 
+    void deleteByIds(@Param("stepIds") Set<Long> stepIds);
 }
 

@@ -55,4 +55,5 @@
 	          WHERE dctsjr.ci_template_stage_id = #{stageId,jdbcType=BIGINT} )
 	     AND dctj.source_id = #{sourceId,jdbcType=BIGINT}
     </select>
+
 </mapper>

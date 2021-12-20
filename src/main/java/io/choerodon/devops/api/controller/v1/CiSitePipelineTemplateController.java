@@ -13,7 +13,6 @@ import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
-import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
@@ -53,6 +52,25 @@ public class CiSitePipelineTemplateController extends BaseController {
             @PathVariable(value = "source_id") Long sourceId,
             @RequestBody CiTemplatePipelineVO devopsPipelineTemplateVO) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.createPipelineTemplate(sourceId, devopsPipelineTemplateVO));
+    }
+
+    @ApiOperation(value = "平台层修改流水线模板")
+    @PutMapping
+    @Permission(level = ResourceLevel.SITE)
+    public ResponseEntity<CiTemplatePipelineVO> updatePipelineTemplate(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestBody CiTemplatePipelineVO devopsPipelineTemplateVO) {
+        return ResponseEntity.ok(ciPipelineTemplateBusService.updatePipelineTemplate(sourceId, devopsPipelineTemplateVO));
+    }
+
+    @ApiOperation(value = "平台层删除流水线模板")
+    @DeleteMapping("/{ci_template_pipeline_id}")
+    @Permission(level = ResourceLevel.SITE)
+    public ResponseEntity<Void> deletePipelineTemplate(
+            @PathVariable(value = "source_id") Long sourceId,
+            @Encrypt @PathVariable(value = "ci_template_pipeline_id") Long ciTemplatePipelineId) {
+        ciPipelineTemplateBusService.deletePipelineTemplate(sourceId, ciTemplatePipelineId);
+        return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "平台层停用流水线模板")
