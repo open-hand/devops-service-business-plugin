@@ -12,10 +12,7 @@ import org.springframework.util.CollectionUtils;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.devops.api.vo.SearchVO;
-import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
-import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
-import io.choerodon.devops.api.vo.template.CiTemplateStageVO;
-import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
+import io.choerodon.devops.api.vo.template.*;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.devops.infra.constant.Constant;
 import io.choerodon.devops.infra.dto.*;
@@ -52,6 +49,12 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
     @Autowired
     private CiTemplateJobStepRelBusMapper ciTemplateJobStepRelBusMapper;
+
+    @Autowired
+    private CiTemplateDockerMapper ciTemplateDockerMapper;
+
+    @Autowired
+    private CiTemplateStageJobRelBusMapper ciTemplateStageJobRelBusMapper;
 
 
     @Override
@@ -103,6 +106,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
         List<CiTemplateStageVO> templateStageVOS = devopsPipelineTemplateVO.getTemplateStageVOS();
         templateStageVOS.forEach(ciTemplateStageVO -> {
+            //2.插入stage数据
             CiTemplateStageDTO ciTemplateStageDTO = new CiTemplateStageDTO();
             BeanUtils.copyProperties(ciTemplateStageVO, ciTemplateStageDTO);
             ciTemplateStageDTO.setPipelineTemplateId(ciTemplatePipelineDTO.getId());
@@ -114,10 +118,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
                 return;
             }
             ciTemplateJobVOList.forEach(ciTemplateJobVO -> {
-                CiTemplateJobDTO ciTemplateJobDTO = new CiTemplateJobDTO();
-                BeanUtils.copyProperties(ciTemplateJobVO, ciTemplateJobDTO);
-                ciTemplateJobBusMapper.insertSelective(ciTemplateJobDTO);
-
+                //插入阶段与job的关联关系
                 CiTemplateStageJobRelDTO ciTemplateStageJobRelDTO = new CiTemplateStageJobRelDTO();
                 ciTemplateStageJobRelDTO.setCiTemplateJobId(ciTemplateJobVO.getId());
                 ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageVO.getId());
@@ -126,27 +127,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
                 List<CiTemplateStepVO> ciTemplateStepVOS = ciTemplateJobVO.getCiTemplateStepVOS();
                 if (CollectionUtils.isEmpty(ciTemplateStepVOS)) {
                     return;
-
                 }
-                ciTemplateStepVOS.forEach(ciTemplateStepVO -> {
-                    CiTemplateStepDTO ciTemplateStepDTO = new CiTemplateStepDTO();
-                    BeanUtils.copyProperties(ciTemplateStepVO, ciTemplateStepDTO);
-                    ciTemplateStepBusMapper.insertSelective(ciTemplateStepDTO);
-
-                    CiTemplateJobStepRelDTO ciTemplateJobStepRelDTO = new CiTemplateJobStepRelDTO();
-                    ciTemplateJobStepRelDTO.setCiTemplateJobId(ciTemplateJobDTO.getId());
-                    ciTemplateJobStepRelDTO.setCiTemplateStepId(ciTemplateStepDTO.getId());
-                    ciTemplateJobStepRelBusMapper.insertSelective(ciTemplateJobStepRelDTO);
-
-                    switch (DevopsCiStepTypeEnum.valueOf(ciTemplateJobVO.getType())) {
-                        // TODO: 2021/12/19
-                        case DOCKER_BUILD:
-                            break;
-                        case SONAR:
-                            break;
-                        default:
-                    }
-                });
             });
         });
         return ConvertUtils.convertObject(ciTemplatePipelineDTO, CiTemplatePipelineVO.class);
@@ -187,6 +168,158 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         CiTemplatePipelineVO.setTemplateStageVOS(ciTemplateStageVOS);
 
         return CiTemplatePipelineVO;
+    }
+
+    @Override
+    public CiTemplatePipelineVO updatePipelineTemplate(Long sourceId, CiTemplatePipelineVO devopsPipelineTemplateVO) {
+        checkPipelineName(devopsPipelineTemplateVO);
+        checkPipelineCategory(devopsPipelineTemplateVO);
+        checkStageName(devopsPipelineTemplateVO);
+        CiTemplatePipelineDTO pipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(devopsPipelineTemplateVO.getId());
+        if (pipelineTemplateDTO == null) {
+            return new CiTemplatePipelineVO();
+        }
+        AssertUtils.isTrue(pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
+        // TODO: 2021/12/19 只能删除自定义的
+        Set<Long> stageJobRelIds = new HashSet<>();
+        List<CiTemplateStageVO> templateStageVOS = devopsPipelineTemplateVO.getTemplateStageVOS();
+        //删除所有的阶段以及阶段与Job之间的关联，重新插入阶段与阶段之间的关联
+        if (!CollectionUtils.isEmpty(templateStageVOS)) {
+            Set<Long> stageIds = templateStageVOS.stream().map(CiTemplateStageVO::getId).collect(Collectors.toSet());
+            //删除stage
+            if (!CollectionUtils.isEmpty(stageIds)) {
+                ciTemplateStageBusMapper.deleteByIds(stageIds);
+            }
+
+            templateStageVOS.forEach(ciTemplateStageVO -> {
+                CiTemplateStageJobRelDTO ciTemplateStageJobRelDTO = new CiTemplateStageJobRelDTO();
+                ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageVO.getId());
+                List<CiTemplateStageJobRelDTO> stageJobRelDTOS = ciTemplateStageJobRelMapper.select(ciTemplateStageJobRelDTO);
+                if (!CollectionUtils.isEmpty(stageJobRelDTOS)) {
+                    stageJobRelIds.addAll(stageJobRelDTOS.stream().map(CiTemplateStageJobRelDTO::getId).collect(Collectors.toSet()));
+                }
+            });
+
+            //删除stage_job_rel
+            if (!CollectionUtils.isEmpty(stageJobRelIds)) {
+                ciTemplateStageJobRelBusMapper.deleteByIds(stageJobRelIds);
+            }
+        }
+
+        //插入新的阶段  阶段与job的关系
+        templateStageVOS.forEach(ciTemplateStageVO -> {
+            //2.插入stage数据
+            CiTemplateStageDTO ciTemplateStageDTO = new CiTemplateStageDTO();
+            BeanUtils.copyProperties(ciTemplateStageVO, ciTemplateStageDTO);
+            ciTemplateStageDTO.setPipelineTemplateId(pipelineTemplateDTO.getId());
+            ciTemplateStageBusMapper.insertSelective(ciTemplateStageDTO);
+
+
+            List<CiTemplateJobVO> ciTemplateJobVOList = ciTemplateStageVO.getCiTemplateJobVOList();
+            if (CollectionUtils.isEmpty(ciTemplateJobVOList)) {
+                return;
+            }
+            ciTemplateJobVOList.forEach(ciTemplateJobVO -> {
+                //插入阶段与job的关联关系
+                CiTemplateStageJobRelDTO ciTemplateStageJobRelDTO = new CiTemplateStageJobRelDTO();
+                ciTemplateStageJobRelDTO.setCiTemplateJobId(ciTemplateJobVO.getId());
+                ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageVO.getId());
+                ciTemplateStageJobRelMapper.insertSelective(ciTemplateStageJobRelDTO);
+
+                List<CiTemplateStepVO> ciTemplateStepVOS = ciTemplateJobVO.getCiTemplateStepVOS();
+                if (CollectionUtils.isEmpty(ciTemplateStepVOS)) {
+                    return;
+                }
+            });
+        });
+
+        BeanUtils.copyProperties(devopsPipelineTemplateVO, pipelineTemplateDTO);
+        ciPipelineTemplateBusMapper.updateByPrimaryKey(pipelineTemplateDTO);
+        return devopsPipelineTemplateVO;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deletePipelineTemplate(Long sourceId, Long ciTemplatePipelineId) {
+        CiTemplatePipelineDTO pipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(ciTemplatePipelineId);
+        if (pipelineTemplateDTO == null) {
+            return;
+        }
+        AssertUtils.isTrue(pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
+        //查询阶段
+        CiTemplateStageDTO record = new CiTemplateStageDTO();
+        record.setPipelineTemplateId(pipelineTemplateDTO.getId());
+        List<CiTemplateStageDTO> ciTemplateStageDTOS = ciTemplateStageBusMapper.select(record);
+        if (CollectionUtils.isEmpty(ciTemplateStageDTOS)) {
+            return;
+        }
+
+        Set<Long> stepIds = new HashSet<>();
+        Set<Long> jobIds = new HashSet<>();
+        Set<Long> stageIds = new HashSet<>();
+        Set<Long> stepJobRelIds = new HashSet<>();
+        Set<Long> stageJobRelIds = new HashSet<>();
+
+        stageIds.addAll(ciTemplateStageDTOS.stream().map(CiTemplateStageDTO::getId).collect(Collectors.toSet()));
+        ciTemplateStageDTOS.forEach(ciTemplateStageDTO -> {
+            //通过阶段id 查找JOB
+            List<CiTemplateJobDTO> ciTemplateJobDTOS = ciTemplateJobBusMapper.queryJobByStageId(sourceId, ciTemplateStageDTO.getId());
+            if (CollectionUtils.isEmpty(ciTemplateJobDTOS)) {
+                return;
+            }
+            jobIds.addAll(ciTemplateJobDTOS.stream().map(CiTemplateJobDTO::getId).collect(Collectors.toSet()));
+
+            CiTemplateStageJobRelDTO ciTemplateStageJobRelDTO = new CiTemplateStageJobRelDTO();
+            ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageDTO.getId());
+            List<CiTemplateStageJobRelDTO> stageJobRelDTOS = ciTemplateStageJobRelMapper.select(ciTemplateStageJobRelDTO);
+            if (!CollectionUtils.isEmpty(stageJobRelDTOS)) {
+                stageJobRelIds.addAll(stageJobRelDTOS.stream().map(CiTemplateStageJobRelDTO::getId).collect(Collectors.toSet()));
+            }
+
+            ciTemplateJobDTOS.forEach(ciTemplateJobDTO -> {
+                //根据job step
+                List<CiTemplateStepDTO> ciTemplateStepDTOS = ciTemplateStepBusMapper.queryStepTemplateByJobId(sourceId, ciTemplateJobDTO.getId());
+                if (CollectionUtils.isEmpty(ciTemplateStepDTOS)) {
+                    return;
+                }
+                stepIds.addAll(ciTemplateStepDTOS.stream().map(CiTemplateStepDTO::getId).collect(Collectors.toSet()));
+                CiTemplateJobStepRelDTO ciTemplateJobStepRelDTO = new CiTemplateJobStepRelDTO();
+                ciTemplateJobStepRelDTO.setCiTemplateJobId(ciTemplateJobDTO.getId());
+                List<CiTemplateJobStepRelDTO> ciTemplateJobStepRelDTOS = ciTemplateJobStepRelBusMapper.select(ciTemplateJobStepRelDTO);
+                if (!CollectionUtils.isEmpty(ciTemplateJobStepRelDTOS)) {
+                    stepJobRelIds.addAll(ciTemplateJobStepRelDTOS.stream().map(CiTemplateJobStepRelDTO::getId).collect(Collectors.toSet()));
+                }
+                ciTemplateStepDTOS.forEach(ciTemplateStepDTO -> {
+
+                    switch (DevopsCiStepTypeEnum.valueOf(ciTemplateStepDTO.getType())) {
+                        // TODO: 2021/12/19  预定义的不能删除
+                        case DOCKER_BUILD:
+                            CiTemplateDockerDTO ciTemplateDockerDTO = new CiTemplateDockerDTO();
+                            ciTemplateDockerDTO.setCiTemplateStepId(ciTemplateStepDTO.getId());
+                            CiTemplateDockerDTO templateDockerDTO = ciTemplateDockerMapper.selectOne(ciTemplateDockerDTO);
+                            if (templateDockerDTO != null) {
+                                ciTemplateDockerMapper.deleteByPrimaryKey(templateDockerDTO.getId());
+                            }
+                            break;
+                        case SONAR:
+                            break;
+                        default:
+                    }
+                });
+            });
+        });
+
+        //删除stage
+        if (!CollectionUtils.isEmpty(stageIds)) {
+            ciTemplateStageBusMapper.deleteByIds(stageIds);
+        }
+        //删除stage_job_rel
+        if (!CollectionUtils.isEmpty(stageJobRelIds)) {
+            ciTemplateStageJobRelBusMapper.deleteByIds(stageJobRelIds);
+        }
+        //删除流水线模板
+        ciPipelineTemplateBusMapper.deleteByPrimaryKey(ciTemplatePipelineId);
+
     }
 
     private void checkPipelineTemplate(Long ciPipelineTemplateId) {

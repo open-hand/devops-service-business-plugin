@@ -25,4 +25,17 @@
 	     And dctc.source_id=#{sourceId,jdbcType=BIGINT}
 
     </select>
+
+    <delete id="deleteByIds">
+        <if test="stepIds != null and stepIds.size() != 0">
+            DELETE FROM devops_ci_template_step
+            where id IN
+            <foreach collection="stepIds" item="stepId" index="index"
+                     open="(" close=")" separator=",">
+                #{stepId}
+            </foreach>
+        </if>
+
+
+    </delete>
 </mapper>

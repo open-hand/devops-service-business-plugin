@@ -36,7 +36,7 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
     @ApiOperation(value = "组织层查询流水线模板")
     @GetMapping
     @CustomPageRequest
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<Page<CiTemplatePipelineVO>> pagePipelineTemplate(
             @PathVariable(value = "organization_id") Long sourceId,
             @ApiParam(value = "分页参数")
@@ -47,7 +47,7 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
 
     @ApiOperation(value = "组织层创建流水线模板")
     @PostMapping
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<CiTemplatePipelineVO> createPipelineTemplate(
             @PathVariable(value = "organization_id") Long sourceId,
             @RequestBody CiTemplatePipelineVO CiTemplatePipelineVO) {
@@ -56,7 +56,7 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
 
     @ApiOperation(value = "组织层停用流水线模板")
     @PutMapping("/invalid")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<Void> invalidPipelineTemplate(
             @PathVariable(value = "organization_id") Long sourceId,
             @Encrypt @RequestParam(value = "ci_pipeline_template_id") Long ciPipelineTemplateId) {
@@ -67,7 +67,7 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
 
     @ApiOperation(value = "组织层启用流水线模板")
     @PutMapping("/enable")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<Void> enablePipelineTemplate(
             @PathVariable(value = "organization_id") Long sourceId,
             @Encrypt @RequestParam(value = "ci_pipeline_template_id") Long ciPipelineTemplateId) {

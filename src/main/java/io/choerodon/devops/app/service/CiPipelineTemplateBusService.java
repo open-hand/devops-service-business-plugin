@@ -18,5 +18,10 @@ public interface CiPipelineTemplateBusService {
     CiTemplatePipelineVO createPipelineTemplate(Long sourceId, CiTemplatePipelineVO devopsPipelineTemplateVO);
 
     CiTemplatePipelineVO queryPipelineTemplateById(Long sourceId, Long ciPipelineTemplateId);
+
+    CiTemplatePipelineVO updatePipelineTemplate(Long sourceId, CiTemplatePipelineVO devopsPipelineTemplateVO);
+
+    void deletePipelineTemplate(Long sourceId, Long ciTemplatePipelineId);
+
 }
 
