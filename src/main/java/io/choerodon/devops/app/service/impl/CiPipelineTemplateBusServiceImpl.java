@@ -16,7 +16,9 @@ import io.choerodon.devops.api.vo.template.*;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.devops.infra.constant.Constant;
 import io.choerodon.devops.infra.dto.*;
+import io.choerodon.devops.infra.dto.iam.ProjectDTO;
 import io.choerodon.devops.infra.enums.DevopsCiStepTypeEnum;
+import io.choerodon.devops.infra.feign.operator.BaseServiceClientOperator;
 import io.choerodon.devops.infra.mapper.*;
 import io.choerodon.devops.infra.util.ConvertUtils;
 import io.choerodon.devops.infra.util.UserDTOFillUtil;
@@ -56,10 +58,13 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     @Autowired
     private CiTemplateStageJobRelBusMapper ciTemplateStageJobRelBusMapper;
 
+    @Autowired
+    private BaseServiceClientOperator baseServiceClientOperator;
+
 
     @Override
-    public Page<CiTemplatePipelineVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
-        Page<CiTemplatePipelineVO> pipelineTemplateVOS = PageHelper.doPageAndSort(pageRequest, () -> ciPipelineTemplateBusMapper.queryDevopsPipelineTemplateByParams(sourceId, searchVO));
+    public Page<CiTemplatePipelineVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, String templateName, Long categoryId, Boolean builtIn, Boolean enable, String params) {
+        Page<CiTemplatePipelineVO> pipelineTemplateVOS = PageHelper.doPageAndSort(pageRequest, () -> ciPipelineTemplateBusMapper.queryDevopsPipelineTemplateByParams(sourceId, templateName, categoryId, builtIn, enable, params));
         List<CiTemplatePipelineVO> devopsPipelineTemplateVOS = pipelineTemplateVOS.getContent();
         if (CollectionUtils.isEmpty(devopsPipelineTemplateVOS)) {
             return pipelineTemplateVOS;

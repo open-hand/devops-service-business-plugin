@@ -15,7 +15,7 @@
 
         <association property="ciTemplateCategoryVO" javaType="io.choerodon.devops.api.vo.template.CiTemplateCategoryVO">
             <id column="user_id" property="id"/>
-            <result column="language" property="language"/>
+            <result column="category" property="category"/>
             <result column="source_type" property="sourceType"/>
             <result column="creation_date" property="creationDate"/>
             <result column="created_by" property="createdBy"/>
@@ -28,33 +28,41 @@
 
     <select id="queryDevopsPipelineTemplateByParams" resultMap="DevopsPipelineTemplateMap">
         SELECT
-           dctp.id AS template_id,
-           dctp.name AS template_name,
-           dctp.source_type AS tempate_source_type,
-           dctp.built_in AS template_built_in,
-           dctp.enable AS template_enable,
-           dctp.creation_date AS template_create_date,
-           dctp.created_by AS template_create_by,
-           dctc.id AS category_id,
-           dctc.category AS category_name
+            dctp.id AS id,
+            dctp.NAME AS name,
+            dctp.source_type AS source_type,
+            dctp.built_in AS built_in,
+            dctp.ENABLE AS enable,
+            dctp.creation_date AS create_date,
+            dctp.created_by AS create_by,
+            dctc.id AS category_id,
+            dctc.category AS category_name
         FROM
            devops_ci_template_pipeline dctp
         JOIN devops_ci_template_category dctc ON dctp.ci_template_category_id=dctc.id
-        <if test="searchVO != null">
-            <if test="searchVO.searchParam != null">
-                <if test="searchVO.searchParam.templateName != null and searchVO.searchParam.templateName != ''">
-                    AND dctp.name LIKE CONCAT(CONCAT('%',
-                    #{searchVO.searchParam.templateName, jdbcType=VARCHAR}), '%')
-                </if>
-<!--                <if test="searchVO.searchParam.custom != null and searchVO.searchParam.custom != ''">-->
-<!--                    <if test="searchVO.searchParam.custom==true">-->
-<!--                        AND mc.CUSTOM=1-->
-<!--                    </if>-->
-<!--                    <if test="searchVO.searchParam.custom==false">-->
-<!--                        AND mc.CUSTOM=0-->
-<!--                    </if>-->
-<!--                </if>-->
-            </if>
-        </if>
+        where 1=1
+
+           <if test="templateName != null and templateName != ''">
+               AND dctp.name LIKE CONCAT(CONCAT('%', #{templateName, jdbcType=VARCHAR}), '%')
+           </if>
+           <if test="categoryId != null">
+               AND dctc.id=#{categoryId,jdbcType=BIGINT}
+           </if>
+           <if test="builtIn != null and builtIn ==true">
+               AND  dctp.built_in = 1
+           </if>
+           <if test="builtIn != null and builtIn ==false">
+              AND  dctp.built_in = 0
+           </if>
+           <if test="enable != null != null and enable ==true ">
+             AND  dctp.enable = 1
+           </if>
+           <if test="enable != null != null and enable ==false">
+             AND  dctp.enable = 0
+           </if>
+           <if test="params != null and params != ''">
+               AND dctp.name LIKE CONCAT(CONCAT('%', #{templateName, jdbcType=VARCHAR}), '%')
+           </if>
+
     </select>
 </mapper>
