@@ -40,12 +40,12 @@ public class CiOrganizationTemplateJobController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @CustomPageRequest
     @GetMapping("/page")
-    public ResponseEntity<Page<CiTemplateJobVO>> page(
+    public ResponseEntity<Page<CiTemplateJobVO>> pageTemplateJob(
             @PathVariable("organization_id") Long resourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
             @RequestBody(required = false) SearchVO searchVO) {
-        return Results.success(ciTemplateJobBusService.pageUnderOrgLevel(resourceId, pageRequest, searchVO));
+        return Results.success(ciTemplateJobBusService.pageTemplateJobs(resourceId, pageRequest, searchVO));
     }
 
     @ApiOperation(value = "组织层创建job模版")
