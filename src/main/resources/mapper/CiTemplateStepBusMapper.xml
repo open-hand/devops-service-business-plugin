@@ -11,10 +11,10 @@
           devops_ci_template_step dcts
         JOIN devops_ci_template_step_category dctsc ON dcts.category_id = dctsc.id
 
-        WHERE
-        dcts.source_id = #{sourceId,jdbcType=BIGINT}
-        <if test="searchParam != null and searchParam != ''">
-        </if>
+        where  dcts.source_id = #{sourceId,jdbcType=BIGINT}
+        <include refid="sqlparam"/>
+
+
     </select>
 
     <select id="queryStepTemplateByJobId" resultType="io.choerodon.devops.infra.dto.CiTemplateStepDTO">
@@ -38,7 +38,28 @@
                 #{stepId}
             </foreach>
         </if>
-
-
     </delete>
+
+    <sql id="sqlparam">
+        <if test="searchVO != null">
+            <if test="searchVO.searchParam != null">
+                <if test="searchVO.searchParam.name != null and searchVO.searchParam.name != ''">
+                    AND dcts.name LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.name, jdbcType=VARCHAR}), '%')
+                </if>
+                <if test="searchVO.searchParam.categoryName != null">
+                    AND  dctsc.name LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.categoryName, jdbcType=VARCHAR}), '%')
+                </if>
+                <if test="searchVO.searchParam.builtIn != null and searchVO.searchParam.builtIn ==true">
+                    AND  dcts.built_in = 1
+                </if>
+                <if test="searchVO.searchParam.builtIn != null and searchVO.searchParam.builtIn ==false">
+                    AND  dcts.built_in = 0
+                </if>
+
+                <if test="searchVO.searchParam.params != null and searchVO.searchParam.params != ''">
+                    AND dcts.name LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.params, jdbcType=VARCHAR}), '%')
+                </if>
+            </if>
+        </if>
+    </sql>
 </mapper>

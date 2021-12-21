@@ -12,6 +12,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.devops.app.service.CiTemplateStepBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -37,8 +38,8 @@ public class CiOrganizationTemplateStepController {
             @PathVariable(value = "organization_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
-            @RequestParam(value = "searchParam", required = false) String searchParam) {
-        return ResponseEntity.ok(ciTemplateStepBusService.pageTemplateStep(sourceId, pageRequest, searchParam));
+            @RequestBody(required = false) SearchVO searchVO) {
+        return ResponseEntity.ok(ciTemplateStepBusService.pageTemplateStep(sourceId, pageRequest, searchVO));
     }
 
     @ApiOperation(value = "平台层修改流水线步骤模板")
