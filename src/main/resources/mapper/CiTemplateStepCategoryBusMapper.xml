@@ -16,7 +16,7 @@
         WHERE
         dcts.source_id = #{sourceId,jdbcType=BIGINT}
         <if test="searchParam != null and searchParam != ''">
-            AND dctsc.`name` LIKE CONCAT(CONCAT('%', #{searchParam, jdbcType=VARCHAR}),'%')
+            AND dcts.`name` LIKE CONCAT(CONCAT('%', #{searchParam, jdbcType=VARCHAR}),'%')
         </if>
 
     </select>
