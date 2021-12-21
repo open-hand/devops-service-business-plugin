@@ -11,7 +11,7 @@
           devops_ci_template_step dcts
         JOIN devops_ci_template_step_category dctsc ON dcts.category_id = dctsc.id
 
-        where  dcts.source_id = #{sourceId,jdbcType=BIGINT}
+        WHERE (dcts.source_id = 0 OR dcts.source_id = #{sourceId})
         <include refid="sqlparam"/>
 
 
