@@ -15,7 +15,7 @@
 
         <association property="ciTemplateCategoryVO" javaType="io.choerodon.devops.api.vo.template.CiTemplateCategoryVO">
             <id column="user_id" property="id"/>
-            <result column="category" property="category"/>
+            <result column="category_name" property="category"/>
             <result column="source_type" property="sourceType"/>
             <result column="creation_date" property="creationDate"/>
             <result column="created_by" property="createdBy"/>
@@ -33,8 +33,8 @@
             dctp.source_type AS source_type,
             dctp.built_in AS built_in,
             dctp.ENABLE AS enable,
-            dctp.creation_date AS create_date,
-            dctp.created_by AS create_by,
+            dctp.creation_date AS creation_date,
+            dctp.created_by AS created_by,
             dctc.id AS category_id,
             dctc.category AS category_name
         FROM
