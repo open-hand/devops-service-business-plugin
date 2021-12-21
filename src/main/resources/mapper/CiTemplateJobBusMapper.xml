@@ -11,7 +11,7 @@
         </if>
     </select>
 
-    <select id="pageUnderOrgLevel" resultType="io.choerodon.devops.api.vo.CiTemplateJobBusVO">
+    <select id="pageUnderOrgLevel" resultType="io.choerodon.devops.api.vo.CiTemplateJobVO">
         SELECT dctj.id,
                dctj.name,
                dctj.created_by,

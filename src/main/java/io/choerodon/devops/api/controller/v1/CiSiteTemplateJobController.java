@@ -14,7 +14,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.devops.api.vo.CiTemplateJobBusVO;
 import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
 import io.choerodon.devops.app.service.CiTemplateJobBusService;
@@ -52,7 +51,7 @@ public class CiSiteTemplateJobController extends BaseController {
     @Permission(level = ResourceLevel.SITE)
     @GetMapping("/page")
     @CustomPageRequest
-    public ResponseEntity<Page<CiTemplateJobBusVO>> pageTemplateJobs(
+    public ResponseEntity<Page<CiTemplateJobVO>> pageTemplateJobs(
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
