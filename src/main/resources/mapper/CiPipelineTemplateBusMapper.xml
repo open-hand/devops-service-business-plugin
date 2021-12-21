@@ -50,8 +50,8 @@
     <sql id="sqlparam">
         <if test="searchVO != null">
             <if test="searchVO.searchParam != null">
-                <if test="searchVO.searchParam.templateName != null and searchVO.searchParam.templateName != ''">
-                    AND dctp.name LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.templateName, jdbcType=VARCHAR}), '%')
+                <if test="searchVO.searchParam.name != null and searchVO.searchParam.name != ''">
+                    AND dctp.name LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.name, jdbcType=VARCHAR}), '%')
                 </if>
                 <if test="searchVO.searchParam.categoryName != null">
                     AND  dctc.category LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.categoryName, jdbcType=VARCHAR}), '%')

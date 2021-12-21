@@ -3,6 +3,7 @@ package io.choerodon.devops.app.service;
 import java.util.List;
 
 import io.choerodon.core.domain.Page;
+import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 
@@ -10,7 +11,7 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
  * Created by wangxiang on 2021/12/14
  */
 public interface CiTemplateStepBusService {
-    Page<CiTemplateStepVO> pageTemplateStep(Long sourceId, PageRequest pageRequest, String searchParam);
+    Page<CiTemplateStepVO> pageTemplateStep(Long sourceId, PageRequest pageRequest, SearchVO searchVO);
 
     CiTemplateStepVO updateTemplateStep(Long sourceId, CiTemplateStepVO ciTemplateStepVO);
 

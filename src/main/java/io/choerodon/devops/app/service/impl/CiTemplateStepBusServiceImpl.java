@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.utils.ConvertUtils;
+import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 
 import io.choerodon.devops.app.service.CiTemplateStepBusService;
@@ -44,8 +45,8 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     private CiTemplateJobStepRelBusMapper ciTemplateJobStepRelBusMapper;
 
     @Override
-    public Page<CiTemplateStepVO> pageTemplateStep(Long sourceId, PageRequest pageRequest, String searchParam) {
-        Page<CiTemplateStepVO> templateStepDTOPageContent = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateStepBusMapper.queryTemplateStepByParams(sourceId, searchParam));
+    public Page<CiTemplateStepVO> pageTemplateStep(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
+        Page<CiTemplateStepVO> templateStepDTOPageContent = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateStepBusMapper.queryTemplateStepByParams(sourceId, searchVO));
         if (CollectionUtils.isEmpty(templateStepDTOPageContent)) {
             return templateStepDTOPageContent;
         }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 
+import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.devops.infra.dto.CiTemplateStepDTO;
 import io.choerodon.mybatis.common.BaseMapper;
@@ -16,7 +17,7 @@ import io.choerodon.mybatis.common.BaseMapper;
  */
 public interface CiTemplateStepBusMapper extends BaseMapper<CiTemplateStepDTO> {
 
-    List<CiTemplateStepVO> queryTemplateStepByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
+    List<CiTemplateStepVO> queryTemplateStepByParams(@Param("sourceId") Long sourceId, @Param("searchVO") SearchVO searchVO);
 
     List<CiTemplateStepDTO> queryStepTemplateByJobId(@Param("sourceId") Long sourceId, @Param("templateJobId") Long templateJobId);
 
