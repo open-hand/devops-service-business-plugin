@@ -63,8 +63,8 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
 
     @Override
-    public Page<CiTemplatePipelineVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, String templateName, Long categoryId, Boolean builtIn, Boolean enable, String params) {
-        Page<CiTemplatePipelineVO> pipelineTemplateVOS = PageHelper.doPageAndSort(pageRequest, () -> ciPipelineTemplateBusMapper.queryDevopsPipelineTemplateByParams(sourceId, templateName, categoryId, builtIn, enable, params));
+    public Page<CiTemplatePipelineVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
+        Page<CiTemplatePipelineVO> pipelineTemplateVOS = PageHelper.doPageAndSort(pageRequest, () -> ciPipelineTemplateBusMapper.queryDevopsPipelineTemplateByParams(sourceId, searchVO));
         List<CiTemplatePipelineVO> devopsPipelineTemplateVOS = pipelineTemplateVOS.getContent();
         if (CollectionUtils.isEmpty(devopsPipelineTemplateVOS)) {
             return pipelineTemplateVOS;
