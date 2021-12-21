@@ -53,8 +53,8 @@
                 <if test="searchVO.searchParam.templateName != null and searchVO.searchParam.templateName != ''">
                     AND dctp.name LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.templateName, jdbcType=VARCHAR}), '%')
                 </if>
-                <if test="searchVO.searchParam.categoryId != null">
-                    AND dctc.id=#{searchVO.searchParam.categoryId,jdbcType=BIGINT}
+                <if test="searchVO.searchParam.categoryName != null">
+                    AND  dctc.category LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.categoryName, jdbcType=VARCHAR}), '%')
                 </if>
                 <if test="searchVO.searchParam.builtIn != null and searchVO.searchParam.builtIn ==true">
                     AND  dctp.built_in = 1
