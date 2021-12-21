@@ -88,4 +88,13 @@ public class CiSiteTemplateStepController {
         return ResponseEntity.ok(ciTemplateStepBusService.queryStepTemplateByStepId(sourceId, templateStepId));
     }
 
+    @ApiOperation(value = "校验步骤是否可以删除（是否关联流水线）")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping("/{template_step_id}/check/delete")
+    public ResponseEntity<Boolean> checkStepTemplateByStepId(
+            @PathVariable(value = "source_id") Long sourceId,
+            @Encrypt @PathVariable(value = "template_step_id") Long templateStepId) {
+        return ResponseEntity.ok(ciTemplateStepBusService.checkStepTemplateByStepId(sourceId, templateStepId));
+    }
+
 }

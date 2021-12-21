@@ -2,6 +2,7 @@ package io.choerodon.devops.app.service.impl;
 
 
 import java.util.List;
+import org.checkerframework.checker.units.qual.A;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.BeanUtils;
@@ -17,8 +18,10 @@ import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 
 import io.choerodon.devops.app.service.CiTemplateStepBusService;
 import io.choerodon.devops.infra.constant.Constant;
+import io.choerodon.devops.infra.dto.CiTemplateJobStepRelDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStepCategoryDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStepDTO;
+import io.choerodon.devops.infra.mapper.CiTemplateJobStepRelBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateStepBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateStepCategoryBusMapper;
 import io.choerodon.devops.infra.util.UserDTOFillUtil;
@@ -36,6 +39,9 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     private CiTemplateStepBusMapper ciTemplateStepBusMapper;
     @Autowired
     private CiTemplateStepCategoryBusMapper ciTemplateStepCategoryBusMapper;
+
+    @Autowired
+    private CiTemplateJobStepRelBusMapper ciTemplateJobStepRelBusMapper;
 
     @Override
     public Page<CiTemplateStepVO> pageTemplateStep(Long sourceId, PageRequest pageRequest, String searchParam) {
@@ -102,6 +108,18 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
             return new CiTemplateStepVO();
         }
         return ConvertUtils.convertObject(ciTemplateStepDTO, CiTemplateStepVO.class);
+    }
+
+    @Override
+    public Boolean checkStepTemplateByStepId(Long sourceId, Long templateStepId) {
+        CiTemplateJobStepRelDTO ciTemplateJobStepRelDTO = new CiTemplateJobStepRelDTO();
+        ciTemplateJobStepRelDTO.setCiTemplateStepId(templateStepId);
+        List<CiTemplateJobStepRelDTO> ciTemplateJobStepRelDTOS = ciTemplateJobStepRelBusMapper.select(ciTemplateJobStepRelDTO);
+        if (CollectionUtils.isEmpty(ciTemplateJobStepRelDTOS)) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
     }
 
     private void checkCategory(CiTemplateStepVO ciTemplateStepVO) {
