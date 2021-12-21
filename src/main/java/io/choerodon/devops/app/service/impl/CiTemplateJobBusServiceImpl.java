@@ -14,7 +14,6 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.core.utils.ConvertUtils;
-import io.choerodon.devops.api.vo.CiTemplateJobBusVO;
 import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
 import io.choerodon.devops.app.service.CiTemplateJobBusService;
@@ -119,8 +118,8 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     }
 
     @Override
-    public Page<CiTemplateJobBusVO> pageUnderOrgLevel(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
-        Page<CiTemplateJobBusVO> ciTemplateJobVOPage = PageHelper.doPage(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, searchVO));
+    public Page<CiTemplateJobVO> pageUnderOrgLevel(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
+        Page<CiTemplateJobVO> ciTemplateJobVOPage = PageHelper.doPage(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, searchVO));
         UserDTOFillUtil.fillUserInfo(ciTemplateJobVOPage
                 .getContent()
                 .stream()
@@ -130,8 +129,8 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     }
 
     @Override
-    public Page<CiTemplateJobBusVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
-        Page<CiTemplateJobBusVO> ciTemplateJobVOPage = PageHelper.doPage(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, searchVO));
+    public Page<CiTemplateJobVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
+        Page<CiTemplateJobVO> ciTemplateJobVOPage = PageHelper.doPage(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, searchVO));
         UserDTOFillUtil.fillUserInfo(ciTemplateJobVOPage
                 .getContent()
                 .stream()
