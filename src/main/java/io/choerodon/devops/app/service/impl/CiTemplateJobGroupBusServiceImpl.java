@@ -13,6 +13,7 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.utils.ConvertUtils;
 import io.choerodon.devops.api.vo.template.CiTemplateJobGroupVO;
 import io.choerodon.devops.app.service.CiTemplateJobGroupBusService;
+import io.choerodon.devops.infra.dto.CiTemplateCategoryDTO;
 import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
 import io.choerodon.devops.infra.dto.CiTemplateJobGroupDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStepDTO;
@@ -69,6 +70,21 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
         AssertUtils.isTrue(!ciTemplateJobGroupDTO.getBuiltIn(), "error.delete.builtin.job.template.group");
 
         ciTemplateJobGroupBusMapper.deleteByPrimaryKey(ciTemplateJobGroupId);
+    }
+
+    @Override
+    public void checkTemplateJobGroup(Long sourceId, String name) {
+       checkGroupName(name);
+    }
+
+    private void checkGroupName(String name) {
+
+        CiTemplateJobGroupDTO record = new CiTemplateJobGroupDTO();
+        record.setName(name);
+        List<CiTemplateJobGroupDTO> ciTemplateJobGroupDTOS = ciTemplateJobGroupBusMapper.select(record);
+        if (!CollectionUtils.isEmpty(ciTemplateJobGroupDTOS)) {
+            throw new CommonException("error.job.group.exist");
+        }
     }
 
     /**
