@@ -72,7 +72,15 @@ public class CiSiteTemplateCategoryController extends BaseController {
         ciTemplateCategoryBusService.deleteTemplateCategory(ciTemplateCategoryId);
         return ResponseEntity.noContent().build();
     }
-
+    @ApiOperation(value = "平台层校验分类名称是否唯一")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping("/check/name/unique")
+    public ResponseEntity<Void> checkTemplateCategory(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestParam(value = "name", required = false) String name) {
+        ciTemplateCategoryBusService.checkTemplateCategory(sourceId, name);
+        return ResponseEntity.noContent().build();
+    }
 
 }
 

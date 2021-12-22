@@ -16,4 +16,6 @@ public interface CiTemplateCategoryBusService {
     void deleteTemplateCategory(Long ciTemplateCategoryId);
 
     CiTemplateCategoryVO createTemplateCategory(CiTemplateCategoryVO ciTemplateCategoryVO);
+
+    void checkTemplateCategory(Long sourceId, String name);
 }

@@ -19,5 +19,7 @@ public interface CiTemplateJobGroupBusService {
     CiTemplateJobGroupVO updateTemplateJobGroup(Long sourceId, CiTemplateJobGroupVO ciTemplateJobGroupVO);
 
     void deleteTemplateJobGroup(Long sourceId, Long ciTemplateJobGroupId);
+
+    void checkTemplateJobGroup(Long sourceId, String name);
 }
 

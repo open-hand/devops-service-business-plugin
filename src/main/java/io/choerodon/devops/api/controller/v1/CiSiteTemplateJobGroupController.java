@@ -72,5 +72,15 @@ public class CiSiteTemplateJobGroupController extends BaseController {
         ciTemplateJobGroupBusService.deleteTemplateJobGroup(sourceId, ciTemplateJobGroupId);
         return Results.success();
     }
+
+    @ApiOperation(value = "平台层校验分类名称是否唯一")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping("/check/name/unique")
+    public ResponseEntity<Void> checkTemplateJobGroup(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestParam(value = "name", required = false) String name) {
+        ciTemplateJobGroupBusService.checkTemplateJobGroup(sourceId, name);
+        return ResponseEntity.noContent().build();
+    }
 }
 
