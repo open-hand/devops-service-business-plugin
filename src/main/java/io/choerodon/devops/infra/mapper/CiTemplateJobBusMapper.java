@@ -19,7 +19,11 @@ import io.choerodon.mybatis.common.BaseMapper;
 public interface CiTemplateJobBusMapper extends BaseMapper<CiTemplateJobDTO> {
     Boolean isNameUnique(@Param("name") String name, @Param("sourceId") Long sourceId, @Param("jobId") Long jobId);
 
-    List<CiTemplateJobVO> pageUnderOrgLevel(@Param("sourceId") Long sourceId, @Param("searchVO") SearchVO searchVO);
+    List<CiTemplateJobVO> pageUnderOrgLevel(@Param("sourceId") Long sourceId,
+                                            @Param("name") String name,
+                                            @Param("groupName") String groupName,
+                                            @Param("builtIn") Boolean builtIn,
+                                            @Param("params") String params);
 
     List<CiTemplateJobDTO> queryJobByStageId(@Param("sourceId") Long sourceId, @Param("stageId") Long stageId);
 }

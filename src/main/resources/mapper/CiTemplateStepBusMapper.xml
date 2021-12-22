@@ -12,7 +12,23 @@
         JOIN devops_ci_template_step_category dctsc ON dcts.category_id = dctsc.id
 
         WHERE (dcts.source_id = 0 OR dcts.source_id = #{sourceId})
-        <include refid="sqlparam"/>
+
+        <if test="name != null and name != ''">
+            AND dcts.name LIKE CONCAT(CONCAT('%', #{name, jdbcType=VARCHAR}), '%')
+        </if>
+        <if test="categoryName != null and categoryName != ''">
+            AND  dctsc.name LIKE CONCAT(CONCAT('%', #{categoryName, jdbcType=VARCHAR}), '%')
+        </if>
+        <if test="builtIn != null and builtIn ==true">
+            AND  dcts.built_in = 1
+        </if>
+        <if test="builtIn != null and builtIn ==false">
+            AND  dcts.built_in = 0
+        </if>
+
+        <if test="params != null and params != ''">
+            AND dcts.name LIKE CONCAT(CONCAT('%', #{params, jdbcType=VARCHAR}), '%')
+        </if>
 
 
     </select>

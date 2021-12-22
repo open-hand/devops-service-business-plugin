@@ -41,8 +41,8 @@ public class CiSiteTemplateStepCategoryController extends BaseController {
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
-            @RequestParam(value = "searchParam", required = false) String searchParam) {
-        return ResponseEntity.ok(ciTemplateStepCategoryBusService.pageTemplateStepCategory(sourceId, pageRequest, searchParam));
+            @RequestParam(value = "name", required = false) String name) {
+        return ResponseEntity.ok(ciTemplateStepCategoryBusService.pageTemplateStepCategory(sourceId, pageRequest, name));
     }
 
 

@@ -39,8 +39,8 @@ public class CiSiteTemplateCategoryController extends BaseController {
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
-            @RequestParam(value = "searchParam", required = false) String searchParam) {
-        return ResponseEntity.ok(ciTemplateCategoryBusService.pageTemplateCategory(pageRequest, searchParam));
+            @RequestParam(value = "name", required = false) String name) {
+        return ResponseEntity.ok(ciTemplateCategoryBusService.pageTemplateCategory(pageRequest, name));
     }
 
     @ApiOperation(value = "平台层创建流水线分类")

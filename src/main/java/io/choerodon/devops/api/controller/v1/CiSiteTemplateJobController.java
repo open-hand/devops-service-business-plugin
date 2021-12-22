@@ -55,8 +55,11 @@ public class CiSiteTemplateJobController extends BaseController {
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
-            @RequestBody(required = false) SearchVO searchVO) {
-        return ResponseEntity.ok(ciTemplateJobBusService.pageTemplateJobs(sourceId, pageRequest, searchVO));
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "groupName", required = false) String groupName,
+            @RequestParam(value = "builtIn", required = false) Boolean builtIn,
+            @RequestParam(value = "params", required = false) String params) {
+        return ResponseEntity.ok(ciTemplateJobBusService.pageTemplateJobs(sourceId, pageRequest, name, groupName, builtIn, params));
     }
 
 
