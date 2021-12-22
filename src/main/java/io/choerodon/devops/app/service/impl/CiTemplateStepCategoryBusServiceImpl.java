@@ -52,7 +52,7 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
     public CiTemplateStepCategoryVO updateTemplateStepCategory(Long sourceId, CiTemplateStepCategoryVO ciTemplateStepCategoryVO) {
         CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = ciTemplateStepCategoryBusMapper.selectByPrimaryKey(ciTemplateStepCategoryVO.getId());
         AssertUtils.notNull(ciTemplateStepCategoryDTO, "error.ci.step.template.category.not.exist");
-        AssertUtils.isTrue(ciTemplateStepCategoryDTO.getBuiltIn(), "error.update.builtin.step.template.category");
+        AssertUtils.isTrue(!ciTemplateStepCategoryDTO.getBuiltIn(), "error.update.builtin.step.template.category");
         checkStepCategoryName(ciTemplateStepCategoryVO);
         BeanUtils.copyProperties(ciTemplateStepCategoryVO, ciTemplateStepCategoryDTO);
         ciTemplateStepCategoryBusMapper.updateByPrimaryKeySelective(ciTemplateStepCategoryDTO);
@@ -68,7 +68,7 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
             return;
         }
         checkRelated(ciTemplateStepCategoryDTO);
-        AssertUtils.isTrue(ciTemplateStepCategoryDTO.getBuiltIn(), "error.delete.builtin.step.template.category");
+        AssertUtils.isTrue(!ciTemplateStepCategoryDTO.getBuiltIn(), "error.delete.builtin.step.template.category");
         ciTemplateStepCategoryBusMapper.deleteByPrimaryKey(ciTemplateStepCategoryDTO.getId());
     }
 

@@ -184,7 +184,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         if (pipelineTemplateDTO == null) {
             return new CiTemplatePipelineVO();
         }
-        AssertUtils.isTrue(pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
+        AssertUtils.isTrue(!pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
         // TODO: 2021/12/19 只能删除自定义的
         Set<Long> stageJobRelIds = new HashSet<>();
         List<CiTemplateStageVO> templateStageVOS = devopsPipelineTemplateVO.getTemplateStageVOS();
@@ -250,7 +250,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         if (pipelineTemplateDTO == null) {
             return;
         }
-        AssertUtils.isTrue(pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
+        AssertUtils.isTrue(!pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
         //查询阶段
         CiTemplateStageDTO record = new CiTemplateStageDTO();
         record.setPipelineTemplateId(pipelineTemplateDTO.getId());
@@ -330,7 +330,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     private void checkPipelineTemplate(Long ciPipelineTemplateId) {
         CiTemplatePipelineDTO pipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(ciPipelineTemplateId);
         AssertUtils.notNull(pipelineTemplateDTO, "error.pipeline.template.is.null");
-        AssertUtils.isTrue(pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
+        AssertUtils.isTrue(!pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
     }
 
     /**

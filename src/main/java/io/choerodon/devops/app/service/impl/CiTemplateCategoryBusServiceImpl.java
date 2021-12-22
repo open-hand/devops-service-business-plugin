@@ -47,7 +47,7 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
     public CiTemplateCategoryVO updateTemplateCategory(CiTemplateCategoryVO ciTemplateCategoryVO) {
         CiTemplateCategoryDTO ciTemplateCategoryDTO = ciTemplateCategoryBusMapper.selectByPrimaryKey(ciTemplateCategoryVO.getId());
         AssertUtils.notNull(ciTemplateCategoryDTO, "error.ci.template.category.not.exist");
-        AssertUtils.isTrue(ciTemplateCategoryDTO.getBuiltIn(), "error.update.builtin.ci.template.category");
+        AssertUtils.isTrue(!ciTemplateCategoryDTO.getBuiltIn(), "error.update.builtin.ci.template.category");
         BeanUtils.copyProperties(ciTemplateCategoryVO, ciTemplateCategoryDTO);
         ciTemplateCategoryBusMapper.updateByPrimaryKeySelective(ciTemplateCategoryDTO);
         return ConvertUtils.convertObject(ciTemplateCategoryBusMapper.selectByPrimaryKey(ciTemplateCategoryVO.getId()), CiTemplateCategoryVO.class);
@@ -60,7 +60,7 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
         if (ciTemplateCategoryDTO == null) {
             return;
         }
-        AssertUtils.isTrue(ciTemplateCategoryDTO.getBuiltIn(), "error.delete.builtin.ci.template.category");
+        AssertUtils.isTrue(!ciTemplateCategoryDTO.getBuiltIn(), "error.delete.builtin.ci.template.category");
         ciTemplateCategoryBusMapper.deleteByPrimaryKey(ciTemplateCategoryDTO.getId());
     }
 
