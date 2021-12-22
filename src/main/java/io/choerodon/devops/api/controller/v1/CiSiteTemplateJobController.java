@@ -90,7 +90,7 @@ public class CiSiteTemplateJobController extends BaseController {
     @DeleteMapping("/{id}")
     public ResponseEntity<CiTemplateJobVO> deleteTemplateJob(
             @PathVariable(value = "source_id") Long sourceId,
-            @Encrypt @PathVariable Long jobId) {
+            @Encrypt @PathVariable(value = "id") Long jobId) {
         ciTemplateJobBusService.deleteTemplateJob(sourceId, jobId);
         return Results.success();
     }

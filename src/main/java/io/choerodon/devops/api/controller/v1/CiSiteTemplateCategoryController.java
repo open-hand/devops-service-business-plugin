@@ -65,10 +65,10 @@ public class CiSiteTemplateCategoryController extends BaseController {
 
     @ApiOperation(value = "平台层删除流水线分类")
     @Permission(level = ResourceLevel.SITE)
-    @DeleteMapping
+    @DeleteMapping("/{ci_template_category_id}")
     public ResponseEntity<CiTemplateCategoryVO> deleteTemplateCategory(
             @PathVariable(value = "source_id") Long sourceId,
-            @Encrypt @RequestParam("ci_template_category_id") Long ciTemplateCategoryId) {
+            @Encrypt @PathVariable("ci_template_category_id") Long ciTemplateCategoryId) {
         ciTemplateCategoryBusService.deleteTemplateCategory(ciTemplateCategoryId);
         return ResponseEntity.noContent().build();
     }
