@@ -45,6 +45,17 @@ public class CiSiteTemplateJobGroupController extends BaseController {
         return ResponseEntity.ok(ciTemplateJobGroupBusService.pageTemplateJobGroup(sourceId, pageRequest, name));
     }
 
+    @ApiOperation(value = "平台层创建流水线的时候查询分组列表")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping
+    @CustomPageRequest
+    public ResponseEntity<Page<CiTemplateJobGroupVO>> pageTemplateJobGroupByCondition(
+            @PathVariable(value = "source_id") Long sourceId,
+            @ApiParam(value = "分页参数")
+            @ApiIgnore PageRequest pageRequest) {
+        return ResponseEntity.ok(ciTemplateJobGroupBusService.pageTemplateJobGroupByCondition(sourceId, pageRequest));
+    }
+
     @ApiOperation(value = "平台层创建流水线任务分组")
     @Permission(level = ResourceLevel.SITE)
     @PostMapping
@@ -76,11 +87,10 @@ public class CiSiteTemplateJobGroupController extends BaseController {
     @ApiOperation(value = "平台层校验分类名称是否唯一")
     @Permission(level = ResourceLevel.SITE)
     @GetMapping("/check/name/unique")
-    public ResponseEntity<Void> checkTemplateJobGroup(
+    public ResponseEntity<Boolean> checkTemplateJobGroup(
             @PathVariable(value = "source_id") Long sourceId,
             @RequestParam(value = "name", required = false) String name) {
-        ciTemplateJobGroupBusService.checkTemplateJobGroup(sourceId, name);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ciTemplateJobGroupBusService.checkTemplateJobGroup(sourceId, name));
     }
 }
 

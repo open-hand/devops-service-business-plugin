@@ -53,7 +53,9 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
         CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = ciTemplateStepCategoryBusMapper.selectByPrimaryKey(ciTemplateStepCategoryVO.getId());
         AssertUtils.notNull(ciTemplateStepCategoryDTO, "error.ci.step.template.category.not.exist");
         AssertUtils.isTrue(!ciTemplateStepCategoryDTO.getBuiltIn(), "error.update.builtin.step.template.category");
-        checkStepCategoryName(ciTemplateStepCategoryVO.getName());
+        if (!checkStepCategoryName(ciTemplateStepCategoryVO.getName())) {
+            throw new CommonException("error.pipeline.category.exist");
+        }
         BeanUtils.copyProperties(ciTemplateStepCategoryVO, ciTemplateStepCategoryDTO);
         ciTemplateStepCategoryBusMapper.updateByPrimaryKeySelective(ciTemplateStepCategoryDTO);
         return ConvertUtils.convertObject(ciTemplateStepCategoryBusMapper.selectByPrimaryKey(ciTemplateStepCategoryDTO.getId()), CiTemplateStepCategoryVO.class);
@@ -76,7 +78,9 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
     @Transactional(rollbackFor = Exception.class)
     public CiTemplateStepCategoryVO createTemplateStepCategory(Long sourceId, CiTemplateStepCategoryVO ciTemplateStepCategoryVO) {
         AssertUtils.notNull(ciTemplateStepCategoryVO, "error.ci.template.step.category.null");
-        checkStepCategoryName(ciTemplateStepCategoryVO.getName());
+        if (!checkStepCategoryName(ciTemplateStepCategoryVO.getName())) {
+            throw new CommonException("error.pipeline.category.exist");
+        }
         //校验类型必须是自定义的
         AssertUtils.isTrue(!ciTemplateStepCategoryVO.getBuiltIn(), "error.ci.template.step.category.built.in");
         CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = new CiTemplateStepCategoryDTO();
@@ -89,8 +93,8 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
     }
 
     @Override
-    public void checkTemplateStepCategory(Long sourceId, String name) {
-        checkStepCategoryName(name);
+    public Boolean checkTemplateStepCategory(Long sourceId, String name) {
+        return checkStepCategoryName(name);
     }
 
     /**
@@ -107,12 +111,13 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
         }
     }
 
-    private void checkStepCategoryName(String name) {
+    private Boolean checkStepCategoryName(String name) {
         CiTemplateStepCategoryDTO record = new CiTemplateStepCategoryDTO();
         record.setName(name);
         CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = ciTemplateStepCategoryBusMapper.selectOne(record);
         if (ciTemplateStepCategoryDTO != null) {
-            throw new CommonException("error.step.category.name.already.exists");
+            return Boolean.FALSE;
         }
+        return Boolean.TRUE;
     }
 }

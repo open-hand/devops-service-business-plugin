@@ -10,7 +10,7 @@
            devops_ci_template_job_group dctjg
         <where>
             <if test="searchParam != null and searchParam != ''">
-
+                AND dctjg.name LIKE CONCAT(CONCAT('%', #{searchParam, jdbcType=VARCHAR}), '%')
             </if>
         </where>
 
