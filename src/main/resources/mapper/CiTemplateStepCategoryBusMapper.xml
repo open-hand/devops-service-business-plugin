@@ -5,19 +5,15 @@
 
     <select id="queryTemplateStepCategoryByParams" resultType="io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO">
         SELECT
-          dcts.*,
-        (SELECT
-           count( * )
-         FROM
-           devops_ci_template_job_step_rel dctjsr
-         WHERE dctjsr.ci_template_step_id = dcts.id AND  dcts.source_id = #{sourceId,jdbcType=BIGINT} ) AS template_number
+        dctsc.*,
+        ( SELECT count( * ) FROM devops_ci_template_step dcts WHERE dcts.category_id = dctsc.id AND dcts.source_id = #{sourceId,jdbcType=BIGINT} ) AS template_number
         FROM
-          devops_ci_template_step dcts
-        WHERE
-        dcts.source_id = #{sourceId,jdbcType=BIGINT}
+        devops_ci_template_step_category dctsc
+        where 1=1
         <if test="searchParam != null and searchParam != ''">
             AND dcts.`name` LIKE CONCAT(CONCAT('%', #{searchParam, jdbcType=VARCHAR}),'%')
         </if>
+
 
     </select>
 </mapper>

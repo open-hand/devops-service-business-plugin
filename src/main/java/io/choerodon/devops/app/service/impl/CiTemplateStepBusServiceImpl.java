@@ -60,6 +60,8 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
         CiTemplateStepDTO ciTemplateStepDTO = ciTemplateStepBusMapper.selectByPrimaryKey(ciTemplateStepVO.getId());
         AssertUtils.notNull(ciTemplateStepDTO, "error.ci.step.template.not.exist");
         AssertUtils.isTrue(ciTemplateStepDTO.getBuiltIn(), "error.update.builtin.step.template");
+        //是否预置这个字段不允许修改
+        ciTemplateStepVO.setBuiltIn(ciTemplateStepDTO.getBuiltIn());
         BeanUtils.copyProperties(ciTemplateStepVO, ciTemplateStepDTO);
         ciTemplateStepBusMapper.updateByPrimaryKeySelective(ciTemplateStepDTO);
         return ConvertUtils.convertObject(ciTemplateStepBusMapper.selectByPrimaryKey(ciTemplateStepVO.getId()), CiTemplateStepVO.class);
