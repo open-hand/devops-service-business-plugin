@@ -56,10 +56,10 @@ public class CiOrganizationTemplateStepController {
 
     @ApiOperation(value = "平台层删除流水线步骤模板")
     @Permission(level = ResourceLevel.ORGANIZATION)
-    @DeleteMapping
+    @DeleteMapping("/{ci_step_template_id}")
     public ResponseEntity<Void> deleteTemplateStep(
             @PathVariable(value = "organization_id") Long sourceId,
-            @Encrypt @RequestParam("ci_step_template_id") Long ciStepTemplateId) {
+            @Encrypt @PathVariable("ci_step_template_id") Long ciStepTemplateId) {
         ciTemplateStepBusService.deleteTemplateStep(sourceId, ciStepTemplateId);
         return ResponseEntity.noContent().build();
     }
