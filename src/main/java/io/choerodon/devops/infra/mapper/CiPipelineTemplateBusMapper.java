@@ -16,6 +16,11 @@ import io.choerodon.mybatis.common.BaseMapper;
  */
 public interface CiPipelineTemplateBusMapper extends BaseMapper<CiTemplatePipelineDTO> {
 
-    List<CiTemplatePipelineVO> queryDevopsPipelineTemplateByParams(@Param("sourceId") Long sourceId, @Param("searchVO") SearchVO searchVO);
+    List<CiTemplatePipelineVO> queryDevopsPipelineTemplateByParams(@Param("sourceId") Long sourceId,
+                                                                   @Param("name") String name,
+                                                                   @Param("categoryName") String categoryName,
+                                                                   @Param("builtIn") Boolean builtIn,
+                                                                   @Param("enable") Boolean enable,
+                                                                   @Param("params") String params);
 }
 

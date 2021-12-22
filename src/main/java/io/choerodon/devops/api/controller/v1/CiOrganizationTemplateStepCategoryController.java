@@ -40,7 +40,7 @@ public class CiOrganizationTemplateStepCategoryController extends BaseController
             @PathVariable(value = "organization_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
-            @RequestParam(value = "searchParam", required = false) String searchParam) {
+            @RequestParam(value = "name", required = false) String searchParam) {
         return ResponseEntity.ok(ciTemplateStepCategoryBusService.pageTemplateStepCategory(sourceId, pageRequest, searchParam));
     }
 

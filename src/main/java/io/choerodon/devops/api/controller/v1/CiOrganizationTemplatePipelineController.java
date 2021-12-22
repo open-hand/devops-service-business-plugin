@@ -41,8 +41,12 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
             @PathVariable(value = "organization_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
-            @RequestBody(required = false) SearchVO searchVO) {
-        return ResponseEntity.ok(ciPipelineTemplateBusService.pagePipelineTemplate(sourceId, pageRequest, searchVO));
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "categoryName", required = false) String categoryName,
+            @RequestParam(value = "builtIn", required = false) Boolean builtIn,
+            @RequestParam(value = "enable", required = false) Boolean enable,
+            @RequestParam(value = "params", required = false) String params) {
+        return ResponseEntity.ok(ciPipelineTemplateBusService.pagePipelineTemplate(sourceId, pageRequest, name, categoryName, builtIn, enable, params));
     }
 
     @ApiOperation(value = "组织层创建流水线模板")

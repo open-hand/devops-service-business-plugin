@@ -45,8 +45,8 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     private CiTemplateJobStepRelBusMapper ciTemplateJobStepRelBusMapper;
 
     @Override
-    public Page<CiTemplateStepVO> pageTemplateStep(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
-        Page<CiTemplateStepVO> templateStepDTOPageContent = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateStepBusMapper.queryTemplateStepByParams(sourceId, searchVO));
+    public Page<CiTemplateStepVO> pageTemplateStep(Long sourceId, PageRequest pageRequest, String name, String categoryName, Boolean builtIn, String params) {
+        Page<CiTemplateStepVO> templateStepDTOPageContent = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateStepBusMapper.queryTemplateStepByParams(sourceId, name, categoryName, builtIn, params));
         if (CollectionUtils.isEmpty(templateStepDTOPageContent)) {
             return templateStepDTOPageContent;
         }

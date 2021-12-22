@@ -11,7 +11,7 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
  * Created by wangxiang on 2021/12/14
  */
 public interface CiTemplateStepBusService {
-    Page<CiTemplateStepVO> pageTemplateStep(Long sourceId, PageRequest pageRequest, SearchVO searchVO);
+    Page<CiTemplateStepVO> pageTemplateStep(Long sourceId, PageRequest pageRequest, String name, String categoryName, Boolean builtIn, String params);
 
     CiTemplateStepVO updateTemplateStep(Long sourceId, CiTemplateStepVO ciTemplateStepVO);
 

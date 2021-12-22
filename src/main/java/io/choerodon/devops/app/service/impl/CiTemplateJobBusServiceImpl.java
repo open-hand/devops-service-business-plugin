@@ -117,20 +117,10 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         return ciTemplateJobBusMapper.isNameUnique(name, sourceId, jobId);
     }
 
-    @Override
-    public Page<CiTemplateJobVO> pageUnderOrgLevel(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
-        Page<CiTemplateJobVO> ciTemplateJobVOPage = PageHelper.doPage(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, searchVO));
-        UserDTOFillUtil.fillUserInfo(ciTemplateJobVOPage
-                .getContent()
-                .stream()
-                .filter(ciTemplateJobVO -> ResourceLevel.ORGANIZATION.value().equals(ciTemplateJobVO.getSourceType()))
-                .collect(Collectors.toList()), "createdBy", "creatorInfo");
-        return ciTemplateJobVOPage;
-    }
 
     @Override
-    public Page<CiTemplateJobVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, SearchVO searchVO) {
-        Page<CiTemplateJobVO> ciTemplateJobVOPage = PageHelper.doPage(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, searchVO));
+    public Page<CiTemplateJobVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, String name, String groupName, Boolean builtIn, String params) {
+        Page<CiTemplateJobVO> ciTemplateJobVOPage = PageHelper.doPage(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, name, groupName, builtIn, params));
         UserDTOFillUtil.fillUserInfo(ciTemplateJobVOPage
                 .getContent()
                 .stream()

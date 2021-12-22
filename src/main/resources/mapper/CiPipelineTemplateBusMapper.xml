@@ -41,37 +41,30 @@
            devops_ci_template_pipeline dctp
         JOIN devops_ci_template_category dctc ON dctp.ci_template_category_id=dctc.id
         where 1=1
-        <include refid="sqlparam"/>
-
+        <if test="name != null and name != ''">
+            AND dctp.name LIKE CONCAT(CONCAT('%', #{name, jdbcType=VARCHAR}), '%')
+        </if>
+        <if test="categoryName != null">
+            AND  dctc.category LIKE CONCAT(CONCAT('%', #{categoryName, jdbcType=VARCHAR}), '%')
+        </if>
+        <if test="builtIn != null and builtIn ==true">
+            AND  dctp.built_in = 1
+        </if>
+        <if test="builtIn != null and builtIn ==false">
+            AND  dctp.built_in = 0
+        </if>
+        <if test="enable != null != null and enable ==true ">
+            AND  dctp.enable = 1
+        </if>
+        <if test="enable != null != null and enable ==false">
+            AND  dctp.enable = 0
+        </if>
+        <if test="params != null and params != ''">
+            AND dctp.name LIKE CONCAT(CONCAT('%', #{params, jdbcType=VARCHAR}), '%')
+        </if>
 
 
     </select>
 
-    <sql id="sqlparam">
-        <if test="searchVO != null">
-            <if test="searchVO.searchParam != null">
-                <if test="searchVO.searchParam.name != null and searchVO.searchParam.name != ''">
-                    AND dctp.name LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.name, jdbcType=VARCHAR}), '%')
-                </if>
-                <if test="searchVO.searchParam.categoryName != null">
-                    AND  dctc.category LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.categoryName, jdbcType=VARCHAR}), '%')
-                </if>
-                <if test="searchVO.searchParam.builtIn != null and searchVO.searchParam.builtIn ==true">
-                    AND  dctp.built_in = 1
-                </if>
-                <if test="searchVO.searchParam.builtIn != null and searchVO.searchParam.builtIn ==false">
-                    AND  dctp.built_in = 0
-                </if>
-                <if test="searchVO.searchParam.enable != null != null and searchVO.searchParam.enable ==true ">
-                    AND  dctp.enable = 1
-                </if>
-                <if test="searchVO.searchParam.enable != null != null and searchVO.searchParam.enable ==false">
-                    AND  dctp.enable = 0
-                </if>
-                <if test="searchVO.searchParam.params != null and searchVO.searchParam.params != ''">
-                    AND dctp.name LIKE CONCAT(CONCAT('%', #{searchVO.searchParam.params, jdbcType=VARCHAR}), '%')
-                </if>
-            </if>
-        </if>
-    </sql>
+
 </mapper>

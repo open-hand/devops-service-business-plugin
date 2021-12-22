@@ -1,5 +1,6 @@
 package io.choerodon.devops.api.controller.v1;
 
+import io.kubernetes.client.openapi.models.V1Affinity;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
@@ -38,8 +39,11 @@ public class CiSiteTemplateStepController {
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
             @ApiIgnore PageRequest pageRequest,
-            @RequestBody(required = false) SearchVO searchVO) {
-        return ResponseEntity.ok(ciTemplateStepBusService.pageTemplateStep(sourceId, pageRequest, searchVO));
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "categoryName", required = false) String categoryName,
+            @RequestParam(value = "builtIn", required = false) Boolean builtIn,
+            @RequestParam(value = "params", required = false) String params) {
+        return ResponseEntity.ok(ciTemplateStepBusService.pageTemplateStep(sourceId, pageRequest, name, categoryName, builtIn, params));
     }
 
     @ApiOperation(value = "平台层修改流水线步骤模板")
