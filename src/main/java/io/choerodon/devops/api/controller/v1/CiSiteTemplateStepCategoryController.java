@@ -75,15 +75,13 @@ public class CiSiteTemplateStepCategoryController extends BaseController {
     }
 
 
-
     @ApiOperation(value = "平台层校验分类名称是否唯一")
     @Permission(level = ResourceLevel.SITE)
     @GetMapping("/check/name/unique")
-    public ResponseEntity<Void> checkTemplateStepCategory(
+    public ResponseEntity<Boolean> checkTemplateStepCategory(
             @PathVariable(value = "source_id") Long sourceId,
             @RequestParam(value = "name", required = false) String name) {
-        ciTemplateStepCategoryBusService.checkTemplateStepCategory(sourceId, name);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ciTemplateStepCategoryBusService.checkTemplateStepCategory(sourceId, name));
     }
 
 }

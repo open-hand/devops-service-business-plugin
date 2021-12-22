@@ -2,6 +2,7 @@ package io.choerodon.devops.app.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,18 +74,33 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     }
 
     @Override
-    public void checkTemplateJobGroup(Long sourceId, String name) {
-       checkGroupName(name);
+    public Boolean checkTemplateJobGroup(Long sourceId, String name) {
+        return checkGroupName(name);
     }
 
-    private void checkGroupName(String name) {
+
+    @Override
+    public Page<CiTemplateJobGroupVO> pageTemplateJobGroupByCondition(Long sourceId, PageRequest pageRequest) {
+        Page<CiTemplateJobGroupVO> ciTemplateJobGroupVOS = pageTemplateJobGroup(sourceId, pageRequest, null);
+        if (CollectionUtils.isEmpty(ciTemplateJobGroupVOS.getContent())) {
+            return ciTemplateJobGroupVOS;
+        }
+        //其他分类没有任务 则其他类型在创建流水线的时候不显示
+//        ciTemplateJobGroupVOS.getContent().stream().filter(ciTemplateJobGroupVO -> StringUtils.equalsIgnoreCase(ciTemplateJobGroupVO.getType,"")).
+
+        return null;
+    }
+
+    private Boolean checkGroupName(String name) {
 
         CiTemplateJobGroupDTO record = new CiTemplateJobGroupDTO();
         record.setName(name);
         List<CiTemplateJobGroupDTO> ciTemplateJobGroupDTOS = ciTemplateJobGroupBusMapper.select(record);
         if (!CollectionUtils.isEmpty(ciTemplateJobGroupDTOS)) {
-            throw new CommonException("error.job.group.exist");
+            return Boolean.FALSE;
+
         }
+        return Boolean.TRUE;
     }
 
     /**

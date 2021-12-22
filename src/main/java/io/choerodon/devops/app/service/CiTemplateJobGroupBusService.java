@@ -20,6 +20,8 @@ public interface CiTemplateJobGroupBusService {
 
     void deleteTemplateJobGroup(Long sourceId, Long ciTemplateJobGroupId);
 
-    void checkTemplateJobGroup(Long sourceId, String name);
+    Boolean checkTemplateJobGroup(Long sourceId, String name);
+
+    Page<CiTemplateJobGroupVO> pageTemplateJobGroupByCondition(Long sourceId, PageRequest pageRequest);
 }
 

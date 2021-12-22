@@ -68,7 +68,9 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
     @Transactional(rollbackFor = Exception.class)
     public CiTemplateCategoryVO createTemplateCategory(CiTemplateCategoryVO ciTemplateCategoryVO) {
         AssertUtils.notNull(ciTemplateCategoryVO, "error.ci.template.category.null");
-        checkCategoryName(ciTemplateCategoryVO.getCategory());
+        if (!checkCategoryName(ciTemplateCategoryVO.getCategory())) {
+            throw new CommonException("error.pipeline.category.exist");
+        }
         CiTemplateCategoryDTO ciTemplateCategoryDTO = new CiTemplateCategoryDTO();
         BeanUtils.copyProperties(ciTemplateCategoryVO, ciTemplateCategoryDTO);
         if (ciTemplateCategoryBusMapper.insertSelective(ciTemplateCategoryDTO) != 1) {
@@ -78,16 +80,17 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
     }
 
     @Override
-    public void checkTemplateCategory(Long sourceId, String name) {
-        checkCategoryName(name);
+    public Boolean checkTemplateCategory(Long sourceId, String name) {
+        return checkCategoryName(name);
     }
 
-    private void checkCategoryName(String name) {
+    private Boolean checkCategoryName(String name) {
         CiTemplateCategoryDTO record = new CiTemplateCategoryDTO();
         record.setCategory(name);
         List<CiTemplateCategoryDTO> ciTemplateCategoryDTOS = ciTemplateCategoryBusMapper.select(record);
         if (!CollectionUtils.isEmpty(ciTemplateCategoryDTOS)) {
-            throw new CommonException("error.pipeline.category.exist");
+            return Boolean.FALSE;
         }
+        return Boolean.TRUE;
     }
 }
