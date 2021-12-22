@@ -77,7 +77,8 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
     public CiTemplateStepCategoryVO createTemplateStepCategory(Long sourceId, CiTemplateStepCategoryVO ciTemplateStepCategoryVO) {
         AssertUtils.notNull(ciTemplateStepCategoryVO, "error.ci.template.step.category.null");
         checkStepCategoryName(ciTemplateStepCategoryVO);
-
+        //校验类型必须是自定义的
+        AssertUtils.isTrue(!ciTemplateStepCategoryVO.getBuiltIn(), "error.ci.template.step.category.built.in");
         CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = new CiTemplateStepCategoryDTO();
         BeanUtils.copyProperties(ciTemplateStepCategoryVO, ciTemplateStepCategoryDTO);
         if (ciTemplateStepCategoryBusMapper.insertSelective(ciTemplateStepCategoryDTO) != 1) {
