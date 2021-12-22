@@ -1,6 +1,5 @@
 package io.choerodon.devops.api.controller.v1;
 
-import io.kubernetes.client.openapi.models.V1Affinity;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
@@ -13,7 +12,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.devops.app.service.CiTemplateStepBusService;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
