@@ -47,7 +47,7 @@ public class CiSiteTemplateJobGroupController extends BaseController {
 
     @ApiOperation(value = "平台层创建流水线的时候查询分组列表")
     @Permission(level = ResourceLevel.SITE)
-    @GetMapping
+    @GetMapping("/ci_pipeline_template")
     @CustomPageRequest
     public ResponseEntity<Page<CiTemplateJobGroupVO>> pageTemplateJobGroupByCondition(
             @PathVariable(value = "source_id") Long sourceId,
