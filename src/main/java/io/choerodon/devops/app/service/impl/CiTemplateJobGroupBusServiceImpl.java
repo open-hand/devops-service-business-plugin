@@ -66,7 +66,7 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
             return;
         }
         checkRelated(ciTemplateJobGroupDTO);
-        AssertUtils.isTrue(ciTemplateJobGroupDTO.getBuiltIn(), "error.delete.builtin.job.template.group");
+        AssertUtils.isTrue(!ciTemplateJobGroupDTO.getBuiltIn(), "error.delete.builtin.job.template.group");
 
         ciTemplateJobGroupBusMapper.deleteByPrimaryKey(ciTemplateJobGroupId);
     }

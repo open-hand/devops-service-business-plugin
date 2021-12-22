@@ -59,7 +59,7 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     public CiTemplateStepVO updateTemplateStep(Long sourceId, CiTemplateStepVO ciTemplateStepVO) {
         CiTemplateStepDTO ciTemplateStepDTO = ciTemplateStepBusMapper.selectByPrimaryKey(ciTemplateStepVO.getId());
         AssertUtils.notNull(ciTemplateStepDTO, "error.ci.step.template.not.exist");
-        AssertUtils.isTrue(ciTemplateStepDTO.getBuiltIn(), "error.update.builtin.step.template");
+        AssertUtils.isTrue(!ciTemplateStepDTO.getBuiltIn(), "error.update.builtin.step.template");
         //是否预置这个字段不允许修改
         ciTemplateStepVO.setBuiltIn(ciTemplateStepDTO.getBuiltIn());
         BeanUtils.copyProperties(ciTemplateStepVO, ciTemplateStepDTO);
@@ -75,7 +75,7 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
         if (ciTemplateStepDTO == null) {
             return;
         }
-        AssertUtils.isTrue(ciTemplateStepDTO.getBuiltIn(), "error.delete.builtin.ci.step.template");
+        AssertUtils.isTrue(!ciTemplateStepDTO.getBuiltIn(), "error.delete.builtin.ci.step.template");
         ciTemplateStepBusMapper.deleteByPrimaryKey(ciTemplateStepDTO.getId());
     }
 
