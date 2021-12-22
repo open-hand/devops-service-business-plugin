@@ -15,5 +15,7 @@ public interface CiTemplateStepCategoryBusService {
     void deleteTemplateStepCategory(Long sourceId, Long ciTemplateCategoryId);
 
     CiTemplateStepCategoryVO createTemplateStepCategory(Long sourceId, CiTemplateStepCategoryVO ciTemplateStepCategoryVO);
+
+    void checkTemplateStepCategory(Long sourceId, String name);
 }
 
