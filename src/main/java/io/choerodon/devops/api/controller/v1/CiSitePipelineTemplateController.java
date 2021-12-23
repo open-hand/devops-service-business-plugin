@@ -14,7 +14,9 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
+import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.CustomPageRequest;
 import io.choerodon.swagger.annotation.Permission;
 
@@ -40,7 +42,8 @@ public class CiSitePipelineTemplateController extends BaseController {
     public ResponseEntity<Page<CiTemplatePipelineVO>> pagePipelineTemplate(
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
-            @ApiIgnore PageRequest pageRequest,
+            @ApiIgnore
+            @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "categoryName", required = false) String categoryName,
             @RequestParam(value = "builtIn", required = false) Boolean builtIn,
