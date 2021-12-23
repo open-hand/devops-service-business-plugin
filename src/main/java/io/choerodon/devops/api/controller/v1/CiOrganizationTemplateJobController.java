@@ -79,10 +79,10 @@ public class CiOrganizationTemplateJobController {
 
     @ApiOperation(value = "组织层删除job模版")
     @Permission(level = ResourceLevel.ORGANIZATION)
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{job_id}")
     public ResponseEntity<CiTemplateJobVO> deleteTemplateJob(
             @PathVariable(value = "organization_id") Long sourceId,
-            @Encrypt @PathVariable Long jobId) {
+            @Encrypt @PathVariable(value = "job_id") Long jobId) {
         if (sourceId == 0) {
             throw new CommonException("error.invalid.sourceId");
         }
