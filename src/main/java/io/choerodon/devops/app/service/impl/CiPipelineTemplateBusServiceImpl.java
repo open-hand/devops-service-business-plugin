@@ -76,23 +76,20 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void invalidPipelineTemplate(Long sourceId, Long ciPipelineTemplateId) {
-        checkPipelineTemplate(ciPipelineTemplateId);
-
-        CiTemplatePipelineDTO ciPipelineTemplateDTO = new CiTemplatePipelineDTO();
-        ciPipelineTemplateDTO.setId(ciPipelineTemplateId);
-        ciPipelineTemplateDTO.setEnable(Boolean.FALSE);
-        ciPipelineTemplateBusMapper.updateByPrimaryKey(ciPipelineTemplateDTO);
+        CiTemplatePipelineDTO pipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(ciPipelineTemplateId);
+        checkPipelineTemplate(pipelineTemplateDTO);
+        pipelineTemplateDTO.setEnable(Boolean.FALSE);
+        ciPipelineTemplateBusMapper.updateByPrimaryKey(pipelineTemplateDTO);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void enablePipelineTemplate(Long sourceId, Long ciPipelineTemplateId) {
-        checkPipelineTemplate(ciPipelineTemplateId);
-
-        CiTemplatePipelineDTO ciPipelineTemplateDTO = new CiTemplatePipelineDTO();
-        ciPipelineTemplateDTO.setId(ciPipelineTemplateId);
-        ciPipelineTemplateDTO.setEnable(Boolean.TRUE);
-        ciPipelineTemplateBusMapper.updateByPrimaryKey(ciPipelineTemplateDTO);
+        CiTemplatePipelineDTO pipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(ciPipelineTemplateId);
+        checkPipelineTemplate(pipelineTemplateDTO);
+        pipelineTemplateDTO.setEnable(Boolean.FALSE);
+        pipelineTemplateDTO.setEnable(Boolean.TRUE);
+        ciPipelineTemplateBusMapper.updateByPrimaryKey(pipelineTemplateDTO);
     }
 
 
@@ -327,8 +324,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
     }
 
-    private void checkPipelineTemplate(Long ciPipelineTemplateId) {
-        CiTemplatePipelineDTO pipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(ciPipelineTemplateId);
+    private void checkPipelineTemplate(CiTemplatePipelineDTO pipelineTemplateDTO) {
         AssertUtils.notNull(pipelineTemplateDTO, "error.pipeline.template.is.null");
         AssertUtils.isTrue(!pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
     }

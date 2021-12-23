@@ -19,6 +19,7 @@ import io.choerodon.devops.infra.dto.CiTemplateCategoryDTO;
 import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
 import io.choerodon.devops.infra.dto.CiTemplateJobGroupDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStepDTO;
+import io.choerodon.devops.infra.enums.CiTemplateJobGroupTypeEnum;
 import io.choerodon.devops.infra.mapper.CiTemplateJobGroupBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateJobMapper;
 import io.choerodon.devops.infra.util.UserDTOFillUtil;
@@ -50,6 +51,7 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     public CiTemplateJobGroupVO createTemplateJobGroup(Long sourceId, CiTemplateJobGroupVO ciTemplateJobGroupVO) {
         ciTemplateJobGroupVO.setBuiltIn(false);
         CiTemplateJobGroupDTO ciTemplateJobGroupDTO = ConvertUtils.convertObject(ciTemplateJobGroupVO, CiTemplateJobGroupDTO.class);
+        ciTemplateJobGroupDTO.setType(CiTemplateJobGroupTypeEnum.OTHER.value());
         ciTemplateJobGroupBusMapper.insert(ciTemplateJobGroupDTO);
         return ConvertUtils.convertObject(ciTemplateJobGroupDTO, CiTemplateJobGroupVO.class);
     }
