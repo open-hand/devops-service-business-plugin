@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.util.AssertUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +16,7 @@ import io.choerodon.core.utils.ConvertUtils;
 import io.choerodon.devops.api.vo.template.CiTemplateJobGroupVO;
 import io.choerodon.devops.app.service.CiTemplateJobGroupBusService;
 import io.choerodon.devops.infra.constant.Constant;
-import io.choerodon.devops.infra.dto.CiTemplateCategoryDTO;
-import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
-import io.choerodon.devops.infra.dto.CiTemplateJobGroupDTO;
-import io.choerodon.devops.infra.dto.CiTemplateStepDTO;
+import io.choerodon.devops.infra.dto.*;
 import io.choerodon.devops.infra.enums.CiTemplateJobGroupTypeEnum;
 import io.choerodon.devops.infra.mapper.CiTemplateJobGroupBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateJobMapper;
@@ -59,10 +57,18 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CiTemplateJobGroupVO updateTemplateJobGroup(Long sourceId, CiTemplateJobGroupVO ciTemplateJobGroupVO) {
+
+        CiTemplateJobGroupDTO templateJobGroupDTO = ciTemplateJobGroupBusMapper.selectByPrimaryKey(ciTemplateJobGroupVO.getId());
+        AssertUtils.notNull(templateJobGroupDTO, "error.ci.job.template.group.not.exist");
+        AssertUtils.isTrue(!templateJobGroupDTO.getBuiltIn(), "error.update.builtin.job.template.group");
+//        if (!checkStepCategoryName(ciTemplateStepCategoryVO.getName())) {
+//            throw new CommonException("error.pipeline.category.exist");
+//        }
+
         ciTemplateJobGroupVO.setBuiltIn(false);
-        CiTemplateJobGroupDTO ciTemplateJobGroupDTO = ConvertUtils.convertObject(ciTemplateJobGroupVO, CiTemplateJobGroupDTO.class);
-        ciTemplateJobGroupBusMapper.updateByPrimaryKeySelective(ciTemplateJobGroupDTO);
-        return ConvertUtils.convertObject(ciTemplateJobGroupDTO, CiTemplateJobGroupVO.class);
+        BeanUtils.copyProperties(ciTemplateJobGroupVO, templateJobGroupDTO);
+        ciTemplateJobGroupBusMapper.updateByPrimaryKeySelective(templateJobGroupDTO);
+        return ConvertUtils.convertObject(templateJobGroupDTO, CiTemplateJobGroupVO.class);
     }
 
     @Override
