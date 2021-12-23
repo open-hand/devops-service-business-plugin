@@ -99,4 +99,13 @@ public class CiOrganizationTemplateJobController {
             @RequestParam(value = "name") String name) {
         return Results.success(ciTemplateJobBusService.isNameUnique(name, sourceId, jobId));
     }
+
+    @ApiOperation(value = "校验任务是否可以删除（是否关联流水线）")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping("/{template_job_id}/check/delete")
+    public ResponseEntity<Boolean> checkJobTemplateByJobId(
+            @PathVariable(value = "organization_id") Long sourceId,
+            @Encrypt @PathVariable(value = "template_job_id") Long templateJobId) {
+        return ResponseEntity.ok(ciTemplateJobBusService.checkJobTemplateByJobId(sourceId, templateJobId));
+    }
 }

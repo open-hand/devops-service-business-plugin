@@ -19,11 +19,13 @@ import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
 import io.choerodon.devops.app.service.CiTemplateJobBusService;
 import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
 import io.choerodon.devops.infra.dto.CiTemplateJobStepRelDTO;
+import io.choerodon.devops.infra.dto.CiTemplateStageJobRelDTO;
 import io.choerodon.devops.infra.enums.CiJobTypeEnum;
 import io.choerodon.devops.infra.feign.operator.BaseServiceClientOperator;
 import io.choerodon.devops.infra.mapper.CiTemplateJobBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateJobGroupBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateJobStepRelBusMapper;
+import io.choerodon.devops.infra.mapper.CiTemplateStageJobRelBusMapper;
 import io.choerodon.devops.infra.util.UserDTOFillUtil;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -47,6 +49,9 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
 
     @Autowired
     private BaseServiceClientOperator baseServiceClientOperator;
+
+    @Autowired
+    private CiTemplateStageJobRelBusMapper ciTemplateStageJobRelBusMapper;
 
     @Override
     public List<CiTemplateJobVO> queryTemplateJobsByGroupId(Long sourceId, Long ciTemplateJobGroupId) {
@@ -127,6 +132,17 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
                 .filter(ciTemplateJobVO -> ResourceLevel.SITE.value().equals(ciTemplateJobVO.getSourceType()))
                 .collect(Collectors.toList()), "createdBy", "creatorInfo");
         return ciTemplateJobVOPage;
+    }
+
+    @Override
+    public Boolean checkJobTemplateByJobId(Long sourceId, Long templateJobId) {
+        CiTemplateStageJobRelDTO ciTemplateStageJobRelDTO = new CiTemplateStageJobRelDTO();
+        ciTemplateStageJobRelDTO.setCiTemplateJobId(templateJobId);
+        List<CiTemplateStageJobRelDTO> ciTemplateStageJobRelDTOS = ciTemplateStageJobRelBusMapper.select(ciTemplateStageJobRelDTO);
+        if (CollectionUtils.isEmpty(ciTemplateStageJobRelDTOS)) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 
     private void checkParam(CiTemplateJobVO ciTemplateJobVO) {
