@@ -14,12 +14,14 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.utils.ConvertUtils;
 import io.choerodon.devops.api.vo.template.CiTemplateJobGroupVO;
 import io.choerodon.devops.app.service.CiTemplateJobGroupBusService;
+import io.choerodon.devops.infra.constant.Constant;
 import io.choerodon.devops.infra.dto.CiTemplateCategoryDTO;
 import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
 import io.choerodon.devops.infra.dto.CiTemplateJobGroupDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStepDTO;
 import io.choerodon.devops.infra.mapper.CiTemplateJobGroupBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateJobMapper;
+import io.choerodon.devops.infra.util.UserDTOFillUtil;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 
@@ -39,6 +41,7 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     public Page<CiTemplateJobGroupVO> pageTemplateJobGroup(Long sourceId, PageRequest pageRequest, String searchParam) {
         Page<CiTemplateJobGroupDTO> ciTemplateJobGroupDTOS = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, searchParam));
         Page<CiTemplateJobGroupVO> ciTemplateJobGroupVOS = ConvertUtils.convertPage(ciTemplateJobGroupDTOS, CiTemplateJobGroupVO.class);
+        UserDTOFillUtil.fillUserInfo(ciTemplateJobGroupVOS.getContent(), Constant.CREATED_BY, Constant.CREATOR);
         return ciTemplateJobGroupVOS;
     }
 
