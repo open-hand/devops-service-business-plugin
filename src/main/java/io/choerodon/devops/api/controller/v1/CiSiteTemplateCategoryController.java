@@ -13,7 +13,9 @@ import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.devops.api.vo.template.CiTemplateCategoryVO;
 import io.choerodon.devops.app.service.CiTemplateCategoryBusService;
+import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.CustomPageRequest;
 import io.choerodon.swagger.annotation.Permission;
 
@@ -38,7 +40,8 @@ public class CiSiteTemplateCategoryController extends BaseController {
     public ResponseEntity<Page<CiTemplateCategoryVO>> pageTemplateCategory(
             @PathVariable(value = "source_id") Long sourceId,
             @ApiParam(value = "分页参数")
-            @ApiIgnore PageRequest pageRequest,
+            @ApiIgnore
+            @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
             @RequestParam(value = "name", required = false) String name) {
         return ResponseEntity.ok(ciTemplateCategoryBusService.pageTemplateCategory(pageRequest, name));
     }
