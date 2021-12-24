@@ -3,6 +3,7 @@ package io.choerodon.devops.api.controller.v1;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import java.util.List;
 import org.hzero.core.util.Results;
 import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,14 @@ public class CiOrganizationTemplateJobController {
             @RequestParam(value = "builtIn", required = false) Boolean builtIn,
             @RequestParam(value = "params", required = false) String params) {
         return Results.success(ciTemplateJobBusService.pageTemplateJobs(resourceId, pageRequest, name, groupName, builtIn, params));
+    }
+
+    @ApiOperation(value = "组织层层查询job列表")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/list")
+    public ResponseEntity<List<CiTemplateJobVO>> listTemplateJobs(
+            @PathVariable(value = "organization_id") Long sourceId) {
+        return ResponseEntity.ok(ciTemplateJobBusService.listTemplateJobs(sourceId));
     }
 
     @ApiOperation(value = "组织层创建job模版")

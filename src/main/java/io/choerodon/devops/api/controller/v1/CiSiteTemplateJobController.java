@@ -62,6 +62,14 @@ public class CiSiteTemplateJobController extends BaseController {
         return ResponseEntity.ok(ciTemplateJobBusService.pageTemplateJobs(sourceId, pageRequest, name, groupName, builtIn, params));
     }
 
+    @ApiOperation(value = "组织层查询job列表")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping("/list")
+    public ResponseEntity<List<CiTemplateJobVO>> listTemplateJobs(
+            @PathVariable(value = "source_id") Long sourceId) {
+        return ResponseEntity.ok(ciTemplateJobBusService.listTemplateJobs(sourceId));
+    }
+
 
     @ApiOperation(value = "平台层创建job模版")
     @Permission(level = ResourceLevel.SITE)
