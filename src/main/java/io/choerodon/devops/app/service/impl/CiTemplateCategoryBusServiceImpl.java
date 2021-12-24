@@ -74,6 +74,7 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
         CiTemplateCategoryDTO ciTemplateCategoryDTO = new CiTemplateCategoryDTO();
         BeanUtils.copyProperties(ciTemplateCategoryVO, ciTemplateCategoryDTO);
         ciTemplateCategoryDTO.setImage(CUSTOM_ICON);
+        ciTemplateCategoryDTO.setBuiltIn(Boolean.FALSE);
         if (ciTemplateCategoryBusMapper.insertSelective(ciTemplateCategoryDTO) != 1) {
             throw new CommonException("error.create.template.category");
         }
