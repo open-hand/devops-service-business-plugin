@@ -117,4 +117,13 @@ public class CiOrganizationTemplateJobController {
             @Encrypt @PathVariable(value = "template_job_id") Long templateJobId) {
         return ResponseEntity.ok(ciTemplateJobBusService.checkJobTemplateByJobId(sourceId, templateJobId));
     }
+
+    @ApiOperation(value = "组织层根据job分组id查询job列表")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping
+    public ResponseEntity<List<CiTemplateJobVO>> queryTemplateJobsByGroupId(
+            @PathVariable(value = "organization_id") Long sourceId,
+            @Encrypt @RequestParam(value = "ci_template_job_group_id") Long ciTemplateJobGroupId) {
+        return ResponseEntity.ok(ciTemplateJobBusService.queryTemplateJobsByGroupId(sourceId, ciTemplateJobGroupId));
+    }
 }
