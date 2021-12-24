@@ -1,7 +1,6 @@
 package io.choerodon.devops.app.service.impl;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +13,13 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.core.utils.ConvertUtils;
+import io.choerodon.devops.api.vo.DevopsCiStepVO;
 import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
+import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
+import io.choerodon.devops.app.service.AbstractDevopsCiStepHandler;
 import io.choerodon.devops.app.service.CiTemplateJobBusService;
+import io.choerodon.devops.app.service.CiTemplateStepService;
 import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
 import io.choerodon.devops.infra.dto.CiTemplateJobStepRelDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStageJobRelDTO;
@@ -53,6 +56,12 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     @Autowired
     private CiTemplateStageJobRelBusMapper ciTemplateStageJobRelBusMapper;
 
+    @Autowired
+    private CiTemplateStepService ciTemplateStepService;
+
+    @Autowired
+    private DevopsCiStepOperator devopsCiStepOperator;
+
     @Override
     public List<CiTemplateJobVO> queryTemplateJobsByGroupId(Long sourceId, Long ciTemplateJobGroupId) {
         CiTemplateJobDTO record = new CiTemplateJobDTO();
@@ -61,7 +70,26 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         if (CollectionUtils.isEmpty(ciTemplateJobDTOS)) {
             return Collections.EMPTY_LIST;
         }
-        return ConvertUtils.convertList(ciTemplateJobDTOS, CiTemplateJobVO.class);
+        List<CiTemplateJobVO> ciTemplateJobVOS = ConvertUtils.convertList(ciTemplateJobDTOS, CiTemplateJobVO.class);
+        // 填充任务中的步骤信息
+        Set<Long> jobIds = ciTemplateJobVOS.stream().map(CiTemplateJobVO::getId).collect(Collectors.toSet());
+        List<CiTemplateStepVO> ciTemplateStepVOS = ciTemplateStepService.listByJobIds(jobIds);
+        Map<Long, List<CiTemplateStepVO>> jobStepsMap = ciTemplateStepVOS.stream().collect(Collectors.groupingBy(CiTemplateStepVO::getCiTemplateJobId));
+
+        ciTemplateJobVOS.forEach(ciTemplateJobVO -> {
+            List<CiTemplateStepVO> ciTemplateStepVOList = jobStepsMap.get(ciTemplateJobVO.getId());
+            if (!CollectionUtils.isEmpty(ciTemplateStepVOList)) {
+                List<CiTemplateStepVO> templateStepVOList = new ArrayList<>();
+                ciTemplateStepVOList.forEach(ciTemplateStepVO -> {
+                    // 添加步骤关联的配置信息
+                    AbstractDevopsCiStepHandler stepHandler = devopsCiStepOperator.getHandlerOrThrowE(ciTemplateStepVO.getType());
+                    stepHandler.fillTemplateStepConfigInfo(ciTemplateStepVO);
+                    templateStepVOList.add(ciTemplateStepVO);
+                });
+                ciTemplateJobVO.setCiTemplateStepVOS(templateStepVOList);
+            }
+        });
+        return ciTemplateJobVOS;
     }
 
     @Override
