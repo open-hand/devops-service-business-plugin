@@ -1,5 +1,7 @@
 package io.choerodon.devops.app.service;
 
+import java.util.List;
+
 import io.choerodon.core.domain.Page;
 import io.choerodon.devops.api.vo.template.CiTemplateJobGroupVO;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -23,5 +25,7 @@ public interface CiTemplateJobGroupBusService {
     Boolean checkTemplateJobGroup(Long sourceId, String name);
 
     Page<CiTemplateJobGroupVO> pageTemplateJobGroupByCondition(Long sourceId, PageRequest pageRequest);
+
+    List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId);
 }
 

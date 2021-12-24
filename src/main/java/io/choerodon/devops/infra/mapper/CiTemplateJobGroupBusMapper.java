@@ -3,6 +3,7 @@ package io.choerodon.devops.infra.mapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
+import io.choerodon.devops.api.vo.template.CiTemplateJobGroupVO;
 import io.choerodon.devops.infra.dto.CiTemplateJobGroupDTO;
 import io.choerodon.mybatis.common.BaseMapper;
 
@@ -15,5 +16,6 @@ import io.choerodon.mybatis.common.BaseMapper;
 public interface CiTemplateJobGroupBusMapper extends BaseMapper<CiTemplateJobGroupDTO> {
 
     List<CiTemplateJobGroupDTO> queryTemplateJobGroupByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
+
 }
 

@@ -2,6 +2,7 @@ package io.choerodon.devops.api.controller.v1;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import java.util.List;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.starter.keyencrypt.core.Encrypt;
@@ -46,6 +47,15 @@ public class CiSiteTemplateJobGroupController extends BaseController {
             @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
             @RequestParam(value = "name", required = false) String name) {
         return ResponseEntity.ok(ciTemplateJobGroupBusService.pageTemplateJobGroup(sourceId, pageRequest, name));
+    }
+
+
+    @ApiOperation(value = "平台层查询流水线任务分组列表list")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping("/list")
+    public ResponseEntity<List<CiTemplateJobGroupVO>> listTemplateJobGroup(
+            @PathVariable(value = "source_id") Long sourceId) {
+        return ResponseEntity.ok(ciTemplateJobGroupBusService.listTemplateJobGroup(sourceId));
     }
 
     @ApiOperation(value = "平台层创建流水线的时候查询分组列表")
