@@ -63,4 +63,26 @@
 	     AND dctj.source_id = #{sourceId,jdbcType=BIGINT}
     </select>
 
+    <select id="queryAllCiTemplateJob" resultType="io.choerodon.devops.api.vo.template.CiTemplateJobVO">
+        SELECT
+           dctj.id,
+           dctj.NAME,
+           dctj.created_by,
+           dctj.last_updated_by,
+           dctj.last_update_date,
+           dctj.source_type,
+           dctj.built_in,
+           dctj.creation_date,
+           dctjg.NAME AS group_name,
+          (select
+           count(dcts.id)
+           FROM devops_ci_template_step dcts
+           JOIN devops_ci_template_job_step_rel dctjsr
+           ON  dctjsr.ci_template_step_id=dcts.id
+           WHERE dctjsr.ci_template_job_id =dctj.id ) AS step_number
+        FROM devops_ci_template_job dctj
+        JOIN devops_ci_template_job_group dctjg ON dctj.group_id = dctjg.id
+        WHERE (dctj.source_id = 0 OR dctj.source_id = #{sourceId})
+    </select>
+
 </mapper>

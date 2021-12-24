@@ -145,6 +145,11 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         return Boolean.FALSE;
     }
 
+    @Override
+    public List<CiTemplateJobVO> listTemplateJobs(Long sourceId) {
+        return ciTemplateJobBusMapper.queryAllCiTemplateJob(sourceId);
+    }
+
     private void checkParam(CiTemplateJobVO ciTemplateJobVO) {
         // 检验名称
         if (ciTemplateJobVO.getName().length() > MAX_NAME_LENGTH) {

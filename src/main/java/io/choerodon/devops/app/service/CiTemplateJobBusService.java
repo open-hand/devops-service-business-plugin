@@ -26,4 +26,7 @@ public interface CiTemplateJobBusService {
     Page<CiTemplateJobVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, String name, String groupName, Boolean builtIn, String params);
 
     Boolean checkJobTemplateByJobId(Long sourceId, Long templateJobId);
+
+    List<CiTemplateJobVO> listTemplateJobs(Long sourceId);
+
 }
