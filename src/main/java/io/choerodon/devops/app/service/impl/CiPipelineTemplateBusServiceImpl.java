@@ -326,7 +326,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
     private void checkPipelineTemplate(CiTemplatePipelineDTO pipelineTemplateDTO) {
         AssertUtils.notNull(pipelineTemplateDTO, "error.pipeline.template.is.null");
-        AssertUtils.isTrue(!pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
+//        AssertUtils.isTrue(!pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
     }
 
     /**
