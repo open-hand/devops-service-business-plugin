@@ -100,9 +100,9 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         CiTemplateJobDTO ciTemplateJobDTO = ConvertUtils.convertObject(ciTemplateJobVO, CiTemplateJobDTO.class);
         // 插入job记录
         ciTemplateJobBusMapper.insert(ciTemplateJobDTO);
-        if (!CollectionUtils.isEmpty(ciTemplateJobVO.getCiTemplateStepVOS())) {
+        if (!CollectionUtils.isEmpty(ciTemplateJobVO.getDevopsCiStepVOList())) {
             // 添加job和step关系
-            ciTemplateJobVO.getCiTemplateStepVOS().forEach(ciTemplateStepVO -> {
+            ciTemplateJobVO.getDevopsCiStepVOList().forEach(ciTemplateStepVO -> {
                 CiTemplateJobStepRelDTO ciTemplateJobStepRelDTO = new CiTemplateJobStepRelDTO();
                 ciTemplateJobStepRelDTO.setCiTemplateJobId(ciTemplateJobDTO.getId());
                 ciTemplateJobStepRelDTO.setCiTemplateStepId(ciTemplateStepVO.getId());
@@ -121,11 +121,11 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         // 更新job记录
         ciTemplateJobBusMapper.updateByPrimaryKeySelective(ciTemplateJobDTO);
         // 更新job和step关系
-        if (!CollectionUtils.isEmpty(ciTemplateJobVO.getCiTemplateStepVOS())) {
+        if (!CollectionUtils.isEmpty(ciTemplateJobVO.getDevopsCiStepVOList())) {
             // 先删除旧关系
             ciTemplateJobStepRelBusMapper.deleteByJobId(ciTemplateJobVO.getId());
             // 添加job和step关系
-            ciTemplateJobVO.getCiTemplateStepVOS().forEach(ciTemplateStepVO -> {
+            ciTemplateJobVO.getDevopsCiStepVOList().forEach(ciTemplateStepVO -> {
                 CiTemplateJobStepRelDTO ciTemplateJobStepRelDTO = new CiTemplateJobStepRelDTO();
                 ciTemplateJobStepRelDTO.setCiTemplateJobId(ciTemplateJobDTO.getId());
                 ciTemplateJobStepRelDTO.setCiTemplateStepId(ciTemplateStepVO.getId());
@@ -184,7 +184,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
             throw new CommonException("error.ci.template.job.name.length");
         }
         // 如果是普通创建类型的任务，需要校验关联的步骤不为空
-        if (CiJobTypeEnum.NORMAL.value().equals(ciTemplateJobVO.getType()) && ciTemplateJobVO.getCiTemplateStepVOS().size() == 0) {
+        if (CiJobTypeEnum.NORMAL.value().equals(ciTemplateJobVO.getType()) && ciTemplateJobVO.getDevopsCiStepVOList().size() == 0) {
             throw new CommonException("error.ci.template.job.normal.step.size");
         }
         // 绑定的组不能为空或不存在
