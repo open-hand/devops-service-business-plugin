@@ -103,7 +103,7 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
 
 
     @ApiOperation(value = "流水线重名校验")
-    @GetMapping("/check/name")
+    @GetMapping("/check/name/unique")
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<Boolean> checkPipelineTemplateName(
             @PathVariable(value = "organization_id") Long organizationId,
