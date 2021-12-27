@@ -126,7 +126,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
                 ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageVO.getId());
                 ciTemplateStageJobRelMapper.insertSelective(ciTemplateStageJobRelDTO);
 
-                List<CiTemplateStepVO> ciTemplateStepVOS = ciTemplateJobVO.getCiTemplateStepVOS();
+                List<CiTemplateStepVO> ciTemplateStepVOS = ciTemplateJobVO.getDevopsCiStepVOList();
                 if (CollectionUtils.isEmpty(ciTemplateStepVOS)) {
                     return;
                 }
@@ -163,7 +163,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
                     return;
                 }
                 List<CiTemplateStepVO> ciTemplateStepVOS = ConvertUtils.convertList(ciTemplateStepDTOS, CiTemplateStepVO.class);
-                ciTemplateJobVO.setCiTemplateStepVOS(ciTemplateStepVOS);
+                ciTemplateJobVO.setDevopsCiStepVOList(ciTemplateStepVOS);
             });
             ciTemplateStageVO.setCiTemplateJobVOList(ciTemplateJobVOS);
         });
@@ -228,7 +228,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
                 ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageVO.getId());
                 ciTemplateStageJobRelMapper.insertSelective(ciTemplateStageJobRelDTO);
 
-                List<CiTemplateStepVO> ciTemplateStepVOS = ciTemplateJobVO.getCiTemplateStepVOS();
+                List<CiTemplateStepVO> ciTemplateStepVOS = ciTemplateJobVO.getDevopsCiStepVOList();
                 if (CollectionUtils.isEmpty(ciTemplateStepVOS)) {
                     return;
                 }
