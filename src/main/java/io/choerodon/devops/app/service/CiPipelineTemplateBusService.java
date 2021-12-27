@@ -23,5 +23,7 @@ public interface CiPipelineTemplateBusService {
 
     void deletePipelineTemplate(Long sourceId, Long ciTemplatePipelineId);
 
+    Boolean checkPipelineTemplateName(Long sourceId, String name);
+
 }
 
