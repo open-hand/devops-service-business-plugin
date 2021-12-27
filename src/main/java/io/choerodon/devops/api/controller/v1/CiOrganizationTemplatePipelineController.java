@@ -102,5 +102,15 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
     }
 
 
+    @ApiOperation(value = "流水线重名校验")
+    @GetMapping("/check/name")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    public ResponseEntity<Boolean> checkPipelineTemplateName(
+            @PathVariable(value = "organization_id") Long organizationId,
+            @RequestParam(value = "name") String name) {
+        return ResponseEntity.ok(ciPipelineTemplateBusService.checkPipelineTemplateName(organizationId, name));
+    }
+
+
 }
 

@@ -280,6 +280,11 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
     }
 
+    @Override
+    public Boolean checkPipelineTemplateName(Long sourceId, String name) {
+        return checkPipelineName(name);
+    }
+
     private void checkPipelineTemplate(CiTemplatePipelineDTO pipelineTemplateDTO) {
         AssertUtils.notNull(pipelineTemplateDTO, "error.pipeline.template.is.null");
 //        AssertUtils.isTrue(!pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
@@ -323,5 +328,15 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         if (!CollectionUtils.isEmpty(ciTemplatePipelineDTOS)) {
             throw new CommonException("error.pipeline.template.name.exist");
         }
+    }
+
+    private boolean checkPipelineName(String name) {
+        CiTemplatePipelineDTO record = new CiTemplatePipelineDTO();
+        record.setName(name);
+        List<CiTemplatePipelineDTO> ciTemplatePipelineDTOS = ciPipelineTemplateBusMapper.select(record);
+        if (!CollectionUtils.isEmpty(ciTemplatePipelineDTOS)) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 }

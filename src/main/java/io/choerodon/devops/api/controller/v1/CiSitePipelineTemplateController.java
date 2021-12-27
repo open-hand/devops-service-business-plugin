@@ -11,7 +11,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -109,6 +108,16 @@ public class CiSitePipelineTemplateController extends BaseController {
             @PathVariable(value = "source_id") Long sourceId,
             @Encrypt @PathVariable(value = "ci_template_id") Long ciPipelineTemplateId) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.queryPipelineTemplateById(sourceId, ciPipelineTemplateId));
+    }
+
+
+    @ApiOperation(value = "流水线重名校验")
+    @GetMapping("/check/name")
+    @Permission(level = ResourceLevel.SITE)
+    public ResponseEntity<Boolean> checkPipelineTemplateName(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestParam(value = "name") String name) {
+        return ResponseEntity.ok(ciPipelineTemplateBusService.checkPipelineTemplateName(sourceId, name));
     }
 
 }
