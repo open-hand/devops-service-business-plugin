@@ -86,7 +86,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
                     stepHandler.fillTemplateStepConfigInfo(ciTemplateStepVO);
                     templateStepVOList.add(ciTemplateStepVO);
                 });
-                ciTemplateJobVO.setCiTemplateStepVOS(templateStepVOList);
+                ciTemplateJobVO.setDevopsCiStepVOList(templateStepVOList);
             }
         });
         return ciTemplateJobVOS;
