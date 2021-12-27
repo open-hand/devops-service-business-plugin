@@ -112,7 +112,7 @@ public class CiSitePipelineTemplateController extends BaseController {
 
 
     @ApiOperation(value = "流水线重名校验")
-    @GetMapping("/check/name")
+    @GetMapping("/check/name/unique")
     @Permission(level = ResourceLevel.SITE)
     public ResponseEntity<Boolean> checkPipelineTemplateName(
             @PathVariable(value = "source_id") Long sourceId,
