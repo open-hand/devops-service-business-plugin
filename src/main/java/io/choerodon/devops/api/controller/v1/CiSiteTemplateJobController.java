@@ -108,7 +108,7 @@ public class CiSiteTemplateJobController extends BaseController {
     @GetMapping("/check_name")
     public ResponseEntity<Boolean> isNameUnique(
             @PathVariable(value = "source_id") Long sourceId,
-            @Encrypt @RequestParam(value = "job_id") Long jobId,
+            @Encrypt @RequestParam(value = "job_id", required = false) Long jobId,
             @RequestParam(value = "name") String name) {
         return Results.success(ciTemplateJobBusService.isNameUnique(name, sourceId, jobId));
     }
