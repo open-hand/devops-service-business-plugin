@@ -125,6 +125,11 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
         }
     }
 
+    @Override
+    public Boolean checkTemplateStepName(Long sourceId, String name) {
+        return checkStepName(sourceId, name);
+    }
+
     private void checkCategory(CiTemplateStepVO ciTemplateStepVO) {
         CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = ciTemplateStepCategoryBusMapper.selectByPrimaryKey(ciTemplateStepVO.getCategoryId());
         if (ciTemplateStepCategoryDTO == null) {
@@ -135,10 +140,21 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     private void checkStepName(CiTemplateStepVO ciTemplateStepVO) {
         CiTemplateStepDTO record = new CiTemplateStepDTO();
         record.setName(ciTemplateStepVO.getName());
-        record.setSourceId(BaseConstants.DEFAULT_TENANT_ID);
+        record.setSourceId(ciTemplateStepVO.getSourceId());
         CiTemplateStepDTO templateStepDTO = ciTemplateStepBusMapper.selectOne(record);
         if (templateStepDTO != null) {
             throw new CommonException("error.step.name.already.exists");
         }
+    }
+
+    private Boolean checkStepName(Long sourceId, String name) {
+        CiTemplateStepDTO record = new CiTemplateStepDTO();
+        record.setName(name);
+        record.setSourceId(sourceId);
+        CiTemplateStepDTO templateStepDTO = ciTemplateStepBusMapper.selectOne(record);
+        if (templateStepDTO != null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 }
