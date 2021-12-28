@@ -103,4 +103,14 @@ public class CiSiteTemplateStepController {
         return ResponseEntity.ok(ciTemplateStepBusService.checkStepTemplateByStepId(sourceId, templateStepId));
     }
 
+
+    @ApiOperation(value = "平台层校验步骤名称是否唯一")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping("/check/name/unique")
+    public ResponseEntity<Boolean> checkTemplateStepName(
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestParam(value = "name") String name) {
+        return ResponseEntity.ok(ciTemplateStepBusService.checkTemplateStepName(sourceId, name));
+    }
+
 }

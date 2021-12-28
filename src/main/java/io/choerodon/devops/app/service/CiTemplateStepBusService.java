@@ -24,4 +24,6 @@ public interface CiTemplateStepBusService {
     CiTemplateStepVO queryStepTemplateByStepId(Long sourceId, Long templateStepId);
 
     Boolean checkStepTemplateByStepId(Long sourceId, Long templateStepId);
+
+    Boolean checkTemplateStepName(Long sourceId, String name);
 }
