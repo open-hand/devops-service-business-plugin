@@ -1,6 +1,7 @@
 package io.choerodon.devops.app.service.impl;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.BeanUtils;
@@ -11,13 +12,10 @@ import org.springframework.util.CollectionUtils;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
-import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.*;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.devops.infra.constant.Constant;
 import io.choerodon.devops.infra.dto.*;
-import io.choerodon.devops.infra.dto.iam.ProjectDTO;
-import io.choerodon.devops.infra.enums.DevopsCiStepTypeEnum;
 import io.choerodon.devops.infra.feign.operator.BaseServiceClientOperator;
 import io.choerodon.devops.infra.mapper.*;
 import io.choerodon.devops.infra.util.ConvertUtils;
@@ -107,11 +105,14 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
 
         List<CiTemplateStageVO> templateStageVOS = devopsPipelineTemplateVO.getTemplateStageVOS();
+        AtomicReference<Long> sequence = new AtomicReference<>(0L);
         templateStageVOS.forEach(ciTemplateStageVO -> {
             //2.插入stage数据
             CiTemplateStageDTO ciTemplateStageDTO = new CiTemplateStageDTO();
             BeanUtils.copyProperties(ciTemplateStageVO, ciTemplateStageDTO);
             ciTemplateStageDTO.setPipelineTemplateId(ciTemplatePipelineDTO.getId());
+            ciTemplateStageDTO.setSequence(sequence.get());
+            sequence.getAndSet(sequence.get() + 1);
             ciTemplateStageBusMapper.insertSelective(ciTemplateStageDTO);
 
 
