@@ -312,7 +312,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
      * @param devopsPipelineTemplateVO
      */
     private void checkPipelineCategory(CiTemplatePipelineVO devopsPipelineTemplateVO) {
-        CiTemplateCategoryDTO ciTemplateCategoryDTO = ciTemplateCategoryBusMapper.selectByPrimaryKey(devopsPipelineTemplateVO.getId());
+        CiTemplateCategoryDTO ciTemplateCategoryDTO = ciTemplateCategoryBusMapper.selectByPrimaryKey(devopsPipelineTemplateVO.getCiTemplateCategoryId());
         AssertUtils.notNull(ciTemplateCategoryDTO, "error.ci.template.category.null");
     }
 
