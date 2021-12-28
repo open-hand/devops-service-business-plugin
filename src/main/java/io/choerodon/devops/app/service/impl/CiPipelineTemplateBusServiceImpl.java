@@ -123,7 +123,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
                 //插入阶段与job的关联关系
                 CiTemplateStageJobRelDTO ciTemplateStageJobRelDTO = new CiTemplateStageJobRelDTO();
                 ciTemplateStageJobRelDTO.setCiTemplateJobId(ciTemplateJobVO.getId());
-                ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageVO.getId());
+                ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageDTO.getId());
                 ciTemplateStageJobRelMapper.insertSelective(ciTemplateStageJobRelDTO);
 
                 List<CiTemplateStepVO> ciTemplateStepVOS = ciTemplateJobVO.getDevopsCiStepVOList();
