@@ -183,7 +183,6 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
             return new CiTemplatePipelineVO();
         }
         AssertUtils.isTrue(!pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
-        // TODO: 2021/12/19 只能删除自定义的
         Set<Long> stageJobRelIds = new HashSet<>();
         List<CiTemplateStageVO> templateStageVOS = devopsPipelineTemplateVO.getTemplateStageVOS();
         //删除所有的阶段以及阶段与Job之间的关联，重新插入阶段与阶段之间的关联
@@ -210,13 +209,15 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         }
 
         //插入新的阶段  阶段与job的关系
+        AtomicReference<Long> sequence = new AtomicReference<>(0L);
         templateStageVOS.forEach(ciTemplateStageVO -> {
             //2.插入stage数据
             CiTemplateStageDTO ciTemplateStageDTO = new CiTemplateStageDTO();
             BeanUtils.copyProperties(ciTemplateStageVO, ciTemplateStageDTO);
             ciTemplateStageDTO.setPipelineTemplateId(pipelineTemplateDTO.getId());
+            ciTemplateStageDTO.setSequence(sequence.get());
             ciTemplateStageBusMapper.insertSelective(ciTemplateStageDTO);
-
+            sequence.getAndSet(sequence.get() + 1);
 
             List<CiTemplateJobVO> ciTemplateJobVOList = ciTemplateStageVO.getCiTemplateJobVOList();
             if (CollectionUtils.isEmpty(ciTemplateJobVOList)) {
