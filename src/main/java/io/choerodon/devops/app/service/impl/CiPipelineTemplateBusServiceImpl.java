@@ -174,6 +174,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CiTemplatePipelineVO updatePipelineTemplate(Long sourceId, CiTemplatePipelineVO devopsPipelineTemplateVO) {
         checkPipelineName(devopsPipelineTemplateVO);
         checkPipelineCategory(devopsPipelineTemplateVO);
