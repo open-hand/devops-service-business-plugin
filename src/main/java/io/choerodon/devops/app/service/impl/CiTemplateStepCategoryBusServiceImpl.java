@@ -93,8 +93,8 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
     }
 
     @Override
-    public Boolean checkTemplateStepCategory(Long sourceId, String name) {
-        return checkStepCategoryName(name);
+    public Boolean checkTemplateStepCategory(Long sourceId, String name, Long ciTemplateCategoryId) {
+        return ciTemplateStepCategoryBusMapper.checkTemplateStepCategoryName(sourceId, name, ciTemplateCategoryId);
     }
 
     /**
