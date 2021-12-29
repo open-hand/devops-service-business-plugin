@@ -131,7 +131,7 @@ public class CiOrganizationTemplateStepController {
     public ResponseEntity<Boolean> checkTemplateStepName(
             @PathVariable(value = "organization_id") Long sourceId,
             @RequestParam(value = "name") String name,
-            @Encrypt @RequestParam(value = "template_step_id") Long templateStepId) {
+            @Encrypt @RequestParam(value = "template_step_id",required = false) Long templateStepId) {
         return ResponseEntity.ok(ciTemplateStepBusService.checkTemplateStepName(sourceId, name, templateStepId));
     }
 }

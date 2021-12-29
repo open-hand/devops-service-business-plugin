@@ -117,7 +117,7 @@ public class CiSitePipelineTemplateController extends BaseController {
     public ResponseEntity<Boolean> checkPipelineTemplateName(
             @PathVariable(value = "source_id") Long sourceId,
             @RequestParam(value = "name") String name,
-            @Encrypt @RequestParam(value = "ci_template_id") Long ciPipelineTemplateId) {
+            @Encrypt @RequestParam(value = "ci_template_id",required = false) Long ciPipelineTemplateId) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.checkPipelineTemplateName(sourceId, name, ciPipelineTemplateId));
     }
 
