@@ -59,6 +59,9 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     @Autowired
     private BaseServiceClientOperator baseServiceClientOperator;
 
+    @Autowired
+    private CiTemplateVariableBusMapper ciTemplateVariableBusMapper;
+
 
     @Override
     public Page<CiTemplatePipelineVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, String name, String categoryName, Boolean builtIn, Boolean enable, String params) {
@@ -133,6 +136,16 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
                 }
             });
         });
+
+        //插入变量的数据
+        if (CollectionUtils.isEmpty(devopsPipelineTemplateVO.getCiTemplateVariableVOS())) {
+            devopsPipelineTemplateVO.getCiTemplateVariableVOS().forEach(ciTemplateVariableVO -> {
+                CiTemplateVariableDTO ciTemplateVariableDTO = ConvertUtils.convertObject(ciTemplateVariableVO, CiTemplateVariableDTO.class);
+                ciTemplateVariableDTO.setPipelineTemplateId(ciTemplatePipelineDTO.getId());
+                ciTemplateVariableBusMapper.insert(ciTemplateVariableDTO);
+            });
+        }
+
         return ConvertUtils.convertObject(ciTemplatePipelineDTO, CiTemplatePipelineVO.class);
     }
 
@@ -193,6 +206,21 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         deleteStageAndStageJobRel(ciTemplateStageDTOS, stageJobRelIds);
         //插入新的阶段  阶段与job的关系
         insertStageAndJobRel(pipelineTemplateDTO, templateStageVOS);
+
+        //删除变量
+        CiTemplateVariableDTO ciTemplateVariable = new CiTemplateVariableDTO();
+        ciTemplateVariable.setPipelineTemplateId(pipelineTemplateDTO.getId());
+        ciTemplateVariableBusMapper.delete(ciTemplateVariable);
+
+
+        if (CollectionUtils.isEmpty(devopsPipelineTemplateVO.getCiTemplateVariableVOS())) {
+            devopsPipelineTemplateVO.getCiTemplateVariableVOS().forEach(ciTemplateVariableVO -> {
+                CiTemplateVariableDTO ciTemplateVariableDTO = ConvertUtils.convertObject(ciTemplateVariableVO, CiTemplateVariableDTO.class);
+                ciTemplateVariableDTO.setPipelineTemplateId(pipelineTemplateDTO.getId());
+                ciTemplateVariableBusMapper.insert(ciTemplateVariableDTO);
+            });
+        }
+
         BeanUtils.copyProperties(devopsPipelineTemplateVO, pipelineTemplateDTO);
         ciPipelineTemplateBusMapper.updateByPrimaryKey(pipelineTemplateDTO);
         return devopsPipelineTemplateVO;
