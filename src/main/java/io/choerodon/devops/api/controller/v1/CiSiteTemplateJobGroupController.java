@@ -101,10 +101,11 @@ public class CiSiteTemplateJobGroupController extends BaseController {
     @ApiOperation(value = "平台层校验分类名称是否唯一")
     @Permission(level = ResourceLevel.SITE)
     @GetMapping("/check/name/unique")
-    public ResponseEntity<Boolean> checkTemplateJobGroup(
+    public ResponseEntity<Boolean> checkTemplateJobGroupName(
             @PathVariable(value = "source_id") Long sourceId,
-            @RequestParam(value = "name", required = false) String name) {
-        return ResponseEntity.ok(ciTemplateJobGroupBusService.checkTemplateJobGroup(sourceId, name));
+            @RequestParam(value = "name", required = false) String name,
+            @Encrypt @RequestParam(value = "template_job_id", required = false) Long templateJobId) {
+        return ResponseEntity.ok(ciTemplateJobGroupBusService.checkTemplateJobGroupName(sourceId, name, templateJobId));
     }
 }
 

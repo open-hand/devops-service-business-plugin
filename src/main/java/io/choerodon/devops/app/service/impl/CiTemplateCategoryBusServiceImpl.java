@@ -80,8 +80,8 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
     }
 
     @Override
-    public Boolean checkTemplateCategory(Long sourceId, String name) {
-        return checkCategoryName(name);
+    public Boolean checkTemplateCategoryName(Long sourceId, String name, Long ciTemplateCategoryId) {
+        return ciTemplateCategoryBusMapper.checkTemplateCategoryName(sourceId, name, ciTemplateCategoryId);
     }
 
     private Boolean checkCategoryName(String name) {

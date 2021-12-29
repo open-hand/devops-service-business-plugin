@@ -17,5 +17,7 @@ public interface CiTemplateCategoryBusService {
 
     CiTemplateCategoryVO createTemplateCategory(CiTemplateCategoryVO ciTemplateCategoryVO);
 
-    Boolean checkTemplateCategory(Long sourceId, String name);
+
+    Boolean checkTemplateCategoryName(Long sourceId, String name, Long ciTemplateCategoryId);
+
 }

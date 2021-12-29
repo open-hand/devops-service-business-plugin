@@ -22,10 +22,12 @@ public interface CiTemplateJobGroupBusService {
 
     void deleteTemplateJobGroup(Long sourceId, Long ciTemplateJobGroupId);
 
-    Boolean checkTemplateJobGroup(Long sourceId, String name);
-
     Page<CiTemplateJobGroupVO> pageTemplateJobGroupByCondition(Long sourceId, PageRequest pageRequest);
 
     List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId, String name);
+
+    Boolean checkTemplateJobGroupName(Long sourceId, String name, Long templateJobId);
+
+
 }
 

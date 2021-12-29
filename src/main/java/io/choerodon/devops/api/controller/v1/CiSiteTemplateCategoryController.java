@@ -79,10 +79,11 @@ public class CiSiteTemplateCategoryController extends BaseController {
     @ApiOperation(value = "平台层校验分类名称是否唯一")
     @Permission(level = ResourceLevel.SITE)
     @GetMapping("/check/name/unique")
-    public ResponseEntity<Boolean> checkTemplateCategory(
+    public ResponseEntity<Boolean> checkTemplateCategoryName(
             @PathVariable(value = "source_id") Long sourceId,
-            @RequestParam(value = "name", required = false) String name) {
-        return ResponseEntity.ok(ciTemplateCategoryBusService.checkTemplateCategory(sourceId, name));
+            @RequestParam(value = "name", required = false) String name,
+            @Encrypt @RequestParam(value = "ci_template_category_id", required = false) Long ciTemplateCategoryId) {
+        return ResponseEntity.ok(ciTemplateCategoryBusService.checkTemplateCategoryName(sourceId, name, ciTemplateCategoryId));
 
     }
 
