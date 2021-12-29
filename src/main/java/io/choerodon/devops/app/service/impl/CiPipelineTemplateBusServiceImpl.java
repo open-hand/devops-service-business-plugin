@@ -183,33 +183,22 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         if (pipelineTemplateDTO == null) {
             return new CiTemplatePipelineVO();
         }
+        CiTemplateStageDTO record = new CiTemplateStageDTO();
+        record.setPipelineTemplateId(pipelineTemplateDTO.getId());
+        List<CiTemplateStageDTO> ciTemplateStageDTOS = ciTemplateStageBusMapper.select(record);
+
         AssertUtils.isTrue(!pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
         Set<Long> stageJobRelIds = new HashSet<>();
         List<CiTemplateStageVO> templateStageVOS = devopsPipelineTemplateVO.getTemplateStageVOS();
-        //删除所有的阶段以及阶段与Job之间的关联，重新插入阶段与阶段之间的关联
-        if (!CollectionUtils.isEmpty(templateStageVOS)) {
-            Set<Long> stageIds = templateStageVOS.stream().map(CiTemplateStageVO::getId).collect(Collectors.toSet());
-            //删除stage
-            if (!CollectionUtils.isEmpty(stageIds)) {
-                ciTemplateStageBusMapper.deleteByIds(stageIds);
-            }
-
-            templateStageVOS.forEach(ciTemplateStageVO -> {
-                CiTemplateStageJobRelDTO ciTemplateStageJobRelDTO = new CiTemplateStageJobRelDTO();
-                ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageVO.getId());
-                List<CiTemplateStageJobRelDTO> stageJobRelDTOS = ciTemplateStageJobRelMapper.select(ciTemplateStageJobRelDTO);
-                if (!CollectionUtils.isEmpty(stageJobRelDTOS)) {
-                    stageJobRelIds.addAll(stageJobRelDTOS.stream().map(CiTemplateStageJobRelDTO::getId).collect(Collectors.toSet()));
-                }
-            });
-
-            //删除stage_job_rel
-            if (!CollectionUtils.isEmpty(stageJobRelIds)) {
-                ciTemplateStageJobRelBusMapper.deleteByIds(stageJobRelIds);
-            }
-        }
-
+        deleteStageAndStageJobRel(ciTemplateStageDTOS, stageJobRelIds);
         //插入新的阶段  阶段与job的关系
+        insertStageAndJobRel(pipelineTemplateDTO, templateStageVOS);
+        BeanUtils.copyProperties(devopsPipelineTemplateVO, pipelineTemplateDTO);
+        ciPipelineTemplateBusMapper.updateByPrimaryKey(pipelineTemplateDTO);
+        return devopsPipelineTemplateVO;
+    }
+
+    private void insertStageAndJobRel(CiTemplatePipelineDTO pipelineTemplateDTO, List<CiTemplateStageVO> templateStageVOS) {
         AtomicReference<Long> sequence = new AtomicReference<>(0L);
         templateStageVOS.forEach(ciTemplateStageVO -> {
             //2.插入stage数据
@@ -237,10 +226,31 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
                 }
             });
         });
+    }
 
-        BeanUtils.copyProperties(devopsPipelineTemplateVO, pipelineTemplateDTO);
-        ciPipelineTemplateBusMapper.updateByPrimaryKey(pipelineTemplateDTO);
-        return devopsPipelineTemplateVO;
+    private void deleteStageAndStageJobRel(List<CiTemplateStageDTO> ciTemplateStageDTOS, Set<Long> stageJobRelIds) {
+        //删除所有的阶段以及阶段与Job之间的关联，重新插入阶段与阶段之间的关联
+        if (!CollectionUtils.isEmpty(ciTemplateStageDTOS)) {
+            Set<Long> stageIds = ciTemplateStageDTOS.stream().map(CiTemplateStageDTO::getId).collect(Collectors.toSet());
+            //删除stage
+            if (!CollectionUtils.isEmpty(stageIds)) {
+                ciTemplateStageBusMapper.deleteByIds(stageIds);
+            }
+
+            ciTemplateStageDTOS.forEach(templateStageDTO -> {
+                CiTemplateStageJobRelDTO ciTemplateStageJobRelDTO = new CiTemplateStageJobRelDTO();
+                ciTemplateStageJobRelDTO.setCiTemplateStageId(templateStageDTO.getId());
+                List<CiTemplateStageJobRelDTO> stageJobRelDTOS = ciTemplateStageJobRelMapper.select(ciTemplateStageJobRelDTO);
+                if (!CollectionUtils.isEmpty(stageJobRelDTOS)) {
+                    stageJobRelIds.addAll(stageJobRelDTOS.stream().map(CiTemplateStageJobRelDTO::getId).collect(Collectors.toSet()));
+                }
+            });
+
+            //删除stage_job_rel
+            if (!CollectionUtils.isEmpty(stageJobRelIds)) {
+                ciTemplateStageJobRelBusMapper.deleteByIds(stageJobRelIds);
+            }
+        }
     }
 
     @Override
