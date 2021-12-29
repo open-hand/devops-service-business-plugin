@@ -107,8 +107,9 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<Boolean> checkPipelineTemplateName(
             @PathVariable(value = "organization_id") Long organizationId,
-            @RequestParam(value = "name") String name) {
-        return ResponseEntity.ok(ciPipelineTemplateBusService.checkPipelineTemplateName(organizationId, name));
+            @RequestParam(value = "name") String name,
+            @Encrypt @RequestParam(value = "ci_pipeline_template_id") Long ciPipelineTemplateId) {
+        return ResponseEntity.ok(ciPipelineTemplateBusService.checkPipelineTemplateName(organizationId, name, ciPipelineTemplateId));
     }
 
 

@@ -56,6 +56,17 @@
         </if>
     </delete>
 
+    <select id="selectByParams" resultType="io.choerodon.devops.infra.dto.CiTemplateStepDTO">
+        SELECT
+          dcts.*
+        FROM
+          devops_ci_template_step dcts
+        WHERE (dcts.source_id = 0 OR dcts.source_id = #{sourceId})
+        <if test="name != null and name != ''">
+            AND dcts.name LIKE CONCAT(CONCAT('%', #{name, jdbcType=VARCHAR}), '%')
+        </if>
+    </select>
+
     <sql id="sqlparam">
         <if test="searchVO != null">
             <if test="searchVO.searchParam != null">

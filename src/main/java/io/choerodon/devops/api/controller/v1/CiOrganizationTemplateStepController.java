@@ -48,6 +48,17 @@ public class CiOrganizationTemplateStepController {
         return ResponseEntity.ok(ciTemplateStepBusService.pageTemplateStep(sourceId, pageRequest, name, categoryName, builtIn, params));
     }
 
+
+    @ApiOperation(value = "组织层查询步骤模板列表")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/list")
+    public ResponseEntity<List<CiTemplateStepVO>> templateStepList(
+            @PathVariable(value = "organization_id") Long sourceId,
+            @RequestParam(value = "name", required = false) String name) {
+        return ResponseEntity.ok(ciTemplateStepBusService.templateStepList(sourceId, name));
+    }
+
+
     @ApiOperation(value = "平台层修改流水线步骤模板")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping

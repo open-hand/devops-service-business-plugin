@@ -322,8 +322,8 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     }
 
     @Override
-    public Boolean checkPipelineTemplateName(Long sourceId, String name) {
-        return checkPipelineName(name);
+    public Boolean checkPipelineTemplateName(Long sourceId, String name, Long ciPipelineTemplateId) {
+        return ciPipelineTemplateBusMapper.checkPipelineName(sourceId, name, ciPipelineTemplateId);
     }
 
     private void checkPipelineTemplate(CiTemplatePipelineDTO pipelineTemplateDTO) {
