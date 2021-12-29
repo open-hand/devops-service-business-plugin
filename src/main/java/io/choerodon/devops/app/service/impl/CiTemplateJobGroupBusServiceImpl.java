@@ -103,8 +103,8 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     }
 
     @Override
-    public List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId) {
-        return ConvertUtils.convertList(ciTemplateJobGroupBusMapper.selectAll(), CiTemplateJobGroupVO.class);
+    public List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId, String name) {
+        return ConvertUtils.convertList(ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, name), CiTemplateJobGroupVO.class);
     }
 
     private Boolean checkGroupName(String name) {

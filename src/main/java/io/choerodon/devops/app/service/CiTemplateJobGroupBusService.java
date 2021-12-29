@@ -26,6 +26,6 @@ public interface CiTemplateJobGroupBusService {
 
     Page<CiTemplateJobGroupVO> pageTemplateJobGroupByCondition(Long sourceId, PageRequest pageRequest);
 
-    List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId);
+    List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId, String name);
 }
 

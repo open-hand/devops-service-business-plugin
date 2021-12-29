@@ -53,8 +53,9 @@ public class CiOrganizationTemplateJobGroupController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/list")
     public ResponseEntity<List<CiTemplateJobGroupVO>> listTemplateJobGroup(
-            @PathVariable(value = "organization_id") Long sourceId) {
-        return ResponseEntity.ok(ciTemplateJobGroupBusService.listTemplateJobGroup(sourceId));
+            @PathVariable(value = "organization_id") Long sourceId,
+            @RequestParam(value = "name", required = false) String name) {
+        return ResponseEntity.ok(ciTemplateJobGroupBusService.listTemplateJobGroup(sourceId, name));
     }
 
 }
