@@ -127,10 +127,13 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
             // 先删除旧关系
             ciTemplateJobStepRelBusMapper.deleteByJobId(ciTemplateJobVO.getId());
             // 添加job和step关系
+            AtomicReference<Long> sequence = new AtomicReference<>(0L);
             ciTemplateJobVO.getDevopsCiStepVOList().forEach(ciTemplateStepVO -> {
                 CiTemplateJobStepRelDTO ciTemplateJobStepRelDTO = new CiTemplateJobStepRelDTO();
                 ciTemplateJobStepRelDTO.setCiTemplateJobId(ciTemplateJobDTO.getId());
                 ciTemplateJobStepRelDTO.setCiTemplateStepId(ciTemplateStepVO.getId());
+                ciTemplateJobStepRelDTO.setSequence(sequence.get());
+                sequence.getAndSet(sequence.get() + 1);
                 ciTemplateJobStepRelBusMapper.insert(ciTemplateJobStepRelDTO);
             });
         }
