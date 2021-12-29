@@ -160,7 +160,7 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
         List<CiTemplateStepCategoryDTO> ciTemplateStepCategoryDTOS = ciTemplateStepCategoryBusMapper.selectByIds(StringUtils.join(cids, ","));
         List<CiTemplateStepCategoryVO> ciTemplateStepCategoryVOS = new ArrayList<>();
         if (!CollectionUtils.isEmpty(ciTemplateStepCategoryDTOS)) {
-            ciTemplateStepCategoryVOS = ConvertUtils.convertList(ciTemplateStepCategoryVOS, CiTemplateStepCategoryVO.class);
+            ciTemplateStepCategoryVOS = ConvertUtils.convertList(ciTemplateStepCategoryDTOS, CiTemplateStepCategoryVO.class);
         }
         // 将步骤分组
         ciTemplateStepCategoryVOS.forEach(ciTemplateStepCategoryVO -> {
