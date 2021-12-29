@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,8 +122,11 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     public CiTemplateJobVO updateTemplateJob(Long sourceId, CiTemplateJobVO ciTemplateJobVO) {
         checkAccess(sourceId);
         checkParam(ciTemplateJobVO);
+        CiTemplateJobDTO templateJobDTO = ciTemplateJobBusMapper.selectByPrimaryKey(ciTemplateJobVO.getId());
+        AssertUtils.notNull(templateJobDTO, "error.templateJobDTO.is.null");
         CiTemplateJobDTO ciTemplateJobDTO = ConvertUtils.convertObject(ciTemplateJobVO, CiTemplateJobDTO.class);
         // 更新job记录
+        ciTemplateJobDTO.setObjectVersionNumber(templateJobDTO.getObjectVersionNumber());
         ciTemplateJobBusMapper.updateByPrimaryKeySelective(ciTemplateJobDTO);
         // 更新job和step关系
         if (!CollectionUtils.isEmpty(ciTemplateJobVO.getDevopsCiStepVOList())) {
