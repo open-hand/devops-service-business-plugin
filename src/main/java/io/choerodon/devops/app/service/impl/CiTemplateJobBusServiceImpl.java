@@ -1,6 +1,7 @@
 package io.choerodon.devops.app.service.impl;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,6 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.core.utils.ConvertUtils;
-import io.choerodon.devops.api.vo.DevopsCiStepVO;
-import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.devops.app.eventhandler.pipeline.step.AbstractDevopsCiStepHandler;
@@ -102,10 +101,13 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         ciTemplateJobBusMapper.insertSelective(ciTemplateJobDTO);
         if (!CollectionUtils.isEmpty(ciTemplateJobVO.getDevopsCiStepVOList())) {
             // 添加job和step关系
+            AtomicReference<Long> sequence = new AtomicReference<>(0L);
             ciTemplateJobVO.getDevopsCiStepVOList().forEach(ciTemplateStepVO -> {
                 CiTemplateJobStepRelDTO ciTemplateJobStepRelDTO = new CiTemplateJobStepRelDTO();
                 ciTemplateJobStepRelDTO.setCiTemplateJobId(ciTemplateJobDTO.getId());
                 ciTemplateJobStepRelDTO.setCiTemplateStepId(ciTemplateStepVO.getId());
+                ciTemplateJobStepRelDTO.setSequence(sequence.get());
+                sequence.getAndSet(sequence.get() + 1);
                 ciTemplateJobStepRelBusMapper.insert(ciTemplateJobStepRelDTO);
             });
         }
