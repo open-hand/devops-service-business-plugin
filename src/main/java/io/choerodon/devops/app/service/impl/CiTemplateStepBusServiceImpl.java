@@ -1,7 +1,12 @@
 package io.choerodon.devops.app.service.impl;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.AssertUtils;
@@ -14,14 +19,16 @@ import org.springframework.util.CollectionUtils;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.utils.ConvertUtils;
-import io.choerodon.devops.api.vo.SearchVO;
+import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 
+import io.choerodon.devops.app.eventhandler.pipeline.step.AbstractDevopsCiStepHandler;
 import io.choerodon.devops.app.service.CiTemplateStepBusService;
 import io.choerodon.devops.infra.constant.Constant;
 import io.choerodon.devops.infra.dto.CiTemplateJobStepRelDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStepCategoryDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStepDTO;
+import io.choerodon.devops.infra.dto.DevopsCdJobDTO;
 import io.choerodon.devops.infra.mapper.CiTemplateJobStepRelBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateStepBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateStepCategoryBusMapper;
@@ -43,6 +50,10 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
 
     @Autowired
     private CiTemplateJobStepRelBusMapper ciTemplateJobStepRelBusMapper;
+
+    @Autowired
+    private DevopsCiStepOperator devopsCiStepOperator;
+
 
     @Override
     public Page<CiTemplateStepVO> pageTemplateStep(Long sourceId, PageRequest pageRequest, String name, String categoryName, Boolean builtIn, String params) {
@@ -133,6 +144,31 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     @Override
     public List<CiTemplateStepVO> templateStepList(Long sourceId, String name) {
         return ConvertUtils.convertList(ciTemplateStepBusMapper.selectByParams(sourceId, name), CiTemplateStepVO.class);
+    }
+
+    @Override
+    public List<CiTemplateStepCategoryVO> listStepWithCategory(Long sourceId) {
+        // 先查询所有步骤
+        List<CiTemplateStepVO> ciTemplateStepVOS = templateStepList(sourceId, null);
+        ciTemplateStepVOS.forEach(ciTemplateStepVO -> {
+            AbstractDevopsCiStepHandler devopsCiStepHandler = devopsCiStepOperator.getHandlerOrThrowE(ciTemplateStepVO.getType());
+            devopsCiStepHandler.fillTemplateStepConfigInfo(ciTemplateStepVO);
+        });
+        Map<Long, List<CiTemplateStepVO>> categoryStepMap = ciTemplateStepVOS.stream().collect(Collectors.groupingBy(CiTemplateStepVO::getCategoryId));
+
+        Set<Long> cids = ciTemplateStepVOS.stream().map(CiTemplateStepVO::getCategoryId).collect(Collectors.toSet());
+        List<CiTemplateStepCategoryDTO> ciTemplateStepCategoryDTOS = ciTemplateStepCategoryBusMapper.selectByIds(StringUtils.join(cids, ","));
+        List<CiTemplateStepCategoryVO> ciTemplateStepCategoryVOS = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(ciTemplateStepCategoryDTOS)) {
+            ciTemplateStepCategoryVOS = ConvertUtils.convertList(ciTemplateStepCategoryVOS, CiTemplateStepCategoryVO.class);
+        }
+        // 将步骤分组
+        ciTemplateStepCategoryVOS.forEach(ciTemplateStepCategoryVO -> {
+            List<CiTemplateStepVO> ciTemplateStepVOList = categoryStepMap.get(ciTemplateStepCategoryVO.getId());
+            ciTemplateStepCategoryVO.setCiTemplateStepVOList(ciTemplateStepVOList);
+        });
+        return ciTemplateStepCategoryVOS;
+
     }
 
     private void checkCategory(CiTemplateStepVO ciTemplateStepVO) {
