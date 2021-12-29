@@ -54,8 +54,9 @@ public class CiSiteTemplateJobGroupController extends BaseController {
     @Permission(level = ResourceLevel.SITE)
     @GetMapping("/list")
     public ResponseEntity<List<CiTemplateJobGroupVO>> listTemplateJobGroup(
-            @PathVariable(value = "source_id") Long sourceId) {
-        return ResponseEntity.ok(ciTemplateJobGroupBusService.listTemplateJobGroup(sourceId));
+            @PathVariable(value = "source_id") Long sourceId,
+            @RequestParam(value = "name", required = false) String name) {
+        return ResponseEntity.ok(ciTemplateJobGroupBusService.listTemplateJobGroup(sourceId, name));
     }
 
     @ApiOperation(value = "平台层创建流水线的时候查询分组列表")
