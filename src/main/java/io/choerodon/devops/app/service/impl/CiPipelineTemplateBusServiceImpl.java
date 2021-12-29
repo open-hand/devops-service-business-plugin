@@ -12,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.devops.api.vo.template.*;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.devops.infra.constant.Constant;
@@ -100,6 +101,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         checkPipelineName(devopsPipelineTemplateVO);
         checkPipelineCategory(devopsPipelineTemplateVO);
         checkStageName(devopsPipelineTemplateVO);
+        checkAccess(sourceId);
 
         //1.插入流水线模板
         CiTemplatePipelineDTO ciTemplatePipelineDTO = new CiTemplatePipelineDTO();
@@ -152,6 +154,20 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         return ConvertUtils.convertObject(ciTemplatePipelineDTO, CiTemplatePipelineVO.class);
     }
 
+    private void checkAccess(Long sourceId) {
+        // 如果sourceId为0，校验用户是有有平台管理员角色
+        if (sourceId == 0) {
+            if (!baseServiceClientOperator.checkSiteAccess(DetailsHelper.getUserDetails().getUserId())) {
+                throw new CommonException("error.no.permission.to.do.operation");
+            }
+        } else {
+            // 如果sourceId不为0，校验用户是否有resourceId对应的组织管理权限
+            if (!baseServiceClientOperator.isOrganzationRoot(DetailsHelper.getUserDetails().getUserId(), sourceId)) {
+                throw new CommonException("error.no.permission.to.do.operation");
+            }
+        }
+    }
+
 
     @Override
     public CiTemplatePipelineVO queryPipelineTemplateById(Long sourceId, Long ciPipelineTemplateId) {
@@ -195,6 +211,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         checkPipelineName(devopsPipelineTemplateVO);
         checkPipelineCategory(devopsPipelineTemplateVO);
         checkStageName(devopsPipelineTemplateVO);
+        checkAccess(sourceId);
         CiTemplatePipelineDTO pipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(devopsPipelineTemplateVO.getId());
         if (pipelineTemplateDTO == null) {
             return new CiTemplatePipelineVO();

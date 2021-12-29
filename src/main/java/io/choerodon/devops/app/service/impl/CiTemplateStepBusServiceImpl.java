@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.core.utils.ConvertUtils;
 import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
@@ -29,6 +30,7 @@ import io.choerodon.devops.infra.dto.CiTemplateJobStepRelDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStepCategoryDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStepDTO;
 import io.choerodon.devops.infra.dto.DevopsCdJobDTO;
+import io.choerodon.devops.infra.feign.operator.BaseServiceClientOperator;
 import io.choerodon.devops.infra.mapper.CiTemplateJobStepRelBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateStepBusMapper;
 import io.choerodon.devops.infra.mapper.CiTemplateStepCategoryBusMapper;
@@ -53,6 +55,9 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
 
     @Autowired
     private DevopsCiStepOperator devopsCiStepOperator;
+
+    @Autowired
+    private BaseServiceClientOperator baseServiceClientOperator;
 
 
     @Override
@@ -82,12 +87,27 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteTemplateStep(Long sourceId, Long ciStepTemplateId) {
+        checkAccess(sourceId);
         CiTemplateStepDTO ciTemplateStepDTO = ciTemplateStepBusMapper.selectByPrimaryKey(ciStepTemplateId);
         if (ciTemplateStepDTO == null) {
             return;
         }
         AssertUtils.isTrue(!ciTemplateStepDTO.getBuiltIn(), "error.delete.builtin.ci.step.template");
         ciTemplateStepBusMapper.deleteByPrimaryKey(ciTemplateStepDTO.getId());
+    }
+
+    private void checkAccess(Long sourceId) {
+        // 如果sourceId为0，校验用户是有有平台管理员角色
+        if (sourceId == 0) {
+            if (!baseServiceClientOperator.checkSiteAccess(DetailsHelper.getUserDetails().getUserId())) {
+                throw new CommonException("error.no.permission.to.do.operation");
+            }
+        } else {
+            // 如果sourceId不为0，校验用户是否有resourceId对应的组织管理权限
+            if (!baseServiceClientOperator.isOrganzationRoot(DetailsHelper.getUserDetails().getUserId(), sourceId)) {
+                throw new CommonException("error.no.permission.to.do.operation");
+            }
+        }
     }
 
     @Override
