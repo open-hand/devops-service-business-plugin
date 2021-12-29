@@ -138,7 +138,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         });
 
         //插入变量的数据
-        if (CollectionUtils.isEmpty(devopsPipelineTemplateVO.getCiTemplateVariableVOS())) {
+        if (!CollectionUtils.isEmpty(devopsPipelineTemplateVO.getCiTemplateVariableVOS())) {
             devopsPipelineTemplateVO.getCiTemplateVariableVOS().forEach(ciTemplateVariableVO -> {
                 CiTemplateVariableDTO ciTemplateVariableDTO = ConvertUtils.convertObject(ciTemplateVariableVO, CiTemplateVariableDTO.class);
                 ciTemplateVariableDTO.setPipelineTemplateId(ciTemplatePipelineDTO.getId());
@@ -213,7 +213,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         ciTemplateVariableBusMapper.delete(ciTemplateVariable);
 
 
-        if (CollectionUtils.isEmpty(devopsPipelineTemplateVO.getCiTemplateVariableVOS())) {
+        if (!CollectionUtils.isEmpty(devopsPipelineTemplateVO.getCiTemplateVariableVOS())) {
             devopsPipelineTemplateVO.getCiTemplateVariableVOS().forEach(ciTemplateVariableVO -> {
                 CiTemplateVariableDTO ciTemplateVariableDTO = ConvertUtils.convertObject(ciTemplateVariableVO, CiTemplateVariableDTO.class);
                 ciTemplateVariableDTO.setPipelineTemplateId(pipelineTemplateDTO.getId());
