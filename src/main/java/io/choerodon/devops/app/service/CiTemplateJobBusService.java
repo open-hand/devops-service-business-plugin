@@ -29,4 +29,6 @@ public interface CiTemplateJobBusService {
 
     List<CiTemplateJobVO> listTemplateJobs(Long sourceId);
 
+    CiTemplateJobVO queryTemplateByJobById(Long sourceId, Long templateJobId);
+
 }
