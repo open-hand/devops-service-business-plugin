@@ -13,6 +13,7 @@
                 AND dctjg.name LIKE CONCAT(CONCAT('%', #{searchParam, jdbcType=VARCHAR}), '%')
             </if>
         </where>
+        ORDER BY dctjg.id DESC
 
     </select>
 
