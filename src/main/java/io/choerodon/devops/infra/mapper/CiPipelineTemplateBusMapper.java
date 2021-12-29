@@ -22,5 +22,10 @@ public interface CiPipelineTemplateBusMapper extends BaseMapper<CiTemplatePipeli
                                                                    @Param("builtIn") Boolean builtIn,
                                                                    @Param("enable") Boolean enable,
                                                                    @Param("params") String params);
+
+    Boolean checkPipelineName(@Param("sourceId") Long sourceId,
+                              @Param("name") String name,
+                              @Param("ciPipelineTemplateId") Long ciPipelineTemplateId);
+
 }
 

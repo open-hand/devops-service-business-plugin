@@ -130,6 +130,11 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
         return checkStepName(sourceId, name);
     }
 
+    @Override
+    public List<CiTemplateStepVO> templateStepList(Long sourceId, String name) {
+        return ConvertUtils.convertList(ciTemplateStepBusMapper.selectByParams(sourceId, name), CiTemplateStepVO.class);
+    }
+
     private void checkCategory(CiTemplateStepVO ciTemplateStepVO) {
         CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = ciTemplateStepCategoryBusMapper.selectByPrimaryKey(ciTemplateStepVO.getCategoryId());
         if (ciTemplateStepCategoryDTO == null) {
