@@ -85,8 +85,8 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     }
 
     @Override
-    public Boolean checkTemplateJobGroup(Long sourceId, String name) {
-        return checkGroupName(name);
+    public Boolean checkTemplateJobGroupName(Long sourceId, String name, Long templateJobId) {
+        return ciTemplateJobGroupBusMapper.checkTemplateJobGroupName(sourceId, name, templateJobId);
     }
 
 

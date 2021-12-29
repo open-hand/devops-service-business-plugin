@@ -17,5 +17,9 @@ public interface CiTemplateJobGroupBusMapper extends BaseMapper<CiTemplateJobGro
 
     List<CiTemplateJobGroupDTO> queryTemplateJobGroupByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
 
+    Boolean checkTemplateJobGroupName(@Param("sourceId") Long sourceId,
+                                      @Param("name") String name,
+                                      @Param("templateJobId") Long templateJobId);
+
 }
 
