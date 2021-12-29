@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.devops.api.vo.SearchVO;
+import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 
@@ -28,4 +29,7 @@ public interface CiTemplateStepBusService {
     Boolean checkTemplateStepName(Long sourceId, String name, Long templateStepId);
 
     List<CiTemplateStepVO> templateStepList(Long sourceId, String name);
+
+    List<CiTemplateStepCategoryVO> listStepWithCategory(Long sourceId);
+
 }

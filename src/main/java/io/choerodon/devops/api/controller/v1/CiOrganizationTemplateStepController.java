@@ -13,6 +13,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.devops.api.vo.SearchVO;
+import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.devops.app.service.CiTemplateStepBusService;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -56,6 +57,15 @@ public class CiOrganizationTemplateStepController {
             @PathVariable(value = "organization_id") Long sourceId,
             @RequestParam(value = "name", required = false) String name) {
         return ResponseEntity.ok(ciTemplateStepBusService.templateStepList(sourceId, name));
+    }
+
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @ApiOperation(value = "平台项目下的可选的步骤列表")
+    @GetMapping("/list/with/category")
+    public ResponseEntity<List<CiTemplateStepCategoryVO>> listStepWithCategory(
+            @ApiParam(value = "organization_id", required = true)
+            @PathVariable(value = "organization_id") Long organization_id) {
+        return ResponseEntity.ok(ciTemplateStepBusService.listStepWithCategory(organization_id));
     }
 
 

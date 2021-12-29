@@ -12,6 +12,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
 import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.devops.app.service.CiTemplateStepBusService;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -49,12 +50,21 @@ public class CiSiteTemplateStepController {
 
 
     @ApiOperation(value = "平台层查询步骤模板列表")
-    @Permission(level = ResourceLevel.ORGANIZATION)
+    @Permission(level = ResourceLevel.SITE)
     @GetMapping("/list")
     public ResponseEntity<List<CiTemplateStepVO>> templateStepList(
             @PathVariable(value = "source_id") Long sourceId,
             @RequestParam(value = "name", required = false) String name) {
         return ResponseEntity.ok(ciTemplateStepBusService.templateStepList(sourceId, name));
+    }
+
+    @Permission(level = ResourceLevel.SITE)
+    @ApiOperation(value = "平台项目下的可选的步骤列表")
+    @GetMapping("/list/with/category")
+    public ResponseEntity<List<CiTemplateStepCategoryVO>> listStepWithCategory(
+            @ApiParam(value = "source_id", required = true)
+            @PathVariable(value = "source_id") Long sourceId) {
+        return ResponseEntity.ok(ciTemplateStepBusService.listStepWithCategory(sourceId));
     }
 
 
