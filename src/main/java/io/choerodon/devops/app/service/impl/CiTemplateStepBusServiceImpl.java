@@ -126,8 +126,8 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     }
 
     @Override
-    public Boolean checkTemplateStepName(Long sourceId, String name) {
-        return checkStepName(sourceId, name);
+    public Boolean checkTemplateStepName(Long sourceId, String name, Long templateStepId) {
+        return ciTemplateStepBusMapper.checkTemplateStepName(sourceId, name, templateStepId);
     }
 
     @Override

@@ -99,7 +99,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         checkParam(ciTemplateJobVO);
         CiTemplateJobDTO ciTemplateJobDTO = ConvertUtils.convertObject(ciTemplateJobVO, CiTemplateJobDTO.class);
         // 插入job记录
-        ciTemplateJobBusMapper.insert(ciTemplateJobDTO);
+        ciTemplateJobBusMapper.insertSelective(ciTemplateJobDTO);
         if (!CollectionUtils.isEmpty(ciTemplateJobVO.getDevopsCiStepVOList())) {
             // 添加job和step关系
             ciTemplateJobVO.getDevopsCiStepVOList().forEach(ciTemplateStepVO -> {

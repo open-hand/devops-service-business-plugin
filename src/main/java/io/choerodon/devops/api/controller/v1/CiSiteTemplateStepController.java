@@ -120,8 +120,9 @@ public class CiSiteTemplateStepController {
     @GetMapping("/check/name/unique")
     public ResponseEntity<Boolean> checkTemplateStepName(
             @PathVariable(value = "source_id") Long sourceId,
-            @RequestParam(value = "name") String name) {
-        return ResponseEntity.ok(ciTemplateStepBusService.checkTemplateStepName(sourceId, name));
+            @RequestParam(value = "name") String name,
+            @Encrypt @RequestParam(value = "template_step_id", required = false) Long templateStepId) {
+        return ResponseEntity.ok(ciTemplateStepBusService.checkTemplateStepName(sourceId, name, templateStepId));
     }
 
 }
