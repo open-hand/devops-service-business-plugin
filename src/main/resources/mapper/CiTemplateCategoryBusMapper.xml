@@ -14,8 +14,6 @@
             </if>
         </where>
 
-        ORDER BY dctc.id DESC
-
     </select>
 
     <select id="checkTemplateCategoryName" resultType="java.lang.Boolean">
