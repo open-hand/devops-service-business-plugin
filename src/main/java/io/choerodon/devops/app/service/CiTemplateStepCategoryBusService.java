@@ -16,6 +16,6 @@ public interface CiTemplateStepCategoryBusService {
 
     CiTemplateStepCategoryVO createTemplateStepCategory(Long sourceId, CiTemplateStepCategoryVO ciTemplateStepCategoryVO);
 
-    Boolean checkTemplateStepCategory(Long sourceId, String name);
+    Boolean checkTemplateStepCategory(Long sourceId, String name, Long ciTemplateCategoryId);
 }
 

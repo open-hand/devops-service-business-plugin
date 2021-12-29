@@ -17,5 +17,9 @@ public interface CiTemplateStepCategoryBusMapper extends BaseMapper<CiTemplateSt
 
     List<CiTemplateStepCategoryVO> queryTemplateStepCategoryByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
 
+    Boolean checkTemplateStepCategoryName(@Param("sourceId") Long sourceId,
+                                          @Param("name") String name,
+                                          @Param("ciTemplateCategoryId") Long ciTemplateCategoryId);
+
 }
 
