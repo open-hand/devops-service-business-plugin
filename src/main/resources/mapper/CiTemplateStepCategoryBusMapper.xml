@@ -11,7 +11,7 @@
         devops_ci_template_step_category dctsc
         where 1=1
         <if test="searchParam != null and searchParam != ''">
-            AND dcts.`name` LIKE CONCAT(CONCAT('%', #{searchParam, jdbcType=VARCHAR}),'%')
+            AND dctsc.`name` LIKE CONCAT(CONCAT('%', #{searchParam, jdbcType=VARCHAR}),'%')
         </if>
 
 
