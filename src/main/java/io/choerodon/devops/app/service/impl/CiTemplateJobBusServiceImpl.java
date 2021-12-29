@@ -20,6 +20,7 @@ import io.choerodon.devops.app.eventhandler.pipeline.step.AbstractDevopsCiStepHa
 import io.choerodon.devops.app.service.CiTemplateJobBusService;
 import io.choerodon.devops.app.service.CiTemplateStepService;
 import io.choerodon.devops.infra.dto.CiTemplateJobDTO;
+import io.choerodon.devops.infra.dto.CiTemplateJobGroupDTO;
 import io.choerodon.devops.infra.dto.CiTemplateJobStepRelDTO;
 import io.choerodon.devops.infra.dto.CiTemplateStageJobRelDTO;
 import io.choerodon.devops.infra.enums.CiJobTypeEnum;
@@ -60,6 +61,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
 
     @Autowired
     private DevopsCiStepOperator devopsCiStepOperator;
+
 
     @Override
     public List<CiTemplateJobVO> queryTemplateJobsByGroupId(Long sourceId, Long ciTemplateJobGroupId) {
@@ -181,6 +183,32 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     @Override
     public List<CiTemplateJobVO> listTemplateJobs(Long sourceId) {
         return ciTemplateJobBusMapper.queryAllCiTemplateJob(sourceId);
+    }
+
+    @Override
+    public CiTemplateJobVO queryTemplateByJobById(Long sourceId, Long templateJobId) {
+        CiTemplateJobDTO ciTemplateJobDTO = ciTemplateJobBusMapper.selectByPrimaryKey(templateJobId);
+        if (ciTemplateJobDTO == null) {
+            return new CiTemplateJobVO();
+        }
+        CiTemplateJobVO ciTemplateJobVO = ConvertUtils.convertObject(ciTemplateJobDTO, CiTemplateJobVO.class);
+        CiTemplateJobGroupDTO ciTemplateJobGroupDTO = ciTemplateJobGroupBusMapper.selectByPrimaryKey(ciTemplateJobVO.getGroupId());
+        ciTemplateJobVO.setCiTemplateJobGroupDTO(ciTemplateJobGroupDTO);
+        //查询step
+        List<CiTemplateStepVO> templateStepVOList = ciTemplateStepService.listByJobIds(Arrays.asList(ciTemplateJobVO.getId()).stream().collect(Collectors.toSet()));
+        List<CiTemplateStepVO> reTemplateStepVOS = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(templateStepVOList)) {
+            templateStepVOList.forEach(ciTemplateStepVO -> {
+                // 添加步骤关联的配置信息
+                AbstractDevopsCiStepHandler stepHandler = devopsCiStepOperator.getHandlerOrThrowE(ciTemplateStepVO.getType());
+                stepHandler.fillTemplateStepConfigInfo(ciTemplateStepVO);
+                reTemplateStepVOS.add(ciTemplateStepVO);
+            });
+
+        }
+        ciTemplateJobVO.setDevopsCiStepVOList(reTemplateStepVOS);
+
+        return ciTemplateJobVO;
     }
 
     private void checkParam(CiTemplateJobVO ciTemplateJobVO) {
