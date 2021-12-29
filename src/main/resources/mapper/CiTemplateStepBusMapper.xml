@@ -67,6 +67,16 @@
         </if>
     </select>
 
+    <select id="checkTemplateStepName" resultType="java.lang.Boolean">
+        SELECT count(*) = 0
+        FROM devops_ci_template_step dcts
+        WHERE dcts.name = #{name}
+        AND dcts.source_id = #{sourceId}
+        <if test="templateStepId != null">
+            AND dcts.id != #{templateStepId}
+        </if>
+    </select>
+
     <sql id="sqlparam">
         <if test="searchVO != null">
             <if test="searchVO.searchParam != null">
