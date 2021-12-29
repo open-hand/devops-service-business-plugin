@@ -84,7 +84,7 @@ public class CiSiteTemplateStepCategoryController extends BaseController {
     public ResponseEntity<Boolean> checkTemplateStepCategory(
             @PathVariable(value = "source_id") Long sourceId,
             @RequestParam(value = "name", required = false) String name,
-            @Encrypt @RequestParam(value = "ci_template_category_id") Long ciTemplateCategoryId) {
+            @Encrypt @RequestParam(value = "ci_template_category_id",required = false) Long ciTemplateCategoryId) {
         return ResponseEntity.ok(ciTemplateStepCategoryBusService.checkTemplateStepCategory(sourceId, name, ciTemplateCategoryId));
     }
 
