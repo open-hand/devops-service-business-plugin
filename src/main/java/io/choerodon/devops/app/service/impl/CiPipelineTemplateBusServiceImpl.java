@@ -187,14 +187,14 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         List<CiTemplateStageVO> ciTemplateStageVOS = ConvertUtils.convertList(ciTemplateStageDTOS, CiTemplateStageVO.class);
         ciTemplateStageVOS.forEach(ciTemplateStageVO -> {
             //通过阶段id 查找JOB
-            List<CiTemplateJobDTO> ciTemplateJobDTOS = ciTemplateJobBusMapper.queryJobByStageId(sourceId, ciTemplateStageVO.getId());
+            List<CiTemplateJobDTO> ciTemplateJobDTOS = ciTemplateJobBusMapper.queryJobByStageId(ciTemplateStageVO.getId());
             if (CollectionUtils.isEmpty(ciTemplateJobDTOS)) {
                 return;
             }
             List<CiTemplateJobVO> ciTemplateJobVOS = ConvertUtils.convertList(ciTemplateJobDTOS, CiTemplateJobVO.class);
             ciTemplateJobVOS.forEach(ciTemplateJobVO -> {
                 //根据job step
-                List<CiTemplateStepDTO> ciTemplateStepDTOS = ciTemplateStepBusMapper.queryStepTemplateByJobId(sourceId, ciTemplateJobVO.getId());
+                List<CiTemplateStepDTO> ciTemplateStepDTOS = ciTemplateStepBusMapper.queryStepTemplateByJobId(ciTemplateJobVO.getId());
                 if (CollectionUtils.isEmpty(ciTemplateStepDTOS)) {
                     return;
                 }

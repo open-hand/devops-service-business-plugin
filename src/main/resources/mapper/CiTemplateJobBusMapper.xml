@@ -64,7 +64,7 @@
 	             dctsjr.ci_template_job_id
 	          FROM devops_ci_template_stage_job_rel dctsjr
 	          WHERE dctsjr.ci_template_stage_id = #{stageId,jdbcType=BIGINT} )
-	     AND dctj.source_id = #{sourceId,jdbcType=BIGINT}
+<!--	     AND dctj.source_id = #{sourceId,jdbcType=BIGINT}-->
     </select>
 
     <select id="queryAllCiTemplateJob" resultType="io.choerodon.devops.api.vo.template.CiTemplateJobVO">
