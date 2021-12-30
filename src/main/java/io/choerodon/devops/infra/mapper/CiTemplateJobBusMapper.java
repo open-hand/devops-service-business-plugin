@@ -24,7 +24,7 @@ public interface CiTemplateJobBusMapper extends BaseMapper<CiTemplateJobDTO> {
                                             @Param("builtIn") Boolean builtIn,
                                             @Param("params") String params);
 
-    List<CiTemplateJobDTO> queryJobByStageId(@Param("sourceId") Long sourceId, @Param("stageId") Long stageId);
+    List<CiTemplateJobDTO> queryJobByStageId(@Param("stageId") Long stageId);
 
     List<CiTemplateJobVO> queryAllCiTemplateJob(@Param("sourceId") Long sourceId);
 }
