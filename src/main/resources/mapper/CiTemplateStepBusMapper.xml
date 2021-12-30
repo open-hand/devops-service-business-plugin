@@ -57,6 +57,7 @@
 
     </select>
 
+
     <delete id="deleteByIds">
         <if test="stepIds != null and stepIds.size() != 0">
             DELETE FROM devops_ci_template_step

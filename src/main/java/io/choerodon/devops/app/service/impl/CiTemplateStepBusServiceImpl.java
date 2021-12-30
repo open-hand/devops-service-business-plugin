@@ -133,7 +133,7 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
 
     @Override
     public List<CiTemplateStepVO> queryStepTemplateByJobId(Long sourceId, Long templateJobId) {
-        List<CiTemplateStepDTO> ciTemplateStepDTOS = ciTemplateStepBusMapper.queryStepTemplateByJobId(sourceId, templateJobId);
+        List<CiTemplateStepDTO> ciTemplateStepDTOS = ciTemplateStepBusMapper.queryStepTemplateByJobIdAndSourceId(sourceId, templateJobId);
         List<CiTemplateStepVO> ciTemplateStepVOS = ConvertUtils.convertList(ciTemplateStepDTOS, CiTemplateStepVO.class);
         return ciTemplateStepVOS;
     }
