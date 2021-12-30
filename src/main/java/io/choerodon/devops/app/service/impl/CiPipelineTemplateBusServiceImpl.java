@@ -108,6 +108,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         //1.插入流水线模板
         CiTemplatePipelineDTO ciTemplatePipelineDTO = new CiTemplatePipelineDTO();
         BeanUtils.copyProperties(devopsPipelineTemplateVO, ciTemplatePipelineDTO);
+        ciTemplatePipelineDTO.setSourceId(sourceId);
         ciPipelineTemplateBusMapper.insertSelective(ciTemplatePipelineDTO);
 
 
