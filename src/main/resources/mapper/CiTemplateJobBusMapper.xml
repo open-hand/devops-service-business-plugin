@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="io.choerodon.devops.infra.mapper.CiTemplateJobBusMapper">
-    <select id="isNameUnique" resultType="java.lang.Boolean">
-        SELECT count(*) = 0
+    <select id="isNameUnique" resultType="java.lang.Integer">
+        SELECT 1
         FROM devops_ci_template_job dctj
-                WHERE dctj.name = #{name}
-                  AND source_id = #{sourceId}
+        WHERE dctj.name = #{name}
+        AND source_id = #{sourceId}
         <if test="jobId != null">
             AND dctj.id != #{jobId}
         </if>
+        LIMIT 1
     </select>
 
     <select id="pageUnderOrgLevel" resultType="io.choerodon.devops.api.vo.template.CiTemplateJobVO">

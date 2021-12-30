@@ -99,6 +99,9 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     public CiTemplateJobVO createTemplateJob(Long sourceId, CiTemplateJobVO ciTemplateJobVO) {
         checkAccess(sourceId);
         checkParam(ciTemplateJobVO);
+        if (!isNameUnique(ciTemplateJobVO.getName(), sourceId, null)) {
+            throw new CommonException("error.job.template.name.exist");
+        }
         CiTemplateJobDTO ciTemplateJobDTO = ConvertUtils.convertObject(ciTemplateJobVO, CiTemplateJobDTO.class);
         // 插入job记录
         ciTemplateJobBusMapper.insertSelective(ciTemplateJobDTO);
@@ -122,6 +125,9 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     public CiTemplateJobVO updateTemplateJob(Long sourceId, CiTemplateJobVO ciTemplateJobVO) {
         checkAccess(sourceId);
         checkParam(ciTemplateJobVO);
+        if (!isNameUnique(ciTemplateJobVO.getName(), sourceId, ciTemplateJobVO.getId())) {
+            throw new CommonException("error.job.template.name.exist");
+        }
         CiTemplateJobDTO templateJobDTO = ciTemplateJobBusMapper.selectByPrimaryKey(ciTemplateJobVO.getId());
         AssertUtils.notNull(templateJobDTO, "error.templateJobDTO.is.null");
         CiTemplateJobDTO ciTemplateJobDTO = ConvertUtils.convertObject(ciTemplateJobVO, CiTemplateJobDTO.class);
@@ -158,7 +164,12 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
 
     @Override
     public Boolean isNameUnique(String name, Long sourceId, Long jobId) {
-        return ciTemplateJobBusMapper.isNameUnique(name, sourceId, jobId);
+        Integer nameUnique = ciTemplateJobBusMapper.isNameUnique(name, sourceId, jobId);
+        if (nameUnique != null) {
+            return Boolean.FALSE;
+        } else {
+            return Boolean.TRUE;
+        }
     }
 
 
