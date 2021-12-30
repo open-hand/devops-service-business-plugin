@@ -113,5 +113,15 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
     }
 
 
+    @ApiOperation(value = "组织层删除流水线模板")
+    @DeleteMapping("/{ci_template_pipeline_id}")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    public ResponseEntity<Void> deletePipelineTemplate(
+            @PathVariable(value = "organization_id") Long sourceId,
+            @Encrypt @PathVariable(value = "ci_template_pipeline_id") Long ciTemplatePipelineId) {
+        ciPipelineTemplateBusService.deletePipelineTemplate(sourceId, ciTemplatePipelineId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
 
