@@ -117,7 +117,7 @@ public class CiOrganizationTemplateStepController {
     }
 
     @ApiOperation(value = "校验步骤是否可以删除（是否关联流水线）")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{template_step_id}/check/delete")
     public ResponseEntity<Boolean> checkStepTemplateByStepId(
             @PathVariable(value = "organization_id") Long sourceId,
@@ -126,7 +126,7 @@ public class CiOrganizationTemplateStepController {
     }
 
     @ApiOperation(value = "组织层校验步骤名称是否唯一")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/check/name/unique")
     public ResponseEntity<Boolean> checkTemplateStepName(
             @PathVariable(value = "organization_id") Long sourceId,
