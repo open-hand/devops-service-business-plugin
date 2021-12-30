@@ -251,6 +251,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         }
 
         BeanUtils.copyProperties(devopsPipelineTemplateVO, pipelineTemplateDTO);
+        pipelineTemplateDTO.setSourceId(sourceId);
         ciPipelineTemplateBusMapper.updateByPrimaryKey(pipelineTemplateDTO);
         return devopsPipelineTemplateVO;
     }
