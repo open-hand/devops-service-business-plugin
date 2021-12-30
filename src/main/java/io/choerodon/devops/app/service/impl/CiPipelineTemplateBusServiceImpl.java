@@ -239,7 +239,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
         if (!CollectionUtils.isEmpty(devopsPipelineTemplateVO.getCiTemplateVariableVOS())) {
             devopsPipelineTemplateVO.getCiTemplateVariableVOS().forEach(ciTemplateVariableVO -> {
-                if (ciTemplateVariableVO.getVariableKey() == null || ciTemplateVariableVO.getVariableKey() != null) {
+                if (ciTemplateVariableVO.getVariableKey() == null || ciTemplateVariableVO.getVariableKey() == null) {
                     return;
                 }
                 CiTemplateVariableDTO ciTemplateVariableDTO = ConvertUtils.convertObject(ciTemplateVariableVO, CiTemplateVariableDTO.class);
