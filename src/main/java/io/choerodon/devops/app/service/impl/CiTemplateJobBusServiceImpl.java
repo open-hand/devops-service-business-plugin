@@ -169,7 +169,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
                 .getContent()
                 .stream()
                 .filter(ciTemplateJobVO -> ResourceLevel.SITE.value().equals(ciTemplateJobVO.getSourceType()))
-                .collect(Collectors.toList()), "createdBy", "creatorInfo");
+                .collect(Collectors.toList()), "createdBy", "creator");
         return ciTemplateJobVOPage;
     }
 
