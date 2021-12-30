@@ -119,7 +119,7 @@ public class CiOrganizationTemplateJobController {
     }
 
     @ApiOperation(value = "校验任务是否可以删除（是否关联流水线）")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{template_job_id}/check/delete")
     public ResponseEntity<Boolean> checkJobTemplateByJobId(
             @PathVariable(value = "organization_id") Long sourceId,
