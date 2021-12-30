@@ -29,7 +29,7 @@ public interface CiTemplateStepBusMapper extends BaseMapper<CiTemplateStepDTO> {
 
     List<CiTemplateStepDTO> selectByParams(@Param("sourceId") Long sourceId, @Param("name") String name);
 
-    Boolean checkTemplateStepName(
+    Integer checkTemplateStepName(
             @Param("sourceId") Long sourceId,
             @Param("name") String name,
             @Param("templateStepId") Long templateStepId);

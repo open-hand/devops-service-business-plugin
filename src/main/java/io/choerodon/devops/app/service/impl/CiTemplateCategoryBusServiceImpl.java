@@ -43,7 +43,10 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CiTemplateCategoryVO updateTemplateCategory(CiTemplateCategoryVO ciTemplateCategoryVO) {
+    public CiTemplateCategoryVO updateTemplateCategory(Long sourceId, CiTemplateCategoryVO ciTemplateCategoryVO) {
+        if (!checkTemplateCategoryName(sourceId, ciTemplateCategoryVO.getCategory(), ciTemplateCategoryVO.getId())) {
+            throw new CommonException("error.pipeline.category.exist");
+        }
         CiTemplateCategoryDTO ciTemplateCategoryDTO = ciTemplateCategoryBusMapper.selectByPrimaryKey(ciTemplateCategoryVO.getId());
         AssertUtils.notNull(ciTemplateCategoryDTO, "error.ci.template.category.not.exist");
         AssertUtils.isTrue(!ciTemplateCategoryDTO.getBuiltIn(), "error.update.builtin.ci.template.category");
@@ -81,7 +84,11 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
 
     @Override
     public Boolean checkTemplateCategoryName(Long sourceId, String name, Long ciTemplateCategoryId) {
-        return ciTemplateCategoryBusMapper.checkTemplateCategoryName(sourceId, name, ciTemplateCategoryId);
+        Integer integer = ciTemplateCategoryBusMapper.checkTemplateCategoryName(sourceId, name, ciTemplateCategoryId);
+        if (integer != null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     private Boolean checkCategoryName(String name) {

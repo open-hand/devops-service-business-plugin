@@ -98,7 +98,9 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CiTemplatePipelineVO createPipelineTemplate(Long sourceId, CiTemplatePipelineVO devopsPipelineTemplateVO) {
-        checkPipelineName(devopsPipelineTemplateVO);
+        if (!checkPipelineTemplateName(sourceId, devopsPipelineTemplateVO.getName(), null)) {
+            throw new CommonException("error.pipeline.template.name.exist");
+        }
         checkPipelineCategory(devopsPipelineTemplateVO);
         checkStageName(devopsPipelineTemplateVO);
         checkAccess(sourceId);
@@ -208,7 +210,9 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CiTemplatePipelineVO updatePipelineTemplate(Long sourceId, CiTemplatePipelineVO devopsPipelineTemplateVO) {
-        checkPipelineName(devopsPipelineTemplateVO);
+        if (!checkPipelineTemplateName(sourceId, devopsPipelineTemplateVO.getName(), devopsPipelineTemplateVO.getId())) {
+            throw new CommonException("error.pipeline.template.name.exist");
+        }
         checkPipelineCategory(devopsPipelineTemplateVO);
         checkStageName(devopsPipelineTemplateVO);
         checkAccess(sourceId);
@@ -346,7 +350,11 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
     @Override
     public Boolean checkPipelineTemplateName(Long sourceId, String name, Long ciPipelineTemplateId) {
-        return ciPipelineTemplateBusMapper.checkPipelineName(sourceId, name, ciPipelineTemplateId);
+        Integer integer = ciPipelineTemplateBusMapper.checkPipelineName(sourceId, name, ciPipelineTemplateId);
+        if (integer != null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     private void checkPipelineTemplate(CiTemplatePipelineDTO pipelineTemplateDTO) {
@@ -366,7 +374,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         }
         Set<String> stageNames = templateStageVOS.stream().map(CiTemplateStageVO::getName).collect(Collectors.toSet());
         if (stageNames.size() < templateStageVOS.size()) {
-            throw new CommonException("error.pipeline.template.name.exist");
+            throw new CommonException("error.pipeline.template.stage.name.exist");
         }
     }
 
@@ -392,15 +400,5 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         if (!CollectionUtils.isEmpty(ciTemplatePipelineDTOS)) {
             throw new CommonException("error.pipeline.template.name.exist");
         }
-    }
-
-    private boolean checkPipelineName(String name) {
-        CiTemplatePipelineDTO record = new CiTemplatePipelineDTO();
-        record.setName(name);
-        List<CiTemplatePipelineDTO> ciTemplatePipelineDTOS = ciPipelineTemplateBusMapper.select(record);
-        if (!CollectionUtils.isEmpty(ciTemplatePipelineDTOS)) {
-            return Boolean.FALSE;
-        }
-        return Boolean.TRUE;
     }
 }

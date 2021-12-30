@@ -13,7 +13,7 @@ import io.choerodon.mybatis.common.BaseMapper;
 public interface CiTemplateCategoryBusMapper extends BaseMapper<CiTemplateCategoryDTO> {
     List<CiTemplateCategoryDTO> pageTemplateCategory(@Param("searchParam") String searchParam);
 
-    Boolean checkTemplateCategoryName(@Param("sourceId") Long sourceId,
+    Integer checkTemplateCategoryName(@Param("sourceId") Long sourceId,
                                       @Param("name") String name,
                                       @Param("ciTemplateCategoryId") Long ciTemplateCategoryId);
 

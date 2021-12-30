@@ -73,6 +73,10 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CiTemplateStepVO updateTemplateStep(Long sourceId, CiTemplateStepVO ciTemplateStepVO) {
+        if (!checkTemplateStepName(sourceId, ciTemplateStepVO.getName(), ciTemplateStepVO.getId())) {
+            throw new CommonException("error.step.name.already.exists");
+        }
+
         CiTemplateStepDTO ciTemplateStepDTO = ciTemplateStepBusMapper.selectByPrimaryKey(ciTemplateStepVO.getId());
         AssertUtils.notNull(ciTemplateStepDTO, "error.ci.step.template.not.exist");
         AssertUtils.isTrue(!ciTemplateStepDTO.getBuiltIn(), "error.update.builtin.step.template");
@@ -114,7 +118,9 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     @Transactional(rollbackFor = Exception.class)
     public CiTemplateStepVO createTemplateStep(Long sourceId, CiTemplateStepVO ciTemplateStepVO) {
         AssertUtils.notNull(ciTemplateStepVO, "error.ci.template.step.null");
-        checkStepName(ciTemplateStepVO);
+        if (!checkTemplateStepName(sourceId, ciTemplateStepVO.getName(), null)) {
+            throw new CommonException("error.step.name.already.exists");
+        }
         checkCategory(ciTemplateStepVO);
         CiTemplateStepDTO ciTemplateStepDTO = new CiTemplateStepDTO();
         BeanUtils.copyProperties(ciTemplateStepVO, ciTemplateStepDTO);
@@ -158,7 +164,11 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
 
     @Override
     public Boolean checkTemplateStepName(Long sourceId, String name, Long templateStepId) {
-        return ciTemplateStepBusMapper.checkTemplateStepName(sourceId, name, templateStepId);
+        Integer integer = ciTemplateStepBusMapper.checkTemplateStepName(sourceId, name, templateStepId);
+        if (integer != null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     @Override

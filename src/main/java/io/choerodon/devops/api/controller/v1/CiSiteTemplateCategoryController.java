@@ -62,7 +62,7 @@ public class CiSiteTemplateCategoryController extends BaseController {
     public ResponseEntity<CiTemplateCategoryVO> updateTemplateCategory(
             @PathVariable(value = "source_id") Long sourceId,
             @RequestBody CiTemplateCategoryVO ciTemplateCategoryVO) {
-        return ResponseEntity.ok(ciTemplateCategoryBusService.updateTemplateCategory(ciTemplateCategoryVO));
+        return ResponseEntity.ok(ciTemplateCategoryBusService.updateTemplateCategory(sourceId, ciTemplateCategoryVO));
     }
 
 
