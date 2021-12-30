@@ -11,7 +11,7 @@ public interface CiTemplateCategoryBusService {
 
     Page<CiTemplateCategoryVO> pageTemplateCategory(PageRequest pageRequest, String searchParam);
 
-    CiTemplateCategoryVO updateTemplateCategory(CiTemplateCategoryVO ciTemplateCategoryVO);
+    CiTemplateCategoryVO updateTemplateCategory(Long sourceId, CiTemplateCategoryVO ciTemplateCategoryVO);
 
     void deleteTemplateCategory(Long ciTemplateCategoryId);
 

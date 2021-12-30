@@ -17,12 +17,13 @@
 
     </select>
 
-    <select id="checkTemplateStepCategoryName"  resultType="java.lang.Boolean">
-        SELECT count(*) = 0
+    <select id="checkTemplateStepCategoryName" resultType="java.lang.Integer">
+        SELECT 1
         FROM devops_ci_template_step_category dctsc
-        WHERE dctsc.name = #{name}
+        WHERE dcts.name = #{name}
         <if test="ciTemplateCategoryId != null">
             AND dctsc.id != #{ciTemplateCategoryId}
         </if>
+        LIMIT 1
     </select>
 </mapper>

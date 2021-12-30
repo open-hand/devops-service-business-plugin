@@ -20,12 +20,13 @@
 
     </select>
 
-    <select id="checkTemplateCategoryName" resultType="java.lang.Boolean">
-        SELECT count(*) = 0
+    <select id="checkTemplateCategoryName" resultType="java.lang.Integer">
+        SELECT 1
         FROM devops_ci_template_category dctc
         WHERE dctc.category = #{name}
         <if test="ciTemplateCategoryId != null">
             AND dctc.id != #{ciTemplateCategoryId}
         </if>
+        LIMIT 1
     </select>
 </mapper>

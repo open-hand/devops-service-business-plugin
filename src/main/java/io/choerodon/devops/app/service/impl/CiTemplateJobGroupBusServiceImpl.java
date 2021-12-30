@@ -47,6 +47,9 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CiTemplateJobGroupVO createTemplateJobGroup(Long sourceId, CiTemplateJobGroupVO ciTemplateJobGroupVO) {
+        if (!checkTemplateJobGroupName(sourceId, ciTemplateJobGroupVO.getName(), null)) {
+            throw new CommonException("error.job.group.exist");
+        }
         ciTemplateJobGroupVO.setBuiltIn(false);
         CiTemplateJobGroupDTO ciTemplateJobGroupDTO = ConvertUtils.convertObject(ciTemplateJobGroupVO, CiTemplateJobGroupDTO.class);
         ciTemplateJobGroupDTO.setType(CiTemplateJobGroupTypeEnum.OTHER.value());
@@ -58,12 +61,12 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     @Transactional(rollbackFor = Exception.class)
     public CiTemplateJobGroupVO updateTemplateJobGroup(Long sourceId, CiTemplateJobGroupVO ciTemplateJobGroupVO) {
 
+        if (!checkTemplateJobGroupName(sourceId, ciTemplateJobGroupVO.getName(), ciTemplateJobGroupVO.getId())) {
+            throw new CommonException("error.job.group.exist");
+        }
         CiTemplateJobGroupDTO templateJobGroupDTO = ciTemplateJobGroupBusMapper.selectByPrimaryKey(ciTemplateJobGroupVO.getId());
         AssertUtils.notNull(templateJobGroupDTO, "error.ci.job.template.group.not.exist");
         AssertUtils.isTrue(!templateJobGroupDTO.getBuiltIn(), "error.update.builtin.job.template.group");
-//        if (!checkStepCategoryName(ciTemplateStepCategoryVO.getName())) {
-//            throw new CommonException("error.pipeline.category.exist");
-//        }
 
         ciTemplateJobGroupVO.setBuiltIn(false);
         BeanUtils.copyProperties(ciTemplateJobGroupVO, templateJobGroupDTO);
@@ -86,7 +89,11 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
 
     @Override
     public Boolean checkTemplateJobGroupName(Long sourceId, String name, Long templateJobId) {
-        return ciTemplateJobGroupBusMapper.checkTemplateJobGroupName(sourceId, name, templateJobId);
+        Integer integer = ciTemplateJobGroupBusMapper.checkTemplateJobGroupName(sourceId, name, templateJobId);
+        if (integer != null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
 

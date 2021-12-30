@@ -53,7 +53,7 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
         CiTemplateStepCategoryDTO ciTemplateStepCategoryDTO = ciTemplateStepCategoryBusMapper.selectByPrimaryKey(ciTemplateStepCategoryVO.getId());
         AssertUtils.notNull(ciTemplateStepCategoryDTO, "error.ci.step.template.category.not.exist");
         AssertUtils.isTrue(!ciTemplateStepCategoryDTO.getBuiltIn(), "error.update.builtin.step.template.category");
-        if (!checkStepCategoryName(ciTemplateStepCategoryVO.getName())) {
+        if (!checkTemplateStepCategory(sourceId, ciTemplateStepCategoryVO.getName(), ciTemplateStepCategoryVO.getId())) {
             throw new CommonException("error.pipeline.category.exist");
         }
         BeanUtils.copyProperties(ciTemplateStepCategoryVO, ciTemplateStepCategoryDTO);
@@ -78,7 +78,7 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
     @Transactional(rollbackFor = Exception.class)
     public CiTemplateStepCategoryVO createTemplateStepCategory(Long sourceId, CiTemplateStepCategoryVO ciTemplateStepCategoryVO) {
         AssertUtils.notNull(ciTemplateStepCategoryVO, "error.ci.template.step.category.null");
-        if (!checkStepCategoryName(ciTemplateStepCategoryVO.getName())) {
+        if (!checkTemplateStepCategory(sourceId, ciTemplateStepCategoryVO.getName(), null)) {
             throw new CommonException("error.pipeline.category.exist");
         }
         //校验类型必须是自定义的
@@ -94,7 +94,11 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
 
     @Override
     public Boolean checkTemplateStepCategory(Long sourceId, String name, Long ciTemplateCategoryId) {
-        return ciTemplateStepCategoryBusMapper.checkTemplateStepCategoryName(sourceId, name, ciTemplateCategoryId);
+        Integer integer = ciTemplateStepCategoryBusMapper.checkTemplateStepCategoryName(sourceId, name, ciTemplateCategoryId);
+        if (integer != null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     /**

@@ -3,7 +3,6 @@ package io.choerodon.devops.infra.mapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-import io.choerodon.devops.api.vo.SearchVO;
 import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
 import io.choerodon.devops.infra.dto.CiTemplatePipelineDTO;
 import io.choerodon.mybatis.common.BaseMapper;
@@ -23,9 +22,9 @@ public interface CiPipelineTemplateBusMapper extends BaseMapper<CiTemplatePipeli
                                                                    @Param("enable") Boolean enable,
                                                                    @Param("params") String params);
 
-    Boolean checkPipelineName(@Param("sourceId") Long sourceId,
-                              @Param("name") String name,
-                              @Param("ciPipelineTemplateId") Long ciPipelineTemplateId);
+    Integer checkPipelineName(@Param("sourceId") Long sourceId,
+                         @Param("name") String name,
+                         @Param("ciPipelineTemplateId") Long ciPipelineTemplateId);
 
 }
 

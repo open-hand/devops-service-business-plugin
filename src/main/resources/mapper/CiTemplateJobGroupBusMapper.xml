@@ -18,13 +18,15 @@
     </select>
 
 
-    <select id="checkTemplateJobGroupName" resultType="java.lang.Boolean">
-        SELECT count(*) = 0
+    <select id="checkTemplateJobGroupName" resultType="java.lang.Integer">
+        SELECT 1
         FROM devops_ci_template_job_group dctjg
         WHERE dctjg.name = #{name}
+
         <if test="templateJobId != null">
             AND dctjg.id != #{templateJobId}
         </if>
+        LIMIT 1
     </select>
 
 </mapper>

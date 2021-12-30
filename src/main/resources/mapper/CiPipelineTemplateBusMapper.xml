@@ -66,14 +66,15 @@
 
     </select>
 
-    <select id="checkPipelineName" resultType="java.lang.Boolean">
-        SELECT count(*) = 0
+    <select id="checkPipelineName" resultType="java.lang.Integer">
+        SELECT 1
         FROM devops_ci_template_pipeline dctp
         WHERE dctp.name = #{name}
         AND dctp.source_id = #{sourceId}
         <if test="ciPipelineTemplateId != null">
             AND dctp.id != #{ciPipelineTemplateId}
         </if>
+        LIMIT 1
     </select>
 
 
