@@ -3,9 +3,10 @@
 <mapper namespace="io.choerodon.devops.infra.mapper.CiTemplateJobGroupBusMapper">
 
 
-    <select id="queryTemplateJobGroupByParams" resultType="io.choerodon.devops.infra.dto.CiTemplateJobGroupDTO">
+    <select id="queryTemplateJobGroupByParams" resultType="io.choerodon.devops.api.vo.template.CiTemplateJobGroupVO">
         SELECT
-          *
+        dctjg.*,
+        ifnull( ( SELECT count( * ) FROM devops_ci_template_job dctj WHERE dctj.group_id = dctjg.id AND  #{sourceId,jdbcType=BIGINT}),0) AS template_number
         FROM
            devops_ci_template_job_group dctjg
         <where>

@@ -15,7 +15,7 @@ import io.choerodon.mybatis.common.BaseMapper;
  */
 public interface CiTemplateJobGroupBusMapper extends BaseMapper<CiTemplateJobGroupDTO> {
 
-    List<CiTemplateJobGroupDTO> queryTemplateJobGroupByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
+    List<CiTemplateJobGroupVO> queryTemplateJobGroupByParams(@Param("sourceId") Long sourceId, @Param("searchParam") String searchParam);
 
     Integer checkTemplateJobGroupName(@Param("sourceId") Long sourceId,
                                       @Param("name") String name,

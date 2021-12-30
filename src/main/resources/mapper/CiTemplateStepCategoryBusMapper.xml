@@ -6,7 +6,7 @@
     <select id="queryTemplateStepCategoryByParams" resultType="io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO">
         SELECT
         dctsc.*,
-        ( SELECT count( * ) FROM devops_ci_template_step dcts WHERE dcts.category_id = dctsc.id AND dcts.source_id = #{sourceId,jdbcType=BIGINT} ) AS template_number
+        ifnull(SELECT count( * ) FROM devops_ci_template_step dcts WHERE dcts.category_id = dctsc.id AND dcts.source_id = #{sourceId,jdbcType=BIGINT},0)  AS template_number
         FROM
         devops_ci_template_step_category dctsc
         where 1=1
