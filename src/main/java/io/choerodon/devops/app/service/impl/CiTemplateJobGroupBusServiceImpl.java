@@ -38,8 +38,8 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
 
     @Override
     public Page<CiTemplateJobGroupVO> pageTemplateJobGroup(Long sourceId, PageRequest pageRequest, String searchParam) {
-        Page<CiTemplateJobGroupDTO> ciTemplateJobGroupDTOS = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, searchParam));
-        Page<CiTemplateJobGroupVO> ciTemplateJobGroupVOS = ConvertUtils.convertPage(ciTemplateJobGroupDTOS, CiTemplateJobGroupVO.class);
+        Page<CiTemplateJobGroupVO> ciTemplateJobGroupVOS = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, searchParam));
+
         UserDTOFillUtil.fillUserInfo(ciTemplateJobGroupVOS.getContent(), Constant.CREATED_BY, Constant.CREATOR);
         return ciTemplateJobGroupVOS;
     }
@@ -111,7 +111,7 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
 
     @Override
     public List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId, String name) {
-        return ConvertUtils.convertList(ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, name), CiTemplateJobGroupVO.class);
+        return ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, name);
     }
 
     private Boolean checkGroupName(String name) {
