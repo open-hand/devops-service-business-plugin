@@ -45,6 +45,9 @@
         <if test="builtIn != null and builtIn ==false">
             AND  dctj.built_in = 0
         </if>
+        <if test="params != null and params != ''">
+            dctj.NAME LIKE CONCAT(CONCAT('%', #{params, jdbcType=VARCHAR}), '%')
+        </if>
     </select>
 
 
