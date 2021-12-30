@@ -20,7 +20,7 @@
     <select id="checkTemplateStepCategoryName" resultType="java.lang.Integer">
         SELECT 1
         FROM devops_ci_template_step_category dctsc
-        WHERE dcts.name = #{name}
+        WHERE dctsc.name = #{name}
         <if test="ciTemplateCategoryId != null">
             AND dctsc.id != #{ciTemplateCategoryId}
         </if>
