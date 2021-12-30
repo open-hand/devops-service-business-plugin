@@ -227,6 +227,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
         AssertUtils.isTrue(!pipelineTemplateDTO.getBuiltIn(), "error.pipeline.built.in");
         Set<Long> stageJobRelIds = new HashSet<>();
         List<CiTemplateStageVO> templateStageVOS = devopsPipelineTemplateVO.getTemplateStageVOS();
+        //删除旧的阶段
         deleteStageAndStageJobRel(ciTemplateStageDTOS, stageJobRelIds);
         //插入新的阶段  阶段与job的关系
         insertStageAndJobRel(pipelineTemplateDTO, templateStageVOS);
@@ -272,7 +273,7 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
                 //插入阶段与job的关联关系
                 CiTemplateStageJobRelDTO ciTemplateStageJobRelDTO = new CiTemplateStageJobRelDTO();
                 ciTemplateStageJobRelDTO.setCiTemplateJobId(ciTemplateJobVO.getId());
-                ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageVO.getId());
+                ciTemplateStageJobRelDTO.setCiTemplateStageId(ciTemplateStageDTO.getId());
                 ciTemplateStageJobRelMapper.insertSelective(ciTemplateStageJobRelDTO);
 
                 List<CiTemplateStepVO> ciTemplateStepVOS = ciTemplateJobVO.getDevopsCiStepVOList();
