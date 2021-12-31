@@ -16,6 +16,7 @@ import org.springframework.util.ObjectUtils;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.oauth.CustomUserDetails;
 import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
 import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
@@ -168,13 +169,17 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
 
     private void checkAccess(Long sourceId) {
         // 如果sourceId为0，校验用户是有有平台管理员角色
+        CustomUserDetails userDetails = DetailsHelper.getUserDetails();
+        if (Boolean.TRUE.equals(userDetails.getAdmin())) {
+            return;
+        }
         if (sourceId == 0) {
-            if (!baseServiceClientOperator.checkSiteAccess(DetailsHelper.getUserDetails().getUserId())) {
+            if (!baseServiceClientOperator.checkSiteAccess(userDetails.getUserId())) {
                 throw new CommonException("error.no.permission.to.do.operation");
             }
         } else {
             // 如果sourceId不为0，校验用户是否有resourceId对应的组织管理权限
-            if (!baseServiceClientOperator.isOrganzationRoot(DetailsHelper.getUserDetails().getUserId(), sourceId)) {
+            if (!baseServiceClientOperator.isOrganzationRoot(userDetails.getUserId(), sourceId)) {
                 throw new CommonException("error.no.permission.to.do.operation");
             }
         }
