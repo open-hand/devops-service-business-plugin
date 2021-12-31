@@ -1,19 +1,26 @@
 package io.choerodon.devops.app.service.impl;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
 import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.oauth.DetailsHelper;
-import io.choerodon.devops.api.vo.template.*;
+import io.choerodon.devops.api.vo.template.CiTemplateJobVO;
+import io.choerodon.devops.api.vo.template.CiTemplatePipelineVO;
+import io.choerodon.devops.api.vo.template.CiTemplateStageVO;
+import io.choerodon.devops.api.vo.template.CiTemplateStepVO;
 import io.choerodon.devops.app.service.CiPipelineTemplateBusService;
 import io.choerodon.devops.infra.constant.Constant;
 import io.choerodon.devops.infra.dto.*;
@@ -29,6 +36,8 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
  */
 @Service
 public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusService {
+
+    private static final String DEFAULT_VERSION_NAME_RULE = "${C7N_COMMIT_TIME}-${C7N_BRANCH}";
 
     @Autowired
     private CiPipelineTemplateBusMapper ciPipelineTemplateBusMapper;
@@ -176,13 +185,16 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     public CiTemplatePipelineVO queryPipelineTemplateById(Long sourceId, Long ciPipelineTemplateId) {
         CiTemplatePipelineDTO ciPipelineTemplateDTO = ciPipelineTemplateBusMapper.selectByPrimaryKey(ciPipelineTemplateId);
         AssertUtils.notNull(ciPipelineTemplateDTO, "error.pipeline.template.is.null");
-        CiTemplatePipelineVO CiTemplatePipelineVO = ConvertUtils.convertObject(ciPipelineTemplateDTO, CiTemplatePipelineVO.class);
+        CiTemplatePipelineVO ciTemplatePipelineVO = ConvertUtils.convertObject(ciPipelineTemplateDTO, CiTemplatePipelineVO.class);
+        if (ObjectUtils.isEmpty(ciTemplatePipelineVO.getVersionName()) || DEFAULT_VERSION_NAME_RULE.equals(ciTemplatePipelineVO.getVersionName())) {
+            ciTemplatePipelineVO.setVersionStrategy(false);
+        }
         //查询阶段
         CiTemplateStageDTO record = new CiTemplateStageDTO();
         record.setPipelineTemplateId(ciPipelineTemplateId);
         List<CiTemplateStageDTO> ciTemplateStageDTOS = ciTemplateStageBusMapper.select(record);
         if (CollectionUtils.isEmpty(ciTemplateStageDTOS)) {
-            return CiTemplatePipelineVO;
+            return ciTemplatePipelineVO;
         }
         List<CiTemplateStageVO> ciTemplateStageVOS = ConvertUtils.convertList(ciTemplateStageDTOS, CiTemplateStageVO.class);
         ciTemplateStageVOS.forEach(ciTemplateStageVO -> {
@@ -203,9 +215,9 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
             });
             ciTemplateStageVO.setCiTemplateJobVOList(ciTemplateJobVOS);
         });
-        CiTemplatePipelineVO.setTemplateStageVOS(ciTemplateStageVOS);
+        ciTemplatePipelineVO.setTemplateStageVOS(ciTemplateStageVOS);
 
-        return CiTemplatePipelineVO;
+        return ciTemplatePipelineVO;
     }
 
     @Override

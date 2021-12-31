@@ -242,7 +242,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     }
 
     private void checkAccess(Long sourceId) {
-        // 如果sourceId为0，校验用户是有有平台管理员角色
+        // 如果sourceId为0，校验用户是否有平台管理员角色
         if (sourceId == 0) {
             if (!baseServiceClientOperator.checkSiteAccess(DetailsHelper.getUserDetails().getUserId())) {
                 throw new CommonException("error.no.permission.to.do.operation");
