@@ -40,7 +40,7 @@
         FROM
            devops_ci_template_pipeline dctp
         JOIN devops_ci_template_category dctc ON dctp.ci_template_category_id=dctc.id
-        where 1=1
+        WHERE (dctp.source_id = 0 OR dctp.source_id = #{sourceId})
         <if test="name != null and name != ''">
             AND dctp.name LIKE CONCAT(CONCAT('%', #{name, jdbcType=VARCHAR}), '%')
         </if>
@@ -62,6 +62,7 @@
         <if test="params != null and params != ''">
             AND dctp.name LIKE CONCAT(CONCAT('%', #{params, jdbcType=VARCHAR}), '%')
         </if>
+
 
 
     </select>
