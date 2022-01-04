@@ -1,7 +1,10 @@
 package io.choerodon.devops.app.service.impl;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.BeanUtils;
@@ -111,7 +114,12 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
 
     @Override
     public List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId, String name) {
-        return ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, name);
+        List<CiTemplateJobGroupVO> ciTemplateJobGroupVOS = ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, name);
+        if (!CollectionUtils.isEmpty(ciTemplateJobGroupVOS)) {
+            List<CiTemplateJobGroupVO> templateJobGroupVOS = ciTemplateJobGroupVOS.stream().sorted(Comparator.comparing(CiTemplateJobGroupVO::getId)).collect(Collectors.toList());
+            return templateJobGroupVOS;
+        }
+        return Collections.emptyList();
     }
 
     private Boolean checkGroupName(String name) {
