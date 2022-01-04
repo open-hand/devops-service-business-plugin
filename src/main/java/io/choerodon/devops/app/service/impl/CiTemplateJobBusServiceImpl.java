@@ -68,6 +68,10 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     public List<CiTemplateJobVO> queryTemplateJobsByGroupId(Long sourceId, Long ciTemplateJobGroupId) {
         CiTemplateJobDTO record = new CiTemplateJobDTO();
         record.setGroupId(ciTemplateJobGroupId);
+        //平台层的查不到组织层的job
+        if (sourceId == 0) {
+            record.setSourceId(sourceId);
+        }
         List<CiTemplateJobDTO> ciTemplateJobDTOS = ciTemplateJobBusMapper.select(record);
         if (CollectionUtils.isEmpty(ciTemplateJobDTOS)) {
             return Collections.EMPTY_LIST;
