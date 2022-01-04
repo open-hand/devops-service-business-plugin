@@ -213,13 +213,15 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         List<CiTemplateStepVO> templateStepVOList = ciTemplateStepService.listByJobIds(Arrays.asList(ciTemplateJobVO.getId()).stream().collect(Collectors.toSet()));
         List<CiTemplateStepVO> reTemplateStepVOS = new ArrayList<>();
         if (!CollectionUtils.isEmpty(templateStepVOList)) {
+            List<CiTemplateStepVO> finalReTemplateStepVOS = reTemplateStepVOS;
             templateStepVOList.forEach(ciTemplateStepVO -> {
                 // 添加步骤关联的配置信息
                 AbstractDevopsCiStepHandler stepHandler = devopsCiStepOperator.getHandlerOrThrowE(ciTemplateStepVO.getType());
                 stepHandler.fillTemplateStepConfigInfo(ciTemplateStepVO);
-                reTemplateStepVOS.add(ciTemplateStepVO);
+                finalReTemplateStepVOS.add(ciTemplateStepVO);
             });
-
+            //步骤按照sequence
+            reTemplateStepVOS = finalReTemplateStepVOS.stream().sorted(Comparator.comparing(CiTemplateStepVO::getSequence)).collect(Collectors.toList());
         }
         ciTemplateJobVO.setDevopsCiStepVOList(reTemplateStepVOS);
 
