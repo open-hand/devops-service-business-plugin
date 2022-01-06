@@ -228,6 +228,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
             reTemplateStepVOS = finalReTemplateStepVOS.stream().sorted(Comparator.comparing(CiTemplateStepVO::getSequence)).collect(Collectors.toList());
         }
         ciTemplateJobVO.setDevopsCiStepVOList(reTemplateStepVOS);
+        ciTemplateJobVO.setOpenParallel(Objects.isNull(ciTemplateJobVO.getParallel()) ? Boolean.FALSE : Boolean.TRUE);
 
         return ciTemplateJobVO;
     }
