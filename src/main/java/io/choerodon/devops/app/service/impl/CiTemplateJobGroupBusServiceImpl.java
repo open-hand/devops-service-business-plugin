@@ -116,7 +116,7 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     public List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId, String name) {
         List<CiTemplateJobGroupVO> ciTemplateJobGroupVOS = ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, name);
         if (!CollectionUtils.isEmpty(ciTemplateJobGroupVOS)) {
-            List<CiTemplateJobGroupVO> templateJobGroupVOS = ciTemplateJobGroupVOS.stream().sorted(Comparator.comparing(CiTemplateJobGroupVO::getId)).collect(Collectors.toList());
+            List<CiTemplateJobGroupVO> templateJobGroupVOS = ciTemplateJobGroupVOS.stream().sorted(Comparator.comparing(CiTemplateJobGroupVO::getId).reversed()).collect(Collectors.toList());
             return templateJobGroupVOS;
         }
         return Collections.emptyList();
