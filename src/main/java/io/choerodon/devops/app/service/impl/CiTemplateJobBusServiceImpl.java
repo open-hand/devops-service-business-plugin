@@ -92,7 +92,9 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
                     stepHandler.fillTemplateStepConfigInfo(ciTemplateStepVO);
                     templateStepVOList.add(ciTemplateStepVO);
                 });
-                ciTemplateJobVO.setDevopsCiStepVOList(templateStepVOList);
+                //步骤按照sequence排序
+                List<CiTemplateStepVO> reTemplateStepVOS = templateStepVOList.stream().sorted(Comparator.comparing(CiTemplateStepVO::getSequence)).collect(Collectors.toList());
+                ciTemplateJobVO.setDevopsCiStepVOList(reTemplateStepVOS);
             }
         });
         return ciTemplateJobVOS;
