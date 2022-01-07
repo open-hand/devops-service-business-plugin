@@ -1,5 +1,6 @@
 package io.choerodon.devops.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -115,9 +116,33 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
     @Override
     public List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId, String name) {
         List<CiTemplateJobGroupVO> ciTemplateJobGroupVOS = ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, name);
+        List<CiTemplateJobGroupVO> resultTemplateJobGroupVOS = new ArrayList<>();
         if (!CollectionUtils.isEmpty(ciTemplateJobGroupVOS)) {
             List<CiTemplateJobGroupVO> templateJobGroupVOS = ciTemplateJobGroupVOS.stream().sorted(Comparator.comparing(CiTemplateJobGroupVO::getId).reversed()).collect(Collectors.toList());
-            return templateJobGroupVOS;
+            //构建放在第一位 自定义的放在最后
+            List<CiTemplateJobGroupVO> customJobGroupVOS = templateJobGroupVOS.stream().filter(ciTemplateJobGroupVO -> !ciTemplateJobGroupVO.getBuiltIn()).collect(Collectors.toList());
+            List<CiTemplateJobGroupVO> otherVos = templateJobGroupVOS.stream()
+                    .filter(CiTemplateJobGroupVO::getBuiltIn)
+                    .filter(ciTemplateJobGroupVO -> StringUtils.equalsIgnoreCase(ciTemplateJobGroupVO.getType(), CiTemplateJobGroupTypeEnum.OTHER.value()))
+                    .collect(Collectors.toList());
+
+
+            List<CiTemplateJobGroupVO> firstVos = templateJobGroupVOS
+                    .stream()
+                    .filter(ciTemplateJobGroupVO -> StringUtils.equalsIgnoreCase(ciTemplateJobGroupVO.getType(), CiTemplateJobGroupTypeEnum.BUILD.value()))
+                    .collect(Collectors.toList());
+
+            List<CiTemplateJobGroupVO> groupVOS = templateJobGroupVOS.stream().filter(CiTemplateJobGroupVO::getBuiltIn)
+                    .filter(ciTemplateJobGroupVO -> !StringUtils.equalsIgnoreCase(ciTemplateJobGroupVO.getType(), CiTemplateJobGroupTypeEnum.OTHER.value()))
+                    .filter(ciTemplateJobGroupVO -> !StringUtils.equalsIgnoreCase(ciTemplateJobGroupVO.getType(), CiTemplateJobGroupTypeEnum.BUILD.value()))
+                    .collect(Collectors.toList());
+
+            resultTemplateJobGroupVOS.addAll(firstVos);
+            resultTemplateJobGroupVOS.addAll(groupVOS);
+            resultTemplateJobGroupVOS.addAll(otherVos);
+            resultTemplateJobGroupVOS.addAll(customJobGroupVOS);
+
+            return resultTemplateJobGroupVOS;
         }
         return Collections.emptyList();
     }
