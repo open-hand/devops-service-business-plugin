@@ -49,7 +49,7 @@ public class CiOrganizationTemplateCategoryController extends BaseController {
 
     @ApiOperation(value = "组织层查询流水线分类列表")
     @Permission(level = ResourceLevel.SITE)
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<CiTemplateCategoryVO>> queryTemplateCategorys(
             @PathVariable(value = "organization_id") Long sourceId) {
         return ResponseEntity.ok(ciTemplateCategoryBusService.queryTemplateCategorys(sourceId));

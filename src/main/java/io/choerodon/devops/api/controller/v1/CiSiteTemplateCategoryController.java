@@ -58,7 +58,7 @@ public class CiSiteTemplateCategoryController extends BaseController {
 
     @ApiOperation(value = "平台层查询流水线分类列表")
     @Permission(level = ResourceLevel.SITE)
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<CiTemplateCategoryVO>> queryTemplateCategorys(
             @PathVariable(value = "source_id") Long sourceId) {
         return ResponseEntity.ok(ciTemplateCategoryBusService.queryTemplateCategorys(sourceId));
