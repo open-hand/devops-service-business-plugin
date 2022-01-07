@@ -2,6 +2,7 @@ package io.choerodon.devops.api.controller.v1;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import java.util.List;
 import org.hzero.core.base.BaseController;
 import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,14 @@ public class CiOrganizationTemplateCategoryController extends BaseController {
             @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
             @RequestParam(value = "name", required = false) String name) {
         return ResponseEntity.ok(ciTemplateCategoryBusService.pageTemplateCategory(pageRequest, name));
+    }
+
+    @ApiOperation(value = "组织层查询流水线分类列表")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping
+    public ResponseEntity<List<CiTemplateCategoryVO>> queryTemplateCategorys(
+            @PathVariable(value = "organization_id") Long sourceId) {
+        return ResponseEntity.ok(ciTemplateCategoryBusService.queryTemplateCategorys(sourceId));
     }
 
 }

@@ -1,5 +1,7 @@
 package io.choerodon.devops.app.service;
 
+import java.util.List;
+
 import io.choerodon.core.domain.Page;
 import io.choerodon.devops.api.vo.template.CiTemplateCategoryVO;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -19,5 +21,7 @@ public interface CiTemplateCategoryBusService {
 
 
     Boolean checkTemplateCategoryName(Long sourceId, String name, Long ciTemplateCategoryId);
+
+    List<CiTemplateCategoryVO> queryTemplateCategorys(Long sourceId);
 
 }

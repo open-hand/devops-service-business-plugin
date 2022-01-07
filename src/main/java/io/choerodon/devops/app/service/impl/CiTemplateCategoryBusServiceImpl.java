@@ -1,6 +1,10 @@
 package io.choerodon.devops.app.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.utils.ConvertUtils;
 import io.choerodon.devops.api.vo.template.CiTemplateCategoryVO;
+import io.choerodon.devops.api.vo.template.CiTemplateStepCategoryVO;
 import io.choerodon.devops.app.service.CiTemplateCategoryBusService;
 import io.choerodon.devops.infra.constant.Constant;
 import io.choerodon.devops.infra.dto.CiTemplateCategoryDTO;
@@ -89,6 +94,36 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
+    }
+
+    @Override
+    public List<CiTemplateCategoryVO> queryTemplateCategorys(Long sourceId) {
+        List<CiTemplateCategoryDTO> ciTemplateCategoryDTOS = ciTemplateCategoryBusMapper.selectAll();
+        if (CollectionUtils.isEmpty(ciTemplateCategoryDTOS)) {
+            return Collections.EMPTY_LIST;
+        }
+        List<CiTemplateCategoryVO> ciTemplateCategoryVOS = ConvertUtils.convertList(ciTemplateCategoryDTOS, CiTemplateCategoryVO.class);
+        //排序
+        List<CiTemplateCategoryVO> templateCategoryVOS = sortedTemplateCategorys(ciTemplateCategoryVOS);
+        return templateCategoryVOS;
+    }
+
+    private List<CiTemplateCategoryVO> sortedTemplateCategorys(List<CiTemplateCategoryVO> ciTemplateCategoryVOS) {
+        List<CiTemplateCategoryVO> templateCategoryVOS = new ArrayList<>();
+        //自定义的放在最后
+        List<CiTemplateCategoryVO> customTemplate = ciTemplateCategoryVOS.stream().filter(ciTemplateCategoryVO -> !ciTemplateCategoryVO.getBuiltIn()).collect(Collectors.toList());
+        List<CiTemplateCategoryVO> otherVos = ciTemplateCategoryVOS.stream()
+                .filter(CiTemplateCategoryVO::getBuiltIn)
+                .filter(CiTemplateCategoryVO -> StringUtils.equalsIgnoreCase(CiTemplateCategoryVO.getCategory(), "其他"))
+                .collect(Collectors.toList());
+        List<CiTemplateCategoryVO> templateCategoryVOS1 = ciTemplateCategoryVOS.stream().filter(CiTemplateCategoryVO::getBuiltIn)
+                .filter(CiTemplateCategoryVO -> !StringUtils.equalsIgnoreCase(CiTemplateCategoryVO.getCategory(), "其他"))
+                .collect(Collectors.toList());
+
+        templateCategoryVOS.addAll(templateCategoryVOS1);
+        templateCategoryVOS.addAll(otherVos);
+        templateCategoryVOS.addAll(customTemplate);
+        return templateCategoryVOS;
     }
 
     private Boolean checkCategoryName(String name) {
