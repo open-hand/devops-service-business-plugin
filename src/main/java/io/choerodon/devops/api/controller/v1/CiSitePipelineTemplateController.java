@@ -2,6 +2,7 @@ package io.choerodon.devops.api.controller.v1;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
 import org.hzero.core.base.BaseController;
 import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class CiSitePipelineTemplateController extends BaseController {
     @Permission(level = ResourceLevel.SITE)
     public ResponseEntity<CiTemplatePipelineVO> createPipelineTemplate(
             @PathVariable(value = "source_id") Long sourceId,
-            @RequestBody CiTemplatePipelineVO devopsPipelineTemplateVO) {
+            @Valid @RequestBody CiTemplatePipelineVO devopsPipelineTemplateVO) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.createPipelineTemplate(sourceId, devopsPipelineTemplateVO));
     }
 
