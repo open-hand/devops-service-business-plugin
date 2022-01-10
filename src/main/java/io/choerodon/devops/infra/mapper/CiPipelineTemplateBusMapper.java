@@ -18,13 +18,14 @@ public interface CiPipelineTemplateBusMapper extends BaseMapper<CiTemplatePipeli
     List<CiTemplatePipelineVO> queryDevopsPipelineTemplateByParams(@Param("sourceId") Long sourceId,
                                                                    @Param("name") String name,
                                                                    @Param("categoryName") String categoryName,
+                                                                   @Param("categoryId") Long categoryId,
                                                                    @Param("builtIn") Boolean builtIn,
                                                                    @Param("enable") Boolean enable,
                                                                    @Param("params") String params);
 
     Integer checkPipelineName(@Param("sourceId") Long sourceId,
-                         @Param("name") String name,
-                         @Param("ciPipelineTemplateId") Long ciPipelineTemplateId);
+                              @Param("name") String name,
+                              @Param("ciPipelineTemplateId") Long ciPipelineTemplateId);
 
 }
 

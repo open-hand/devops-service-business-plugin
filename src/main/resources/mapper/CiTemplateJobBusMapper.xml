@@ -40,6 +40,9 @@
         <if test="groupName != null and groupName != ''">
             AND dctjg.name = #{groupName, jdbcType=VARCHAR}
         </if>
+        <if test="groupId != null and groupId != ''">
+            AND dctjg.id = #{groupId,jdbcType=BIGINT}
+        </if>
         <if test="builtIn != null and builtIn ==true">
             AND  dctj.built_in = 1
         </if>

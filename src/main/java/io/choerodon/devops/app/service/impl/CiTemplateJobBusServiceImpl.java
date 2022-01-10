@@ -180,8 +180,8 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
 
 
     @Override
-    public Page<CiTemplateJobVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, String name, String groupName, Boolean builtIn, String params) {
-        Page<CiTemplateJobVO> ciTemplateJobVOPage = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, name, groupName, builtIn, params));
+    public Page<CiTemplateJobVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, String name, String groupName, Long groupId, Boolean builtIn, String params) {
+        Page<CiTemplateJobVO> ciTemplateJobVOPage = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, name, groupName, groupId, builtIn, params));
         UserDTOFillUtil.fillUserInfo(ciTemplateJobVOPage
                 .getContent()
                 .stream()
@@ -251,7 +251,7 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     }
 
     private void checkAccess(Long sourceId) {
-        if (DetailsHelper.getUserDetails().getAdmin()){
+        if (DetailsHelper.getUserDetails().getAdmin()) {
             return;
         }
         // 如果sourceId为0，校验用户是否有平台管理员角色
