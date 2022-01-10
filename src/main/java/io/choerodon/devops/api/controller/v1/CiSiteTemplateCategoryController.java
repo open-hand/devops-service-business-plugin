@@ -2,6 +2,7 @@ package io.choerodon.devops.api.controller.v1;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import java.util.List;
 import org.hzero.core.base.BaseController;
 import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,14 @@ public class CiSiteTemplateCategoryController extends BaseController {
             @PathVariable(value = "source_id") Long sourceId,
             @RequestBody CiTemplateCategoryVO ciTemplateCategoryVO) {
         return ResponseEntity.ok(ciTemplateCategoryBusService.createTemplateCategory(ciTemplateCategoryVO));
+    }
+
+    @ApiOperation(value = "平台层查询流水线分类列表")
+    @Permission(level = ResourceLevel.SITE)
+    @GetMapping("/list")
+    public ResponseEntity<List<CiTemplateCategoryVO>> queryTemplateCategorys(
+            @PathVariable(value = "source_id") Long sourceId) {
+        return ResponseEntity.ok(ciTemplateCategoryBusService.queryTemplateCategorys(sourceId));
     }
 
 

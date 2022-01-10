@@ -68,6 +68,10 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     public List<CiTemplateJobVO> queryTemplateJobsByGroupId(Long sourceId, Long ciTemplateJobGroupId) {
         CiTemplateJobDTO record = new CiTemplateJobDTO();
         record.setGroupId(ciTemplateJobGroupId);
+        //平台层的查不到组织层的job
+        if (sourceId == 0) {
+            record.setSourceId(sourceId);
+        }
         List<CiTemplateJobDTO> ciTemplateJobDTOS = ciTemplateJobBusMapper.select(record);
         if (CollectionUtils.isEmpty(ciTemplateJobDTOS)) {
             return Collections.EMPTY_LIST;
@@ -88,7 +92,9 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
                     stepHandler.fillTemplateStepConfigInfo(ciTemplateStepVO);
                     templateStepVOList.add(ciTemplateStepVO);
                 });
-                ciTemplateJobVO.setDevopsCiStepVOList(templateStepVOList);
+                //步骤按照sequence排序
+                List<CiTemplateStepVO> reTemplateStepVOS = templateStepVOList.stream().sorted(Comparator.comparing(CiTemplateStepVO::getSequence)).collect(Collectors.toList());
+                ciTemplateJobVO.setDevopsCiStepVOList(reTemplateStepVOS);
             }
         });
         return ciTemplateJobVOS;
@@ -213,15 +219,18 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
         List<CiTemplateStepVO> templateStepVOList = ciTemplateStepService.listByJobIds(Arrays.asList(ciTemplateJobVO.getId()).stream().collect(Collectors.toSet()));
         List<CiTemplateStepVO> reTemplateStepVOS = new ArrayList<>();
         if (!CollectionUtils.isEmpty(templateStepVOList)) {
+            List<CiTemplateStepVO> finalReTemplateStepVOS = reTemplateStepVOS;
             templateStepVOList.forEach(ciTemplateStepVO -> {
                 // 添加步骤关联的配置信息
                 AbstractDevopsCiStepHandler stepHandler = devopsCiStepOperator.getHandlerOrThrowE(ciTemplateStepVO.getType());
                 stepHandler.fillTemplateStepConfigInfo(ciTemplateStepVO);
-                reTemplateStepVOS.add(ciTemplateStepVO);
+                finalReTemplateStepVOS.add(ciTemplateStepVO);
             });
-
+            //步骤按照sequence
+            reTemplateStepVOS = finalReTemplateStepVOS.stream().sorted(Comparator.comparing(CiTemplateStepVO::getSequence)).collect(Collectors.toList());
         }
         ciTemplateJobVO.setDevopsCiStepVOList(reTemplateStepVOS);
+        ciTemplateJobVO.setOpenParallel(Objects.isNull(ciTemplateJobVO.getParallel()) ? Boolean.FALSE : Boolean.TRUE);
 
         return ciTemplateJobVO;
     }
@@ -242,6 +251,9 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
     }
 
     private void checkAccess(Long sourceId) {
+        if (DetailsHelper.getUserDetails().getAdmin()){
+            return;
+        }
         // 如果sourceId为0，校验用户是否有平台管理员角色
         if (sourceId == 0) {
             if (!baseServiceClientOperator.checkSiteAccess(DetailsHelper.getUserDetails().getUserId())) {

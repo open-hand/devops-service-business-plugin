@@ -1,8 +1,13 @@
 package io.choerodon.devops.app.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.C;
 import org.hzero.core.util.AssertUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +116,41 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
 
     @Override
     public List<CiTemplateJobGroupVO> listTemplateJobGroup(Long sourceId, String name) {
-        return ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, name);
+        List<CiTemplateJobGroupVO> ciTemplateJobGroupVOS = ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, name);
+        if (!CollectionUtils.isEmpty(ciTemplateJobGroupVOS)) {
+            List<CiTemplateJobGroupVO> templateJobGroupVOS = sortedTemplateJob(ciTemplateJobGroupVOS);
+            return templateJobGroupVOS;
+        }
+        return Collections.emptyList();
+    }
+
+    private List<CiTemplateJobGroupVO> sortedTemplateJob(List<CiTemplateJobGroupVO> ciTemplateJobGroupVOS) {
+        List<CiTemplateJobGroupVO> resultTemplateJobGroupVOS = new ArrayList<>();
+        List<CiTemplateJobGroupVO> templateJobGroupVOS = ciTemplateJobGroupVOS.stream().sorted(Comparator.comparing(CiTemplateJobGroupVO::getId).reversed()).collect(Collectors.toList());
+        //构建放在第一位 自定义的放在最后
+        List<CiTemplateJobGroupVO> customJobGroupVOS = templateJobGroupVOS.stream().filter(ciTemplateJobGroupVO -> !ciTemplateJobGroupVO.getBuiltIn()).collect(Collectors.toList());
+        List<CiTemplateJobGroupVO> otherVos = templateJobGroupVOS.stream()
+                .filter(CiTemplateJobGroupVO::getBuiltIn)
+                .filter(ciTemplateJobGroupVO -> StringUtils.equalsIgnoreCase(ciTemplateJobGroupVO.getType(), CiTemplateJobGroupTypeEnum.OTHER.value()))
+                .collect(Collectors.toList());
+
+
+        List<CiTemplateJobGroupVO> firstVos = templateJobGroupVOS
+                .stream()
+                .filter(ciTemplateJobGroupVO -> StringUtils.equalsIgnoreCase(ciTemplateJobGroupVO.getType(), CiTemplateJobGroupTypeEnum.BUILD.value()))
+                .collect(Collectors.toList());
+
+        List<CiTemplateJobGroupVO> groupVOS = templateJobGroupVOS.stream().filter(CiTemplateJobGroupVO::getBuiltIn)
+                .filter(ciTemplateJobGroupVO -> !StringUtils.equalsIgnoreCase(ciTemplateJobGroupVO.getType(), CiTemplateJobGroupTypeEnum.OTHER.value()))
+                .filter(ciTemplateJobGroupVO -> !StringUtils.equalsIgnoreCase(ciTemplateJobGroupVO.getType(), CiTemplateJobGroupTypeEnum.BUILD.value()))
+                .sorted(Comparator.comparing(CiTemplateJobGroupVO::getId))
+                .collect(Collectors.toList());
+
+        resultTemplateJobGroupVOS.addAll(firstVos);
+        resultTemplateJobGroupVOS.addAll(groupVOS);
+        resultTemplateJobGroupVOS.addAll(otherVos);
+        resultTemplateJobGroupVOS.addAll(customJobGroupVOS);
+        return resultTemplateJobGroupVOS;
     }
 
     private Boolean checkGroupName(String name) {
