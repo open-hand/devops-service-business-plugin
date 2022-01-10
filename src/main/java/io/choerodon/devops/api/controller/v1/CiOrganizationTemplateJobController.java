@@ -46,11 +46,10 @@ public class CiOrganizationTemplateJobController {
             @ApiParam(value = "分页参数")
             @ApiIgnore @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "groupName", required = false) String groupName,
-            @Encrypt @RequestParam(value = "groupId", required = false) Long groupId,
+            @Encrypt @RequestParam(value = "group_id", required = false) Long groupId,
             @RequestParam(value = "builtIn", required = false) Boolean builtIn,
             @RequestParam(value = "params", required = false) String params) {
-        return Results.success(ciTemplateJobBusService.pageTemplateJobs(resourceId, pageRequest, name, groupName, groupId, builtIn, params));
+        return Results.success(ciTemplateJobBusService.pageTemplateJobs(resourceId, pageRequest, name, groupId, builtIn, params));
     }
 
     @ApiOperation(value = "组织层层查询job列表")

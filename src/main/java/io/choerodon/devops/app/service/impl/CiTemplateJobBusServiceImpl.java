@@ -180,8 +180,8 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
 
 
     @Override
-    public Page<CiTemplateJobVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, String name, String groupName, Long groupId, Boolean builtIn, String params) {
-        Page<CiTemplateJobVO> ciTemplateJobVOPage = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, name, groupName, groupId, builtIn, params));
+    public Page<CiTemplateJobVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, String name, Long groupId, Boolean builtIn, String params) {
+        Page<CiTemplateJobVO> ciTemplateJobVOPage = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateJobBusMapper.pageUnderOrgLevel(sourceId, name, null, groupId, builtIn, params));
         UserDTOFillUtil.fillUserInfo(ciTemplateJobVOPage
                 .getContent()
                 .stream()

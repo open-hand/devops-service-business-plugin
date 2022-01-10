@@ -22,7 +22,7 @@ public interface CiTemplateJobBusService {
     Boolean isNameUnique(String name, Long sourceId, Long jobId);
 
 
-    Page<CiTemplateJobVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, String name, String groupName, Long groupId, Boolean builtIn, String params);
+    Page<CiTemplateJobVO> pageTemplateJobs(Long sourceId, PageRequest pageRequest, String name, Long groupId, Boolean builtIn, String params);
 
     Boolean checkJobTemplateByJobId(Long sourceId, Long templateJobId);
 
