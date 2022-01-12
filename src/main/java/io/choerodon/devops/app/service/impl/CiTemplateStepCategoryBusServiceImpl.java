@@ -44,6 +44,11 @@ public class CiTemplateStepCategoryBusServiceImpl implements CiTemplateStepCateg
             return ciTemplateStepCategoryVOPage;
         }
         UserDTOFillUtil.fillUserInfo(ciTemplateStepCategoryVOPage.getContent(), Constant.CREATED_BY, Constant.CREATOR);
+        ciTemplateStepCategoryVOPage.getContent().forEach(ciTemplateStepCategoryVO -> {
+            if (ciTemplateStepCategoryVO.getBuiltIn()) {
+                ciTemplateStepCategoryVO.setCreator(null);
+            }
+        });
         return ciTemplateStepCategoryVOPage;
     }
 

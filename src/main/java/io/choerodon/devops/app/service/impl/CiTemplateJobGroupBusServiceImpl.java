@@ -46,6 +46,11 @@ public class CiTemplateJobGroupBusServiceImpl implements CiTemplateJobGroupBusSe
         Page<CiTemplateJobGroupVO> ciTemplateJobGroupVOS = PageHelper.doPageAndSort(pageRequest, () -> ciTemplateJobGroupBusMapper.queryTemplateJobGroupByParams(sourceId, searchParam));
 
         UserDTOFillUtil.fillUserInfo(ciTemplateJobGroupVOS.getContent(), Constant.CREATED_BY, Constant.CREATOR);
+        ciTemplateJobGroupVOS.getContent().forEach(ciTemplateJobGroupVO -> {
+            if (ciTemplateJobGroupVO.getBuiltIn()) {
+                ciTemplateJobGroupVO.setCreator(null);
+            }
+        });
         return ciTemplateJobGroupVOS;
     }
 
