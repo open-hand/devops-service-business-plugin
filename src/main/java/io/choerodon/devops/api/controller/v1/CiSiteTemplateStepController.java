@@ -42,10 +42,10 @@ public class CiSiteTemplateStepController {
             @ApiIgnore
             @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "categoryName", required = false) String categoryName,
+            @Encrypt @RequestParam(value = "category_id", required = false) Long categoryId,
             @RequestParam(value = "builtIn", required = false) Boolean builtIn,
             @RequestParam(value = "params", required = false) String params) {
-        return ResponseEntity.ok(ciTemplateStepBusService.pageTemplateStep(sourceId, pageRequest, name, categoryName, builtIn, params));
+        return ResponseEntity.ok(ciTemplateStepBusService.pageTemplateStep(sourceId, pageRequest, name, categoryId, builtIn, params));
     }
 
 

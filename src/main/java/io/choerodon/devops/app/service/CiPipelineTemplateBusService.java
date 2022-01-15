@@ -9,7 +9,7 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
  * Created by wangxiang on 2021/12/3
  */
 public interface CiPipelineTemplateBusService {
-    Page<CiTemplatePipelineVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, String name, String categoryName, Boolean builtIn, Boolean enable, String params);
+    Page<CiTemplatePipelineVO> pagePipelineTemplate(Long sourceId, PageRequest pageRequest, String name, Long categoryId, Boolean builtIn, Boolean enable, String params);
 
     void invalidPipelineTemplate(Long sourceId, Long ciPipelineTemplateId);
 

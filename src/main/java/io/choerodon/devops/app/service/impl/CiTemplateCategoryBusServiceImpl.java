@@ -43,6 +43,12 @@ public class CiTemplateCategoryBusServiceImpl implements CiTemplateCategoryBusSe
             return ciTemplateCategoryVOS;
         }
         UserDTOFillUtil.fillUserInfo(ciTemplateCategoryVOS.getContent(), Constant.CREATED_BY, Constant.CREATOR);
+        //平台预置的不返回创建者
+        ciTemplateCategoryVOS.getContent().forEach(ciTemplateCategoryVO -> {
+            if (ciTemplateCategoryVO.getBuiltIn()) {
+                ciTemplateCategoryVO.setCreator(null);
+            }
+        });
         return ciTemplateCategoryVOS;
     }
 

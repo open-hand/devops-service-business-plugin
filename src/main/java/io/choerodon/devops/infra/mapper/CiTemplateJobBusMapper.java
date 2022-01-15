@@ -21,6 +21,7 @@ public interface CiTemplateJobBusMapper extends BaseMapper<CiTemplateJobDTO> {
     List<CiTemplateJobVO> pageUnderOrgLevel(@Param("sourceId") Long sourceId,
                                             @Param("name") String name,
                                             @Param("groupName") String groupName,
+                                            @Param("groupId") Long groupId,
                                             @Param("builtIn") Boolean builtIn,
                                             @Param("params") String params);
 

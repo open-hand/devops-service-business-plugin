@@ -19,6 +19,9 @@
         <if test="categoryName != null and categoryName != ''">
             AND  dctsc.name LIKE CONCAT(CONCAT('%', #{categoryName, jdbcType=VARCHAR}), '%')
         </if>
+        <if test="categoryId != null and categoryId != ''">
+            AND  dctsc.id = #{categoryId,jdbcType=BIGINT}
+        </if>
         <if test="builtIn != null and builtIn ==true">
             AND  dcts.built_in = 1
         </if>

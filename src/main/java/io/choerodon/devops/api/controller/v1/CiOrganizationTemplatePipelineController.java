@@ -6,6 +6,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -45,11 +46,11 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
             @ApiIgnore
             @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "categoryName", required = false) String categoryName,
+            @Encrypt @RequestParam(value = "category_id", required = false) Long categoryId,
             @RequestParam(value = "builtIn", required = false) Boolean builtIn,
             @RequestParam(value = "enable", required = false) Boolean enable,
             @RequestParam(value = "params", required = false) String params) {
-        return ResponseEntity.ok(ciPipelineTemplateBusService.pagePipelineTemplate(sourceId, pageRequest, name, categoryName, builtIn, enable, params));
+        return ResponseEntity.ok(ciPipelineTemplateBusService.pagePipelineTemplate(sourceId, pageRequest, name, categoryId, builtIn, enable, params));
     }
 
     @ApiOperation(value = "组织层创建流水线模板")
@@ -57,7 +58,7 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<CiTemplatePipelineVO> createPipelineTemplate(
             @PathVariable(value = "organization_id") Long sourceId,
-            @RequestBody CiTemplatePipelineVO CiTemplatePipelineVO) {
+            @Validated @RequestBody CiTemplatePipelineVO CiTemplatePipelineVO) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.createPipelineTemplate(sourceId, CiTemplatePipelineVO));
     }
 
@@ -108,7 +109,7 @@ public class CiOrganizationTemplatePipelineController extends BaseController {
     public ResponseEntity<Boolean> checkPipelineTemplateName(
             @PathVariable(value = "organization_id") Long organizationId,
             @RequestParam(value = "name") String name,
-            @Encrypt @RequestParam(value = "ci_pipeline_template_id",required = false) Long ciPipelineTemplateId) {
+            @Encrypt @RequestParam(value = "ci_pipeline_template_id", required = false) Long ciPipelineTemplateId) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.checkPipelineTemplateName(organizationId, name, ciPipelineTemplateId));
     }
 

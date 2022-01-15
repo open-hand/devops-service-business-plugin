@@ -20,6 +20,7 @@ public interface CiTemplateStepBusMapper extends BaseMapper<CiTemplateStepDTO> {
     List<CiTemplateStepVO> queryTemplateStepByParams(@Param("sourceId") Long sourceId,
                                                      @Param("name") String name,
                                                      @Param("categoryName") String categoryName,
+                                                     @Param("categoryId") Long categoryId,
                                                      @Param("builtIn") Boolean builtIn,
                                                      @Param("params") String params);
 

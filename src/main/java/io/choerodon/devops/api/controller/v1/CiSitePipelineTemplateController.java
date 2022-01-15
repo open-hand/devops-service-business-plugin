@@ -46,11 +46,11 @@ public class CiSitePipelineTemplateController extends BaseController {
             @ApiIgnore
             @SortDefault(value = "id", direction = Sort.Direction.DESC) PageRequest pageRequest,
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "categoryName", required = false) String categoryName,
+            @Encrypt @RequestParam(value = "category_id", required = false) Long categoryId,
             @RequestParam(value = "builtIn", required = false) Boolean builtIn,
             @RequestParam(value = "enable", required = false) Boolean enable,
             @RequestParam(value = "params", required = false) String params) {
-        return ResponseEntity.ok(ciPipelineTemplateBusService.pagePipelineTemplate(sourceId, pageRequest, name, categoryName, builtIn, enable, params));
+        return ResponseEntity.ok(ciPipelineTemplateBusService.pagePipelineTemplate(sourceId, pageRequest, name, categoryId, builtIn, enable, params));
     }
 
     @ApiOperation(value = "平台层创建流水线模板")
@@ -119,7 +119,7 @@ public class CiSitePipelineTemplateController extends BaseController {
     public ResponseEntity<Boolean> checkPipelineTemplateName(
             @PathVariable(value = "source_id") Long sourceId,
             @RequestParam(value = "name") String name,
-            @Encrypt @RequestParam(value = "ci_template_id",required = false) Long ciPipelineTemplateId) {
+            @Encrypt @RequestParam(value = "ci_template_id", required = false) Long ciPipelineTemplateId) {
         return ResponseEntity.ok(ciPipelineTemplateBusService.checkPipelineTemplateName(sourceId, name, ciPipelineTemplateId));
     }
 
