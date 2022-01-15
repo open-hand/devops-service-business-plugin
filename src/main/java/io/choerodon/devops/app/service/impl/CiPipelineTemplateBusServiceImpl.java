@@ -82,6 +82,12 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
             return pipelineTemplateVOS;
         }
         UserDTOFillUtil.fillUserInfo(devopsPipelineTemplateVOS, Constant.CREATED_BY, Constant.CREATOR);
+
+        pipelineTemplateVOS.getContent().forEach(ciTemplateJobGroupVO -> {
+            if (ciTemplateJobGroupVO.getBuiltIn()) {
+                ciTemplateJobGroupVO.setCreator(null);
+            }
+        });
         return pipelineTemplateVOS;
     }
 
