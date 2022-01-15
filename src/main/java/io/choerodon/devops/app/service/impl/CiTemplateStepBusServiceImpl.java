@@ -69,6 +69,11 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
             return templateStepDTOPageContent;
         }
         UserDTOFillUtil.fillUserInfo(templateStepDTOPageContent.getContent(), Constant.CREATED_BY, Constant.CREATOR);
+        templateStepDTOPageContent.getContent().forEach(ciTemplateJobGroupVO -> {
+            if (ciTemplateJobGroupVO.getBuiltIn()) {
+                ciTemplateJobGroupVO.setCreator(null);
+            }
+        });
         return templateStepDTOPageContent;
     }
 
