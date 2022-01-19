@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>devops-service-business-plugin</artifactId>
-    <version>1.2.0-alpha.3-SNAPSHOT</version>
+    <version>1.2.0-alpha.3.RELEASE</version>
 
     <properties>
         <maven.springboot.skip>true</maven.springboot.skip>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>devops-service</artifactId>
-            <version>1.2.0-alpha.5.RELEASE</version>
+            <version>1.2.0-alpha.8.RELEASE</version>
         </dependency>
     </dependencies>
 
