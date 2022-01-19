@@ -108,6 +108,9 @@ public class CiTemplateStepBusServiceImpl implements CiTemplateStepBusService {
     }
 
     private void checkAccess(Long sourceId) {
+        if (baseServiceClientOperator.isRoot(DetailsHelper.getUserDetails().getUserId())) {
+            return;
+        }
         // 如果sourceId为0，校验用户是有有平台管理员角色
         if (sourceId == 0) {
             if (!baseServiceClientOperator.checkSiteAccess(DetailsHelper.getUserDetails().getUserId())) {
