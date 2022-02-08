@@ -82,6 +82,12 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
             return pipelineTemplateVOS;
         }
         UserDTOFillUtil.fillUserInfo(devopsPipelineTemplateVOS, Constant.CREATED_BY, Constant.CREATOR);
+
+        pipelineTemplateVOS.getContent().forEach(ciTemplateJobGroupVO -> {
+            if (ciTemplateJobGroupVO.getBuiltIn()) {
+                ciTemplateJobGroupVO.setCreator(null);
+            }
+        });
         return pipelineTemplateVOS;
     }
 
@@ -168,6 +174,9 @@ public class CiPipelineTemplateBusServiceImpl implements CiPipelineTemplateBusSe
     }
 
     private void checkAccess(Long sourceId) {
+        if (baseServiceClientOperator.isRoot(DetailsHelper.getUserDetails().getUserId())) {
+            return;
+        }
         // 如果sourceId为0，校验用户是有有平台管理员角色
         CustomUserDetails userDetails = DetailsHelper.getUserDetails();
         if (Boolean.TRUE.equals(userDetails.getAdmin())) {

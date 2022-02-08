@@ -187,6 +187,11 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
                 .stream()
 //                .filter(ciTemplateJobVO -> ResourceLevel.SITE.value().equals(ciTemplateJobVO.getSourceType()))
                 .collect(Collectors.toList()), "createdBy", "creator");
+        ciTemplateJobVOPage.getContent().forEach(ciTemplateJobGroupVO -> {
+            if (ciTemplateJobGroupVO.getBuiltIn()) {
+                ciTemplateJobGroupVO.setCreator(null);
+            }
+        });
         return ciTemplateJobVOPage;
     }
 
@@ -252,6 +257,9 @@ public class CiTemplateJobBusServiceImpl implements CiTemplateJobBusService {
 
     private void checkAccess(Long sourceId) {
         if (DetailsHelper.getUserDetails().getAdmin()) {
+            return;
+        }
+        if (baseServiceClientOperator.isRoot(DetailsHelper.getUserDetails().getUserId())) {
             return;
         }
         // 如果sourceId为0，校验用户是否有平台管理员角色
